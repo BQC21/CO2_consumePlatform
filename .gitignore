@@ -71,4 +71,4 @@ temp/
 # =========================
 *.sqlite
 *.sqlite3
-supabase/
+supabase_sql/
