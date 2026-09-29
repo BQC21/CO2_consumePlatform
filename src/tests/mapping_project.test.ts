@@ -1,7 +1,7 @@
+import { createProjectFormStateFromProject, mapProjectToSupabaseRow, mapSupabaseRowToProject } from "@/features/model/mapping/mapping_project";
+import { mapProjectMonthToSupabaseRow, mapSupabaseRowToProjectMonth } from "@/features/model/mapping/mapping_project_month";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createProjectFormStateFromProject, mapProjectToSupabaseRow, mapSupabaseRowToProject } from "../features/model/mapping/mapping_project.ts";
-import { mapProjectMonthToSupabaseRow, mapSupabaseRowToProjectMonth } from "../features/model/mapping/mapping_project_month.ts";
 
 describe("mapping de proyectos", () => {
   it("convierte la fila de Supabase y conserva null en potencias vacías", () => {

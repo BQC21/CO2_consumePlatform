@@ -1,4 +1,7 @@
-import type { ReactNode } from "react";
+import type { ReactNode, SelectHTMLAttributes } from "react";
+import { Project, ProjectFormState } from "../supabase/project-types";
+import { ProjectMonth, ProjectMonthFormState } from "../supabase/projectMonth-types";
+import { ProjectSortingOrder } from "./options";
 
 export type FieldProps = {
     label: string;
@@ -24,8 +27,190 @@ export type ProjectFilters = {
     marcaInversor: string;
 };
 
+export type ProjectFiltersBarProps = {
+    ubicacion: string;
+    marcaInversor: string;
+    onUbicacion: (value: string) => void;
+    onMarca: (value: string) => void;
+};
+
 export type ModalFrameProps = {
     title: string;
     onClose: () => void;
     children: ReactNode;
+};
+
+export type SelectProps = FieldProps & {
+    options: readonly string[];
+};
+
+export type NativeSelectProps = FieldProps & 
+    SelectHTMLAttributes<HTMLSelectElement> & 
+    { options: { value: string; label: string }[] 
+};
+
+export type IconProps = { className?: string };
+
+export type PeruMapProps = {
+    projects: Project[];
+    selected: string | null;
+    onSelect: (nombre: string) => void;
+};
+
+export type ProjectSorterProps = {
+    value: ProjectSortingOrder;
+    onChange: (value: ProjectSortingOrder) => void;
+};
+
+export type ProjectAnnualTableProps = {
+    projects: Project[];
+    total: number;
+    onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
+};
+
+export type ProjectMonthTableProps = {
+    projects: Project[];
+    months: ProjectMonth[];
+    onUpdate: (id: string, form: ProjectMonthFormState) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
+};
+
+export type MassiveCleanModalProps = {
+    title: string;
+    description: string;
+    onClean: () => Promise<void>;
+    onClose: () => void;
+};
+
+export type MassiveDownloadModalProps = {
+    title: string;
+    filename: string;
+    headers: string[];
+    rows: string[][];
+    onClose: () => void;
+};
+
+export type MassiveUploadModalProps = {
+    title: string;
+    description: string;
+    expectedHeaders: readonly string[];
+    onRows: (rows: Record<string, string>[]) => Promise<void>;
+    onClose: () => void;
+};
+
+export type AddProjectModalProps = {
+    onAdd: (form: ProjectFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type DeleteProjectModalProps = {
+    project: Project;
+    onDelete: (id: string) => Promise<void>;
+    onClose: () => void;
+};
+
+export type EditProjectModalProps = {
+    project: Project;
+    onUpdate: (form: ProjectFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type ProjectFormModalProps = {
+    title: string;
+    submitLabel: string;
+    busyLabel: string;
+    initial: ProjectFormState;
+    onSubmit: (form: ProjectFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type AddMonthModalProps = {
+    projects: Project[];
+    onAdd: (form: ProjectMonthFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type DeleteMonthModalProps = {
+    month: ProjectMonth;
+    projectName: string;
+    onDelete: (id: string) => Promise<void>;
+    onClose: () => void;
+};
+
+export type EditMonthModalProps = {
+    month: ProjectMonth;
+    projects: Project[];
+    onUpdate: (form: ProjectMonthFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type MonthFormModalProps = {
+    title: string;
+    initial: ProjectMonthFormState;
+    projects: Project[];
+    onSubmit: (form: ProjectMonthFormState) => Promise<void>;
+    onClose: () => void;
+};
+
+export type CollapsibleTableSectionProps = {
+    title: string;
+    meta?: string;
+    children: ReactNode;
+};
+
+export type ExcelWorkbookProps = {
+    sheets: ExcelWorkbookSheet[];
+    defaultSheetId?: string;
+    layout?: "split" | "tabs";
+};
+
+export type PortalShellProps = {
+    title: string;
+    subtitle: string;
+    activePath: string;
+    children: ReactNode;
+    tone?: "light" | "dark";
+    actions?: ReactNode;
+};
+
+/** Contornos departamentales proyectados desde el GeoJSON público de los 24 departamentos. 
+ * Callao queda dentro de Lima. */
+export type DepartmentShape = {
+    id: string;
+    nombre: string;
+    d: string;
+    labelX: number;
+    labelY: number;
+};
+
+export type MonthEnergy = {
+    mes: string;
+    tipicoDiario: number;
+    energiaKwh: number;
+    co2Kg: number;
+    carbonKg: number;
+    arboles: number;
+};
+
+export type DashboardMetrics = {
+    proyectosRegistrados: number;
+    proyectosCompletados: number;
+    capacidadInstaladaKwp: number;
+    panelesAnio: number;
+    panelesMes: number;
+    panelesAcumulados: number;
+    produccionMensualMwh: number;
+    produccionAnualMwh: number;
+    carbonAnualMg: number;
+    carbonAcumuladoMg: number;
+    avanceAnual: number;
+    avanceMensual: number;
+};
+
+export type MassiveColumn = {
+    header: string;
+    field: string;
+    kind: "text" | "number" | "integer" | "date" | "month";
+    required?: boolean;
 };

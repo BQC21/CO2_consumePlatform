@@ -1,4 +1,6 @@
-import type { MetaFormState, ProjectFormState, ProjectMonthFormState } from "@/lib/types/supabase/project-types";
+import { MetaFormState } from "../types/supabase/meta-types";
+import { ProjectFormState } from "../types/supabase/project-types";
+import { ProjectMonthFormState } from "../types/supabase/projectMonth-types";
 
 export const INITIAL_PROJECT_FORM: ProjectFormState = {
   nombre: "",

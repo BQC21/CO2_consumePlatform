@@ -38,3 +38,24 @@ export function initialsFromName(name: string): string {
   }
   return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
 }
+
+/** Meses que tienen registros o instalaciones en el año. Si no hay ninguno, ofrece los doce. */
+export function monthsForYear(year: number, monthKeys: string[], installationDates: string[]): number[] {
+  const found = new Set<number>();
+  const add = (value: string) => {
+    const match = new RegExp(`^${year}-(\\d{2})`).exec(value);
+    if (!match) {
+      return;
+    }
+    const month = Number(match[1]);
+    if (month >= 1 && month <= 12) {
+      found.add(month);
+    }
+  };
+  monthKeys.forEach(add);
+  installationDates.forEach(add);
+  if (found.size === 0) {
+    return Array.from({ length: 12 }, (_, index) => index + 1);
+  }
+  return [...found].sort((left, right) => left - right);
+}

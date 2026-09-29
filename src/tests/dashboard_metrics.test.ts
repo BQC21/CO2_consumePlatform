@@ -1,7 +1,9 @@
+import { Meta } from "@/lib/types/supabase/meta-types";
+import { Project } from "@/lib/types/supabase/project-types";
+import { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
+import { computeDashboardMetrics, computeProgress } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { computeDashboardMetrics, computeProgress } from "../lib/utils/helpers/computes/dashboard_metrics.ts";
-import type { Meta, Project, ProjectMonth } from "../lib/types/supabase/project-types.ts";
 
 const meta: Meta = { id: "meta", anio: 2026, meta_paneles_anual: 1000, meta_paneles_mensual: 100 };
 

@@ -18,6 +18,3 @@ export const PROJECT_MONTH_HEADERS = [
   "Árboles plantados",
   "Ahorro de carbón (kg)",
 ] as const;
-
-export type ProjectAnnualHeader = (typeof PROJECT_ANNUAL_HEADERS)[number];
-export type ProjectMonthHeader = (typeof PROJECT_MONTH_HEADERS)[number];

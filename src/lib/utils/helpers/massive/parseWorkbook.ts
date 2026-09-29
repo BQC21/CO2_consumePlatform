@@ -1,13 +1,6 @@
 import * as XLSX from "xlsx";
 import { toIsoDate, toNullableNumber, toText, toYearMonth } from "@/lib/utils/helpers/normalization";
 
-export type MassiveColumn = {
-  header: string;
-  field: string;
-  kind: "text" | "number" | "integer" | "date" | "month";
-  required?: boolean;
-};
-
 function normalizeHeader(value: string): string {
   return value
     .normalize("NFD")

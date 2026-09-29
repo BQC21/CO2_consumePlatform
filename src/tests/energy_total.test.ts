@@ -1,12 +1,7 @@
+import { arbolesPlantados, computeMonthEnergy, daysInMonth, 
+  energiaMensualKwh, reduccionCo2Kg } from "@/lib/utils/helpers/computes/energy_total";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  arbolesPlantados,
-  computeMonthEnergy,
-  daysInMonth,
-  energiaMensualKwh,
-  reduccionCo2Kg,
-} from "../lib/utils/helpers/computes/energy_total.ts";
 
 describe("rendimiento FV", () => {
   it("usa los días reales del mes para pasar del típico diario a energía mensual", () => {

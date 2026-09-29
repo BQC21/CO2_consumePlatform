@@ -40,9 +40,3 @@ export const DEPARTMENT_OPTIONS = [
   "Tumbes",
   "Ucayali",
 ] as const;
-
-export type SystemType = (typeof SYSTEM_TYPE_OPTIONS)[number];
-export type InverterBrand = (typeof INVERTER_BRAND_OPTIONS)[number];
-export type DepartmentName = (typeof DEPARTMENT_OPTIONS)[number];
-export type ProjectStatus = (typeof PROJECT_STATUS_OPTIONS)[number]["value"];
-export type ProjectSortingOrder = (typeof SORTING_OPTIONS)[number]["value"];

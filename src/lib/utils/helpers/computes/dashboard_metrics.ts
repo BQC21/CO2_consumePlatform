@@ -1,20 +1,8 @@
-import type { Meta, Project, ProjectMonth } from "../../../types/supabase/project-types";
-import { computeMonthEnergy, type MonthEnergy } from "./energy_total";
-
-export type DashboardMetrics = {
-  proyectosRegistrados: number;
-  proyectosCompletados: number;
-  capacidadInstaladaKwp: number;
-  panelesAnio: number;
-  panelesMes: number;
-  panelesAcumulados: number;
-  produccionMensualMwh: number;
-  produccionAnualMwh: number;
-  carbonAnualMg: number;
-  carbonAcumuladoMg: number;
-  avanceAnual: number;
-  avanceMensual: number;
-};
+import { DashboardMetrics, MonthEnergy } from "@/lib/types/components/components";
+import { Meta } from "@/lib/types/supabase/meta-types";
+import { Project } from "@/lib/types/supabase/project-types";
+import { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
+import { computeMonthEnergy } from "./energy_total";
 
 export function computeProgress(actual: number, meta: number): number {
   if (meta <= 0) {
@@ -41,8 +29,12 @@ export function computeDashboardMetrics(
   months: ProjectMonth[],
   meta: Meta,
   today = new Date(),
+  selectedMonth?: number,
 ): DashboardMetrics {
-  const monthKey = referenceMonth(meta.anio, today);
+  const monthKey =
+    selectedMonth && selectedMonth >= 1 && selectedMonth <= 12
+      ? `${meta.anio}-${String(selectedMonth).padStart(2, "0")}`
+      : referenceMonth(meta.anio, today);
   const energies: MonthEnergy[] = months.map((row) => computeMonthEnergy(row.tipico_diario, row.mes));
 
   const panelesAnio = projects.reduce((total, project) => {

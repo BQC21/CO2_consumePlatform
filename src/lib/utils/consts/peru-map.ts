@@ -1,11 +1,4 @@
-/** Contornos departamentales proyectados desde el GeoJSON público de los 24 departamentos. Callao queda dentro de Lima. */
-export type DepartmentShape = {
-  id: string;
-  nombre: string;
-  d: string;
-  labelX: number;
-  labelY: number;
-};
+import { DepartmentShape } from "@/lib/types/components/components";
 
 export const PERU_MAP_VIEWBOX = "0 0 420 640";
 

@@ -1,7 +1,5 @@
-/** Factores usados por los portales de inversor para expresar el ahorro frente a la red. */
-export const FACTOR_CO2_KG_POR_KWH = 0.997;
-export const FACTOR_CARBON_KG_POR_KWH = 0.404;
-export const FACTOR_KG_CO2_POR_ARBOL = 18.3;
+import { MonthEnergy } from "@/lib/types/components/components";
+import { FACTOR_CARBON_KG_POR_KWH, FACTOR_CO2_KG_POR_KWH, FACTOR_KG_CO2_POR_ARBOL } from "../../consts/factors";
 
 export function daysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
@@ -38,15 +36,6 @@ export function arbolesPlantados(co2Kg: number): number {
   }
   return co2Kg / FACTOR_KG_CO2_POR_ARBOL;
 }
-
-export type MonthEnergy = {
-  mes: string;
-  tipicoDiario: number;
-  energiaKwh: number;
-  co2Kg: number;
-  carbonKg: number;
-  arboles: number;
-};
 
 export function computeMonthEnergy(tipicoDiario: number, mes: string): MonthEnergy {
   const energiaKwh = energiaMensualKwh(tipicoDiario, mes);

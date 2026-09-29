@@ -1,7 +1,11 @@
-/** Nombres canónicos de tablas y candidatos de columnas para la carga Excel. */
+// ------------- TABLAS --------------------
 export const PROJECT_TABLE = "proyectos";
 export const PROJECT_MONTH_TABLE = "registros_mensuales";
 export const META_TABLE = "metas";
+
+
+
+// ------------- COLUMNAS -------------------
 
 export const PROJECT_COLUMN_CANDIDATES = {
   nombre: ["proyecto / mes", "proyecto", "nombre", "nombre de la planta", "planta"],
