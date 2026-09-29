@@ -1,8 +1,5 @@
+import { LogoProps } from "@/lib/types/components/Image-types";
 import Image from "next/image";
-
-type LogoProps = {
-  compact?: boolean;
-};
 
 export function Logo({ compact = false }: LogoProps) {
   if (compact) {
