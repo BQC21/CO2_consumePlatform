@@ -1,26 +1,9 @@
 "use client";
 
 import { DEPARTMENT_SHAPES, PERU_MAP_VIEWBOX } from "@/lib/utils/consts/peru-map";
-import type { Project } from "@/lib/types/supabase/project-types";
-import { MapStatus } from "@/lib/types/components/options";
 import { PeruMapProps } from "@/lib/types/components/components";
-
-const FILL: Record<MapStatus, string> = {
-  en_ejecucion: "var(--color-primary)",
-  completado: "var(--color-accent-green)",
-  sin_proyecto: "#2f6fbf",
-};
-
-export function departmentStatus(nombre: string, projects: Project[]): MapStatus {
-  const local = projects.filter((project) => project.ubicacion === nombre);
-  if (local.some((project) => project.estado === "en_ejecucion")) {
-    return "en_ejecucion";
-  }
-  if (local.some((project) => project.estado === "completado")) {
-    return "completado";
-  }
-  return "sin_proyecto";
-}
+import { FILL } from "@/lib/utils/consts/map_color_state";
+import { departmentStatus } from "@/lib/utils/helpers/render/format";
 
 export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
   return (
@@ -41,7 +24,8 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
               onClick={() => onSelect(shape.nombre)}
             >
               <title>
-                {shape.nombre}: {status === "en_ejecucion" ? "En ejecución" : status === "completado" ? "Completado" : "Sin proyecto"}
+                {shape.nombre}: {status === "en_ejecucion" ? "En ejecución" : 
+                status === "completado" ? "Completado" : "Sin proyecto"}
               </title>
             </path>
           );

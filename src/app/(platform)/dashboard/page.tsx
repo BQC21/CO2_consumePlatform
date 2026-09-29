@@ -145,12 +145,10 @@ export default function DashboardPage() {
         <div className="grid gap-4 xl:grid-cols-[180px_1fr_320px]">
           <div className="grid content-center gap-4">
             <ProductionGauge label="Producción mensual total" value={metrics.produccionMensualMwh} color="var(--color-info)" />
+            
             <ProductionGauge label="Producción anual total" value={metrics.produccionAnualMwh} color="var(--color-success)" />
-          </div>
-
-          <div className="relative">
-            <PeruMap projects={projects.items} selected={activeDepartment} onSelect={setSelected} />
-            <aside className="pointer-events-none absolute right-3 bottom-3 hidden w-44 rounded-2xl bg-black/35 p-3 text-sm xl:block">
+            
+            <div className="grid content-center gap-4">
               <p className="font-semibold">Carbón ahorrado</p>
               <p className="numeric mt-2 text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Annual Yield {formatNumber(metrics.carbonAnualMg, 2)} Mg
@@ -165,7 +163,11 @@ export default function DashboardPage() {
               <p className="numeric text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Accumulation {formatNumber(metrics.panelesAcumulados, 0)}
               </p>
-            </aside>
+            </div>
+          </div>
+
+          <div className="relative">
+            <PeruMap projects={projects.items} selected={activeDepartment} onSelect={setSelected} />
           </div>
 
           <div className="flex flex-col gap-4">

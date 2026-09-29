@@ -1,3 +1,6 @@
+import { MapStatus } from "@/lib/types/components/options";
+import { Project } from "@/lib/types/supabase/project-types";
+
 export function formatNumber(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined || Number.isNaN(value)) {
     return "—";
@@ -58,4 +61,17 @@ export function monthsForYear(year: number, monthKeys: string[], installationDat
     return Array.from({ length: 12 }, (_, index) => index + 1);
   }
   return [...found].sort((left, right) => left - right);
+}
+
+/** Estado del departamento */
+
+export function departmentStatus(nombre: string, projects: Project[]): MapStatus {
+  const local = projects.filter((project) => project.ubicacion === nombre);
+  if (local.some((project) => project.estado === "en_ejecucion")) {
+    return "en_ejecucion";
+  }
+  if (local.some((project) => project.estado === "completado")) {
+    return "completado";
+  }
+  return "sin_proyecto";
 }
