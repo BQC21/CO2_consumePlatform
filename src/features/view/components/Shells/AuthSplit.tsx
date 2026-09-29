@@ -44,8 +44,8 @@ export function AuthSplit({ title, subtitle, children }: { title: string; subtit
 
       {/* Sección de la derecha */}
       <section className="grid place-items-center px-4 py-10" style={{ background: "var(--color-background)" }}>
-        <div className="w-full max-w-md rounded-[var(--radius-xl)] bg-white p-8 shadow-[var(--shadow-md)]">
-          <div className="mb-6 flex justify-center">
+        <div className="w-full max-w-xl rounded-[var(--radius-xl)] bg-white p-8 shadow-[var(--shadow-md)]">
+          <div className="mb-10 flex justify-center">
             <Logo />
           </div>
           <h2 className="text-center text-3xl font-semibold">{title}</h2>
