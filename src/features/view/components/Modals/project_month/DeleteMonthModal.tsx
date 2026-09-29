@@ -2,15 +2,8 @@
 
 import { useState } from "react";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
-import type { ProjectMonth } from "@/lib/types/supabase/project-types";
 import { formatMonthLabel } from "@/lib/utils/helpers/render/format";
-
-type DeleteMonthModalProps = {
-  month: ProjectMonth;
-  projectName: string;
-  onDelete: (id: string) => Promise<void>;
-  onClose: () => void;
-};
+import { DeleteMonthModalProps } from "@/lib/types/components/components";
 
 export function DeleteMonthModal({ month, projectName, onDelete, onClose }: DeleteMonthModalProps) {
   const [busy, setBusy] = useState(false);

@@ -7,17 +7,10 @@ import { DeleteMonthModal } from "@/features/view/components/Modals/project_mont
 import { EditMonthModal } from "@/features/view/components/Modals/project_month/EditMonthModal";
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectMonthFormStateFromProjectMonth } from "@/features/model/mapping/mapping_project_month";
-import type { Project, ProjectMonth, ProjectMonthFormState } from "@/lib/types/supabase/project-types";
 import { computeMonthEnergy } from "@/lib/utils/helpers/computes/energy_total";
 import { PROJECT_MONTH_HEADERS } from "@/lib/utils/headers";
 import { formatMonthLabel, formatNumber } from "@/lib/utils/helpers/render/format";
-
-type ProjectMonthTableProps = {
-  projects: Project[];
-  months: ProjectMonth[];
-  onUpdate: (id: string, form: ProjectMonthFormState) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-};
+import { ProjectMonthTableProps } from "@/lib/types/components/components";
 
 export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: ProjectMonthTableProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});

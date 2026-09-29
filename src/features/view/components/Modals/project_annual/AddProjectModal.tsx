@@ -1,13 +1,8 @@
 "use client";
 
 import { ProjectFormModal } from "@/features/view/components/Modals/project_annual/ProjectFormModal";
-import type { ProjectFormState } from "@/lib/types/supabase/project-types";
+import { AddProjectModalProps } from "@/lib/types/components/components";
 import { INITIAL_PROJECT_FORM } from "@/lib/utils/initialValues";
-
-type AddProjectModalProps = {
-  onAdd: (form: ProjectFormState) => Promise<void>;
-  onClose: () => void;
-};
 
 export function AddProjectModal({ onAdd, onClose }: AddProjectModalProps) {
   return (

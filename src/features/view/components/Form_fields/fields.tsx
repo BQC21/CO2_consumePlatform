@@ -1,12 +1,5 @@
-import type { ReactNode, SelectHTMLAttributes } from "react";
-
-type FieldProps = {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
-  placeholder?: string;
-};
+import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
+import type { ReactNode } from "react";
 
 export function AddSectionTitle({ children }: { children: ReactNode }) {
   return <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">{children}</h3>;
@@ -61,10 +54,6 @@ export function AddReadOnlyField({ label, value }: { label: string; value: strin
   );
 }
 
-type SelectProps = FieldProps & {
-  options: readonly string[];
-};
-
 export function AddSearchableSelectField({ label, value, onChange, options, error }: SelectProps) {
   const listId = `list-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
@@ -80,8 +69,6 @@ export function AddSearchableSelectField({ label, value, onChange, options, erro
     </label>
   );
 }
-
-type NativeSelectProps = FieldProps & SelectHTMLAttributes<HTMLSelectElement> & { options: { value: string; label: string }[] };
 
 export function AddSelectField({ label, value, onChange, options, error }: NativeSelectProps) {
   return (

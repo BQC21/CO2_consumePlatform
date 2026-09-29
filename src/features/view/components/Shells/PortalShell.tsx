@@ -5,20 +5,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/features/view/components/Images/Logo";
 import { createClient, hasSupabaseEnv } from "@/features/model/supabase/client";
 import { initialsFromName } from "@/lib/utils/helpers/render/format";
-
-const NAVIGATION = [
-  { href: "/dashboard", label: "Vista principal" },
-  { href: "/project", label: "Lista de proyectos" },
-];
-
-type PortalShellProps = {
-  title: string;
-  subtitle: string;
-  activePath: string;
-  children: ReactNode;
-  tone?: "light" | "dark";
-  actions?: ReactNode;
-};
+import { PortalShellProps } from "@/lib/types/components/components";
+import { NAVIGATION } from "@/lib/utils/consts/navigation";
 
 export function PortalShell({ title, subtitle, activePath, children, tone = "light", actions }: PortalShellProps) {
   const [name, setName] = useState("Usuario");

@@ -10,13 +10,7 @@ import type { Project, ProjectFormState } from "@/lib/types/supabase/project-typ
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { formatDate } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
-
-type ProjectAnnualTableProps = {
-  projects: Project[];
-  total: number;
-  onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-};
+import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 
 export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
   async function commit(project: Project, patch: Partial<ProjectFormState>) {

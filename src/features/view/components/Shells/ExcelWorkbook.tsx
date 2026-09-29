@@ -1,13 +1,7 @@
 "use client";
 
+import { ExcelWorkbookProps } from "@/lib/types/components/components";
 import { useState } from "react";
-import type { ExcelWorkbookSheet } from "@/lib/types/components/workbook-types";
-
-type ExcelWorkbookProps = {
-  sheets: ExcelWorkbookSheet[];
-  defaultSheetId?: string;
-  layout?: "split" | "tabs";
-};
 
 export function ExcelWorkbook({ sheets, defaultSheetId, layout = "split" }: ExcelWorkbookProps) {
   const [active, setActive] = useState(defaultSheetId ?? sheets[0]?.id ?? "");

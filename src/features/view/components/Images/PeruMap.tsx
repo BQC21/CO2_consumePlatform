@@ -2,8 +2,8 @@
 
 import { DEPARTMENT_SHAPES, PERU_MAP_VIEWBOX } from "@/lib/utils/consts/peru-map";
 import type { Project } from "@/lib/types/supabase/project-types";
-
-export type MapStatus = "en_ejecucion" | "completado" | "sin_proyecto";
+import { MapStatus } from "@/lib/types/components/options";
+import { PeruMapProps } from "@/lib/types/components/components";
 
 const FILL: Record<MapStatus, string> = {
   en_ejecucion: "var(--color-primary)",
@@ -21,12 +21,6 @@ export function departmentStatus(nombre: string, projects: Project[]): MapStatus
   }
   return "sin_proyecto";
 }
-
-type PeruMapProps = {
-  projects: Project[];
-  selected: string | null;
-  onSelect: (nombre: string) => void;
-};
 
 export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
   return (

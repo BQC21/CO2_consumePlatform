@@ -3,18 +3,10 @@
 import { useMemo, useState } from "react";
 import { AddNumberField, AddReadOnlyField, AddSearchableSelectField, AddTextField } from "@/features/view/components/Form_fields/fields";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
-import type { Project, ProjectMonthFormState } from "@/lib/types/supabase/project-types";
 import { computeMonthEnergy } from "@/lib/utils/helpers/computes/energy_total";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
 import { toNumber, toYearMonth } from "@/lib/utils/helpers/normalization";
-
-type MonthFormModalProps = {
-  title: string;
-  initial: ProjectMonthFormState;
-  projects: Project[];
-  onSubmit: (form: ProjectMonthFormState) => Promise<void>;
-  onClose: () => void;
-};
+import { MonthFormModalProps } from "@/lib/types/components/components";
 
 export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: MonthFormModalProps) {
   const [form, setForm] = useState(initial);

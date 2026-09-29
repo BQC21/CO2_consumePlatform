@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
-
-type MassiveCleanModalProps = {
-  title: string;
-  description: string;
-  onClean: () => Promise<void>;
-  onClose: () => void;
-};
+import { MassiveCleanModalProps } from "@/lib/types/components/components";
 
 export function MassiveCleanModal({ title, description, onClean, onClose }: MassiveCleanModalProps) {
   const [busy, setBusy] = useState(false);

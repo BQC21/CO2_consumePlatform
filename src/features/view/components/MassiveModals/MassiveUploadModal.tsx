@@ -3,14 +3,7 @@
 import { useState } from "react";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
 import { assertHeaders, readSheetRows } from "@/lib/utils/helpers/massive/parseWorkbook";
-
-type MassiveUploadModalProps = {
-  title: string;
-  description: string;
-  expectedHeaders: readonly string[];
-  onRows: (rows: Record<string, string>[]) => Promise<void>;
-  onClose: () => void;
-};
+import { MassiveUploadModalProps } from "@/lib/types/components/components";
 
 export function MassiveUploadModal({ title, description, expectedHeaders, onRows, onClose }: MassiveUploadModalProps) {
   const [fileName, setFileName] = useState("");

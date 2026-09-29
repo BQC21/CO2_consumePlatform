@@ -1,4 +1,4 @@
-type IconProps = { className?: string };
+import { IconProps } from "@/lib/types/components/components";
 
 export function PlusIcon({ className }: IconProps) {
   return (

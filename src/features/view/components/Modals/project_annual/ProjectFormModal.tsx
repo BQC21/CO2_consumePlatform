@@ -13,15 +13,7 @@ import {
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
 import type { ProjectFormState } from "@/lib/types/supabase/project-types";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
-
-type ProjectFormModalProps = {
-  title: string;
-  submitLabel: string;
-  busyLabel: string;
-  initial: ProjectFormState;
-  onSubmit: (form: ProjectFormState) => Promise<void>;
-  onClose: () => void;
-};
+import { ProjectFormModalProps } from "@/lib/types/components/components";
 
 export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSubmit, onClose }: ProjectFormModalProps) {
   const [form, setForm] = useState<ProjectFormState>(initial);

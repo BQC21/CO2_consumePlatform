@@ -1,13 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { CollapsibleTableSectionProps } from "@/lib/types/components/components";
 import { useState } from "react";
-
-type CollapsibleTableSectionProps = {
-  title: string;
-  meta?: string;
-  children: ReactNode;
-};
 
 export function CollapsibleTableSection({ title, meta, children }: CollapsibleTableSectionProps) {
   const [open, setOpen] = useState(true);

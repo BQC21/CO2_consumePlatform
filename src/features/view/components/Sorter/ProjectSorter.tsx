@@ -1,12 +1,8 @@
 "use client";
 
 import { SortIcon } from "@/features/view/components/Icons/icons";
+import { ProjectSorterProps } from "@/lib/types/components/components";
 import { SORTING_OPTIONS, type ProjectSortingOrder } from "@/lib/utils/options";
-
-type ProjectSorterProps = {
-  value: ProjectSortingOrder;
-  onChange: (value: ProjectSortingOrder) => void;
-};
 
 export function ProjectSorter({ value, onChange }: ProjectSorterProps) {
   return (

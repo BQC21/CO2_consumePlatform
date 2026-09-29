@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
-import type { Project } from "@/lib/types/supabase/project-types";
-
-type DeleteProjectModalProps = {
-  project: Project;
-  onDelete: (id: string) => Promise<void>;
-  onClose: () => void;
-};
+import { DeleteProjectModalProps } from "@/lib/types/components/components";
 
 export function DeleteProjectModal({ project, onDelete, onClose }: DeleteProjectModalProps) {
   const [busy, setBusy] = useState(false);
