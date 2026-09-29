@@ -2,7 +2,7 @@ import { DashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics
 import { formatPercent } from "@/lib/utils/helpers/render/format";
 import { useState } from "react";
 import { Progress } from "../../refactor/Progress";
-import { MetaModal } from "../../refactor/MetaModal";
+import { MetaModal } from "../Modals/MetaModal";
 import { Meta, MetaFormState } from "@/lib/types/supabase/meta-types";
 import { PeriodSelect } from "@/lib/utils/helpers/filters/filterProjects";
 import { MONTH_NAMES } from "@/lib/utils/consts/monthNames";
