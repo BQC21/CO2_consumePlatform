@@ -3,14 +3,10 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { CloseIcon } from "@/features/view/components/Icons/icons";
 import { useModalLifecycle } from "@/features/ViewModel/hooks/modals/useModalLifecycle";
-
-type ModalFrameProps = {
-  title: string;
-  onClose: () => void;
-  children: ReactNode;
-};
+import { ModalFrameProps } from "@/lib/types/components/components";
 
 export function ModalFrame({ title, onClose, children }: ModalFrameProps) {
+  
   const titleId = useId();
   const cardRef = useRef<HTMLDivElement>(null);
   useModalLifecycle(onClose);
@@ -56,7 +52,7 @@ export function ModalFrame({ title, onClose, children }: ModalFrameProps) {
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 id={titleId} className="text-lg font-semibold">
+          <h2 id={titleId} className="text-lg font-semibold text-black">
             {title}
           </h2>
           <button type="button" className="icon-button" aria-label="Cerrar" onClick={onClose}>
