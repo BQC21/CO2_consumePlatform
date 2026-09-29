@@ -2,9 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { Button2Add } from "@/features/view/components/Buttons/button2Add";
-import { Button2MassiveClean } from "@/features/view/components/Buttons/button2MassiveClean";
-import { Button2MassiveDownload } from "@/features/view/components/Buttons/button2MassiveDownload";
-import { Button2MassiveUpload } from "@/features/view/components/Buttons/button2MassiveUpload";
 import { SearchBar } from "@/features/view/components/Bars/SearchBar";
 import { ProjectFiltersBar } from "@/features/view/components/Filters/ProjectFiltersBar";
 import { MassiveCleanModal } from "@/features/view/components/MassiveModals/MassiveCleanModal";
@@ -19,15 +16,15 @@ import { ProjectAnnualTable } from "@/features/view/components/Tables/project_an
 import { ProjectMonthTable } from "@/features/view/components/Tables/project_month";
 import { useProjectMonthMutations, useRealtimeProjectMonth } from "@/features/ViewModel/hooks/services/useRealtimeProjectMonth";
 import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
-import type { ProjectFormState, ProjectMonthFormState } from "@/lib/types/supabase/project-types";
 import { filterMonthsByProjects, filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
 import { transformAnnualRow, transformMonthRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
 import { formatDate } from "@/lib/utils/helpers/render/format";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
-import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
-import type { ProjectSortingOrder } from "@/lib/utils/options";
-
-const MONTH_HEADERS = ["Proyecto", "Mes", "TÍPICO DIARIO", "POT. NOMINAL (kW)"] as const;
+import { MONTH_HEADERS, PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
+import { ProjectSortingOrder } from "@/lib/types/components/options";
+import { ProjectMonthFormState } from "@/lib/types/supabase/projectMonth-types";
+import { Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/button2Massive";
+import { ProjectFormState } from "@/lib/types/supabase/project-types";
 
 export default function ProjectPage() {
   const projectsState = useRealtimeProject();

@@ -18,3 +18,7 @@ export const PROJECT_MONTH_HEADERS = [
   "Árboles plantados",
   "Ahorro de carbón (kg)",
 ] as const;
+
+
+// --- Para el modal de llenado de mes
+export const MONTH_HEADERS = ["Proyecto", "Mes", "TÍPICO DIARIO", "POT. NOMINAL (kW)"] as const;
