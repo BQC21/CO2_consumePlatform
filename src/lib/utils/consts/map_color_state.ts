@@ -5,3 +5,9 @@ export const FILL: Record<MapStatus, string> = {
     completado: "var(--color-accent-green)",
     sin_proyecto: "#2f6fbf",
 };
+
+export const STATUS_LABEL = {
+    en_ejecucion: "En ejecución",
+    completado: "Completado",
+    sin_proyecto: "Sin proyecto",
+} as const;
