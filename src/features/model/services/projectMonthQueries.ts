@@ -1,6 +1,6 @@
 import { mapProjectMonthToSupabaseRow, mapSupabaseRowToProjectMonth } from "@/features/model/mapping/mapping_project_month";
 import { createClient } from "@/features/model/supabase/client";
-import type { ProjectMonth, ProjectMonthFormData, SupabaseProjectMonthRow } from "@/lib/types/supabase/project-types";
+import { ProjectMonth, ProjectMonthFormData, SupabaseProjectMonthRow } from "@/lib/types/supabase/projectMonth-types";
 import { PROJECT_MONTH_TABLE } from "@/lib/utils/namingTolerance";
 
 export async function getProjectMonths(): Promise<ProjectMonth[]> {

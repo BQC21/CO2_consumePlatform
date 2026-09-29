@@ -1,6 +1,6 @@
 import { mapMetaToSupabaseRow, mapSupabaseRowToMeta } from "@/features/model/mapping/mapping_meta";
 import { createClient } from "@/features/model/supabase/client";
-import type { Meta, MetaFormData, SupabaseMetaRow } from "@/lib/types/supabase/project-types";
+import type { Meta, MetaFormData, SupabaseMetaRow } from "@/lib/types/supabase/meta-types";
 import { META_TABLE } from "@/lib/utils/namingTolerance";
 
 export async function getMetas(): Promise<Meta[]> {
