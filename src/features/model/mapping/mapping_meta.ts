@@ -1,4 +1,4 @@
-import type { Meta, MetaFormState, SupabaseMetaRow } from "../../../lib/types/supabase/project-types";
+import type { Meta, MetaFormState, SupabaseMetaRow } from "../../../lib/types/supabase/meta-types";
 import { numberToInput, toInteger } from "../../../lib/utils/helpers/normalization";
 
 export function mapSupabaseRowToMeta(row: SupabaseMetaRow): Meta {

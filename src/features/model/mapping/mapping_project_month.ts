@@ -1,4 +1,4 @@
-import type { ProjectMonth, ProjectMonthFormState, SupabaseProjectMonthRow } from "../../../lib/types/supabase/project-types";
+import { ProjectMonth, ProjectMonthFormState, SupabaseProjectMonthRow } from "@/lib/types/supabase/projectMonth-types";
 import { numberToInput, toNullableNumber, toNumber, toText, toYearMonth } from "../../../lib/utils/helpers/normalization";
 
 export function mapSupabaseRowToProjectMonth(row: SupabaseProjectMonthRow): ProjectMonth {
