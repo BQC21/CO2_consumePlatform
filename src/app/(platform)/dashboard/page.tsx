@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { MetaPanel, MetricCards, ProductionGauge } from "@/features/view/components/Bars/DashboardMetrics";
 import { DepartmentCard } from "@/features/view/components/Images/DepartmentCard";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
@@ -11,6 +10,9 @@ import { useRealtimeProjectMonth } from "@/features/ViewModel/hooks/services/use
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
+import { MetricCards } from "@/features/view/components/Bars/MetricCards";
+import { MetaPanel } from "@/features/view/components/Bars/MetaPanel";
+import { ProductionGauge } from "@/features/view/components/Bars/ProductionGauge";
 
 export default function DashboardPage() {
 
@@ -61,7 +63,7 @@ export default function DashboardPage() {
       {/* Métricas */}
       <div className="grid items-stretch gap-4 xl:grid-cols-[1.4fr_1fr]">
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : <MetricCards metrics={metrics} />}
-        
+
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
           <MetaPanel
             meta={metaState.meta}
