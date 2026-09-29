@@ -1,4 +1,4 @@
-import { AuthSplit } from "@/features/view/components/auth/AuthSplit";
+import { AuthSplit } from "@/features/view/components/Shells/AuthSplit";
 import { LoginForm } from "@/features/view/components/auth/LoginForm";
 
 export default function LoginPage() {

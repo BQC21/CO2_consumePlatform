@@ -1,4 +1,4 @@
-import { AuthSplit } from "@/features/view/components/auth/AuthSplit";
+import { AuthSplit } from "@/features/view/components/Shells/AuthSplit";
 import { UpdatePasswordForm } from "@/features/view/components/auth/UpdatePasswordForm";
 
 export default function UpdatePasswordPage() {

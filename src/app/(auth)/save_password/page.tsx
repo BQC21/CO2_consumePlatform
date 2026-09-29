@@ -1,4 +1,4 @@
-import { AuthSplit } from "@/features/view/components/auth/AuthSplit";
+import { AuthSplit } from "@/features/view/components/Shells/AuthSplit";
 import { SavePasswordForm } from "@/features/view/components/auth/SavePasswordForm";
 
 export default function SavePasswordPage() {

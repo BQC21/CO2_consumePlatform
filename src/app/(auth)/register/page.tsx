@@ -1,4 +1,4 @@
-import { AuthSplit } from "@/features/view/components/auth/AuthSplit";
+import { AuthSplit } from "@/features/view/components/Shells/AuthSplit";
 import { RegisterForm } from "@/features/view/components/auth/RegisterForm";
 
 export default function RegisterPage() {
