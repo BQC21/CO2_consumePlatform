@@ -13,25 +13,41 @@ import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_
 import { formatNumber } from "@/lib/utils/helpers/render/format";
 
 export default function DashboardPage() {
+
+  // --- enganchar con la info del DB
   const projects = useRealtimeProject();
   const months = useRealtimeProjectMonth();
   const metaState = useRealtimeMeta();
-  const [selected, setSelected] = useState<string | null>(null);
+
+  const [selected, setSelected] = useState<string | null>(null); // proyecto seleccionado
+  const activeDepartment = selected ?? 
+      projects.items.find((project) => project.estado === "en_ejecucion")?.ubicacion ?? 
+      projects.items[0]?.ubicacion ?? null; // departamento activo
+
+  // -------------------------
+  // --- Almacenamiento ------
+  // -------------------------
+
   const metrics = useMemo(
     () => computeDashboardMetrics(projects.items, months.items, metaState.meta),
     [projects.items, months.items, metaState.meta],
-  );
-  const activeDepartment = selected ?? projects.items.find((project) => project.estado === "en_ejecucion")?.ubicacion ?? projects.items[0]?.ubicacion ?? null;
+  ); 
+
+  // -------------------------
+  // ----- Indicadores -------
+  // -------------------------
+
   const error = projects.error || months.error || metaState.error;
   const loading = projects.loading || months.loading;
 
   return (
     <PortalShell
-      title="Cobertura nacional del proyecto de energía solar"
+      title="Cobertura nacional de todos los proyectos de energía fotovoltaica"
       subtitle="Haz clic en un departamento del mapa para ver el detalle del proyecto en esa región."
       activePath="/dashboard"
       tone="dark"
     >
+      {/* En caso haya error al cargar las métricas*/}
       {error ? (
         <div className="panel mb-4 p-4 text-[var(--color-text-primary)]">
           <p className="font-medium">No se pudieron cargar las métricas</p>
@@ -41,8 +57,11 @@ export default function DashboardPage() {
           </button>
         </div>
       ) : null}
+
+      {/* Métricas */}
       <div className="grid items-stretch gap-4 xl:grid-cols-[1.4fr_1fr]">
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : <MetricCards metrics={metrics} />}
+        
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
           <MetaPanel
             meta={metaState.meta}
@@ -53,12 +72,17 @@ export default function DashboardPage() {
           />
         )}
       </div>
-      <section className="mt-4 rounded-[var(--radius-lg)] border p-4" style={{ borderColor: "rgb(255 255 255 / 0.08)", background: "var(--color-surface-dark)" }}>
+
+      {/* Mapa del Perú */}
+      <section className="mt-4 rounded-[var(--radius-lg)] border p-4" 
+                style={{ borderColor: "rgb(255 255 255 / 0.08)", background: "var(--color-surface-dark)" }}>
+        
         <div className="grid gap-4 xl:grid-cols-[180px_1fr_320px]">
           <div className="grid content-center gap-4">
             <ProductionGauge label="Producción mensual total" value={metrics.produccionMensualMwh} color="var(--color-info)" />
             <ProductionGauge label="Producción anual total" value={metrics.produccionAnualMwh} color="var(--color-success)" />
           </div>
+
           <div className="relative">
             <PeruMap projects={projects.items} selected={activeDepartment} onSelect={setSelected} />
             <aside className="pointer-events-none absolute right-3 bottom-3 hidden w-44 rounded-2xl bg-black/35 p-3 text-sm xl:block">
@@ -78,6 +102,7 @@ export default function DashboardPage() {
               </p>
             </aside>
           </div>
+
           <div className="flex flex-col gap-4">
             <DepartmentCard department={activeDepartment} projects={projects.items} months={months.items} year={metaState.meta.anio} />
             <Link href="/project" className="btn-primary">
