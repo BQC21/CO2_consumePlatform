@@ -8,10 +8,11 @@ import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useRealtimeMeta } from "@/features/ViewModel/hooks/services/useRealtimeMeta";
 import { useRealtimeProjectMonth } from "@/features/ViewModel/hooks/services/useRealtimeProjectMonth";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
-import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
-import { formatNumber } from "@/lib/utils/helpers/render/format";
+import { computeDashboardMetrics, referenceMonth } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { formatNumber, monthsForYear } from "@/lib/utils/helpers/render/format";
 import { MetricCards } from "@/features/view/components/Bars/MetricCards";
 import { MetaPanel } from "@/features/view/components/Bars/MetaPanel";
+import type { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
 import { ProductionGauge } from "@/features/view/components/Bars/ProductionGauge";
 
 export default function DashboardPage() {
@@ -22,6 +23,11 @@ export default function DashboardPage() {
   const metaState = useRealtimeMeta();
 
   const [selected, setSelected] = useState<string | null>(null); // proyecto seleccionado
+  const [year, setYear] = useState<number | null>(null); // año seleccionado
+  const [month, setMonth] = useState<number | null>(null); // mess seleccionada
+  const selectedYear = year ?? metaState.meta.anio; // año seleccionado
+  const fallbackMonth = Number(referenceMonth(selectedYear).slice(-2)); // Mes de reserva
+
   const activeDepartment = selected ?? 
       projects.items.find((project) => project.estado === "en_ejecucion")?.ubicacion ?? 
       projects.items[0]?.ubicacion ?? null; // departamento activo
@@ -30,9 +36,59 @@ export default function DashboardPage() {
   // --- Almacenamiento ------
   // -------------------------
 
+  // Años
+  const years = useMemo(() => {
+    const values = new Set<number>([metaState.meta.anio]);
+    for (const row of metaState.metas) {
+      if (row.anio > 0) {
+        values.add(row.anio);
+      }
+    }
+    for (const row of months.items) {
+      const match = /^(\d{4})-/.exec(row.mes);
+      if (match) {
+        values.add(Number(match[1]));
+      }
+    }
+    return [...values].sort((left, right) => right - left);
+  }, [metaState.meta.anio, metaState.metas, months.items]
+  );
+
+  // Opciones para meses
+  const monthOptions = useMemo(
+    () => monthsForYear(
+      selectedYear,
+      months.items.map((row: ProjectMonth) => row.mes),
+      projects.items.map((project) => project.fecha_instalacion),
+    ),
+    [selectedYear, months.items, projects.items],
+  );
+  const selectedMonth = month !== null && monthOptions.includes(month)
+  ? month
+  : monthOptions.includes(fallbackMonth)
+    ? fallbackMonth
+    : monthOptions[monthOptions.length - 1];
+
+  // Meta activa
+  const activeMeta = useMemo(() => {
+      const stored = metaState.metas.find((row) => row.anio === selectedYear);
+      if (stored) {
+        return stored;
+      }
+      const sameYear = selectedYear === metaState.meta.anio;
+      return {
+        id: sameYear ? metaState.meta.id : "",
+        anio: selectedYear,
+        meta_paneles_anual: sameYear ? metaState.meta.meta_paneles_anual : 0,
+        meta_paneles_mensual: sameYear ? metaState.meta.meta_paneles_mensual : 0,
+      };
+    }, [metaState.meta, metaState.metas, selectedYear]
+  );
+
+  // Métricas
   const metrics = useMemo(
-    () => computeDashboardMetrics(projects.items, months.items, metaState.meta),
-    [projects.items, months.items, metaState.meta],
+    () => computeDashboardMetrics(projects.items, months.items, activeMeta, new Date(), selectedMonth),
+    [projects.items, months.items, activeMeta, selectedMonth],
   ); 
 
   // -------------------------
@@ -66,10 +122,17 @@ export default function DashboardPage() {
 
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
           <MetaPanel
-            meta={metaState.meta}
+            meta={activeMeta}
             metrics={metrics}
+            years={years}
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            monthOptions={monthOptions}
+            onYearChange={setYear}
+            onMonthChange={setMonth}
             onSave={async (form) => {
-              await metaState.save(form);
+              const saved = await metaState.save(form, activeMeta.id || undefined);
+              setYear(saved.anio);
             }}
           />
         )}
@@ -106,7 +169,11 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <DepartmentCard department={activeDepartment} projects={projects.items} months={months.items} year={metaState.meta.anio} />
+            <DepartmentCard 
+              department={activeDepartment} 
+              projects={projects.items} 
+              months={months.items} 
+              year={selectedYear} />
             <Link href="/project" className="btn-primary">
               Ver lista de proyectos
             </Link>
