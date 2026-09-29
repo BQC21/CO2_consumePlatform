@@ -72,3 +72,9 @@ temp/
 *.sqlite
 *.sqlite3
 supabase_sql/
+
+# =========================
+# Testeos
+# =========================
+
+tests/
