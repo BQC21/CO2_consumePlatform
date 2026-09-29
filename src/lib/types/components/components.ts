@@ -18,3 +18,14 @@ export type LogoProps = {
     compact?: boolean;
 };
 
+export type ProjectFilters = {
+    search: string;
+    ubicacion: string;
+    marcaInversor: string;
+};
+
+export type ModalFrameProps = {
+    title: string;
+    onClose: () => void;
+    children: ReactNode;
+};
