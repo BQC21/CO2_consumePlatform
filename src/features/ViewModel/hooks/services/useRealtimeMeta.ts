@@ -3,17 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient, hasSupabaseEnv } from "@/features/model/supabase/client";
 import { getMetas, saveMeta } from "@/features/model/services/metaQueries";
-import type { Meta, MetaFormData } from "@/lib/types/supabase/project-types";
+import type { Meta, MetaFormData } from "@/lib/types/supabase/meta-types";
 import { META_TABLE } from "@/lib/utils/namingTolerance";
-
-const fallbackMeta = (): Meta => ({
-  id: "",
-  anio: new Date().getFullYear(),
-  meta_paneles_anual: 1000,
-  meta_paneles_mensual: 100,
-});
+import { fallbackMeta } from "@/lib/utils/consts/fallbacks";
 
 export function useRealtimeMeta() {
+  const [metas, setMetas] = useState<Meta[]>([]);
   const [meta, setMeta] = useState<Meta>(fallbackMeta);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +21,15 @@ export function useRealtimeMeta() {
     try {
       setError(null);
       const rows = await getMetas();
-      const currentYear = new Date().getFullYear();
-      setMeta(rows.find((row) => row.anio === currentYear) ?? rows[0] ?? fallbackMeta());
+      setMetas(rows);
+      setMeta((current) => {
+        const sameRow = current.id ? rows.find((row) => row.id === current.id) : undefined;
+        if (sameRow) {
+          return sameRow;
+        }
+        const currentYear = new Date().getFullYear();
+        return rows.find((row) => row.anio === currentYear) ?? rows[0] ?? fallbackMeta();
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar la meta");
     } finally {
@@ -58,14 +60,18 @@ export function useRealtimeMeta() {
     };
   }, [refetch]);
 
-  const save = useCallback(
-    async (form: MetaFormData) => {
-      const saved = await saveMeta(form, meta.id || undefined);
-      setMeta(saved);
-      return saved;
-    },
-    [meta.id],
-  );
+  const save = useCallback(async (form: MetaFormData, existingId?: string) => {
+    const saved = await saveMeta(form, existingId);
+    setMeta(saved);
+    setMetas((current) => {
+      const index = current.findIndex((row) => row.id === saved.id);
+      if (index === -1) {
+        return [...current, saved].sort((left, right) => right.anio - left.anio);
+      }
+      return current.map((row) => (row.id === saved.id ? saved : row));
+    });
+    return saved;
+  }, []);
 
-  return { meta, loading, error, refetch, save };
+  return { meta, metas, loading, error, refetch, save };
 }

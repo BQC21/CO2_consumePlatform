@@ -10,7 +10,8 @@ import {
   getProjects,
   updateProject,
 } from "@/features/model/services/projectQueries";
-import type { Project, ProjectFormData, UseListResult, UseMutationsResult } from "@/lib/types/supabase/project-types";
+import type { Project, ProjectFormData } from "@/lib/types/supabase/project-types";
+import type { UseListResult, UseMutationsResult } from "@/lib/types/hooks/hooks";
 import { PROJECT_TABLE } from "@/lib/utils/namingTolerance";
 
 const MISSING_ENV = "Configura Supabase para ver los proyectos instalados.";

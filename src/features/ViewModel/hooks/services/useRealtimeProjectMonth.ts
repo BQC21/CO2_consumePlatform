@@ -10,8 +10,9 @@ import {
   getProjectMonths,
   updateProjectMonth,
 } from "@/features/model/services/projectMonthQueries";
-import type { ProjectMonth, ProjectMonthFormData, UseListResult, UseMutationsResult } from "@/lib/types/supabase/project-types";
 import { PROJECT_MONTH_TABLE } from "@/lib/utils/namingTolerance";
+import { UseListResult, UseMutationsResult } from "@/lib/types/hooks/hooks";
+import { ProjectMonth, ProjectMonthFormData } from "@/lib/types/supabase/projectMonth-types";
 
 export function useRealtimeProjectMonth(): UseListResult<ProjectMonth> {
   const [items, setItems] = useState<ProjectMonth[]>([]);
