@@ -92,6 +92,20 @@ export function toYearMonth(value: unknown): string {
   return "";
 }
 
+// Rescatar la fecha sin considerar el días
+export function daysInMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
+
+// Separar Mes y Año
+export function splitYearMonth(mes: string): { year: number; month: number } | null {
+  const match = /^(\d{4})-(\d{2})$/.exec(mes);
+  if (!match) {
+    return null;
+  }
+  return { year: Number(match[1]), month: Number(match[2]) };
+}
+
 // Normaliza las opciones a mostrarse en el selector
 export function normalizeSelectOptions(options: SelectFieldOptions): SelectOption[] {
   return options.map((option) =>
