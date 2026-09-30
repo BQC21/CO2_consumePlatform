@@ -74,18 +74,19 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
                       onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
         
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* rendimiento fotovoltaico */}
-          <AddNumberField label="Típico diario (kWh)" value={form.tipico_diario} 
+          <AddNumberField label="Rendimiento FV (KWh)" value={form.tipico_diario} 
                           onChange={(value) => setForm((current) => ({ ...current, tipico_diario: value }))} />
-          {/* rendimiento de la red eléctrica */}
-          <AddNumberField label="Pot. nominal (kW)" value={form.pot_nominal_kw} 
+          <AddNumberField label="Energía importada de la red (kWh)" value={form.pot_nominal_kw} 
                           onChange={(value) => setForm((current) => ({ ...current, pot_nominal_kw: value }))} />
         </div>
         
         <div className="grid gap-4 sm:grid-cols-3">
-          <AddReadOnlyField label="Reducción de CO2 (kg)" value={formatNumber(preview.co2Kg, 1)} />
-          <AddReadOnlyField label="Árboles plantados" value={formatNumber(preview.arboles, 1)} />
-          <AddReadOnlyField label="Ahorro de carbón (kg)" value={formatNumber(preview.carbonKg, 1)} />
+          <AddNumberField label="Reducción de CO2 (kg)" value={form.reduccion_co2} 
+                          onChange={(value) => setForm((current) => ({ ...current, reduccion_co2: value }))} />
+          <AddNumberField label="Árboles plantados" value={form.arboles} 
+                          onChange={(value) => setForm((current) => ({ ...current, arboles: value }))} />
+          <AddNumberField label="Ahorro de carbón (kg)" value={form.reduccion_carbon} 
+                          onChange={(value) => setForm((current) => ({ ...current, reduccion_carbon: value }))} />
         </div>
 
         {/* En caso haya error al suscribir cambios */}
