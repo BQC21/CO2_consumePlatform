@@ -1,3 +1,5 @@
+import { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
+
 /** Convierte lo que escribe una persona o una celda Excel a número, o a null si no hay dato. */
 export function toNullableNumber(value: unknown): number | null {
   if (value === null || value === undefined || value === "") {
@@ -82,4 +84,11 @@ export function numberToInput(value: number | null | undefined): string {
     return "";
   }
   return String(value);
+}
+
+// Normaliza las opciones a mostrarse en el selector
+export function normalizeSelectOptions(options: SelectFieldOptions): SelectOption[] {
+  return options.map((option) =>
+      typeof option === "string" ? { value: option, label: option } : option
+  );
 }
