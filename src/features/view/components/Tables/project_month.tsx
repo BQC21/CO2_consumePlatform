@@ -13,7 +13,8 @@ import { formatMonthLabel, formatNumber } from "@/lib/utils/helpers/render/forma
 import { ProjectMonthTableProps } from "@/lib/types/components/components";
 
 export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: ProjectMonthTableProps) {
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({}); // activar colapso de filas
   const visibleRows = months.filter((month) => projects.some((project) => project.id === month.proyecto_id));
 
   return (
