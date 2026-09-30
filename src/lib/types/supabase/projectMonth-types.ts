@@ -3,8 +3,8 @@ export type SupabaseProjectMonthRow = {
     id?: string;
     proyecto_id: string | null;
     mes: string | null;
-    tipico_diario: number | string | null;
-    pot_nominal_kw: number | string | null;
+    rendimiento_fv: number | string | null;
+    rendimiento_grid: number | string | null;
     reduccion_co2: number | string | null;
     reduccion_carbon: number | string | null;
     arboles: number | string | null;
@@ -16,8 +16,8 @@ export type ProjectMonth = {
     id: string;
     proyecto_id: string;
     mes: string;
-    tipico_diario: number;
-    pot_nominal_kw: number | null;
+    rendimiento_fv: number | null;
+    rendimiento_grid: number | null;
     reduccion_co2: number | null;
     reduccion_carbon: number | null;
     arboles: number | null;
@@ -27,8 +27,8 @@ export type ProjectMonth = {
 export type ProjectMonthFormState = {
     proyecto_id: string;
     mes: string;
-    tipico_diario: string;
-    pot_nominal_kw: string;
+    rendimiento_fv: string;
+    rendimiento_grid: string;
     reduccion_co2: string;
     reduccion_carbon: string;
     arboles: string;

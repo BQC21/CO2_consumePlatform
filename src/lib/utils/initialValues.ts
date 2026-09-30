@@ -21,8 +21,8 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
 export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
   proyecto_id: "",
   mes: "",
-  tipico_diario: "",
-  pot_nominal_kw: "",
+  rendimiento_fv: "",
+  rendimiento_grid: "",
   reduccion_co2: "",
   reduccion_carbon: "",
   arboles: "",
