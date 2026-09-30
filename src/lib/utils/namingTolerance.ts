@@ -24,6 +24,6 @@ export const PROJECT_COLUMN_CANDIDATES = {
 export const PROJECT_MONTH_COLUMN_CANDIDATES = {
   proyecto: ["proyecto / mes", "proyecto", "nombre", "planta"],
   mes: ["mes", "periodo", "período", "datetime"],
-  tipico_diario: ["típico diario", "tipico diario", "producción diaria", "produccion diaria"],
-  pot_nominal_kw: ["pot. nominal (kw)", "potencia nominal", "pot nominal"],
+  tipico_diario: ["típico diario", "tipico diario", "producción diaria", "produccion diaria", "rendimiento_FV"],
+  pot_nominal_kw: ["pot. nominal (kw)", "potencia nominal", "pot nominal", "rendimiento_GRID"],
 } as const;

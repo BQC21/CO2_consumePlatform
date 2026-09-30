@@ -2,6 +2,7 @@ import { MetaFormState } from "../types/supabase/meta-types";
 import { ProjectFormState } from "../types/supabase/project-types";
 import { ProjectMonthFormState } from "../types/supabase/projectMonth-types";
 
+// Proyectos anuales
 export const INITIAL_PROJECT_FORM: ProjectFormState = {
   nombre: "",
   ubicacion: "",
@@ -16,6 +17,7 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   descripcion: "",
 };
 
+// Proyectos mensuales
 export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
   proyecto_id: "",
   mes: "",
@@ -23,6 +25,7 @@ export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
   pot_nominal_kw: "",
 };
 
+// Meta 
 export const INITIAL_META_FORM: MetaFormState = {
   anio: String(new Date().getFullYear()),
   meta_paneles_anual: "1000",
