@@ -144,7 +144,7 @@ export default function ProjectPage() {
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
 
-        <SearchBar value={search} onChange={setSearch} placeholder="Buscar por planta, distrito o descripción" />
+        <SearchBar value={search} onChange={setSearch} placeholder="        Buscar por planta, distrito o descripción" />
         <ProjectFiltersBar ubicacion={ubicacion} marcaInversor={marcaInversor} 
                           onUbicacion={setUbicacion} onMarca={setMarcaInversor} />
         <ProjectSorter value={sorting} onChange={setSorting} />
