@@ -2,7 +2,8 @@
 
 import { SortIcon } from "@/features/view/components/Icons/icons";
 import { ProjectSorterProps } from "@/lib/types/components/components";
-import { SORTING_OPTIONS, type ProjectSortingOrder } from "@/lib/utils/options";
+import { ProjectSortingOrder } from "@/lib/types/components/options";
+import { SORTING_OPTIONS } from "@/lib/utils/options";
 
 export function ProjectSorter({ value, onChange }: ProjectSorterProps) {
   return (
