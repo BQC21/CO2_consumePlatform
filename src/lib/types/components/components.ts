@@ -254,16 +254,8 @@ export type DepartmentShape = {
 };
 
 // Energía mensual
-export type MonthEnergy = {
-    mes: string;
-    rendimiento_fv: number | null;
-    rendimiento_grid: number | null;
-    energiaFVKwh: number;
-    energiGRIDKwh: number;
-    co2Kg: number;
-    carbonKg: number;
-    arboles: number;
-};
+
+
 
 // metricas para el dashboard
 export type DashboardMetrics = {
