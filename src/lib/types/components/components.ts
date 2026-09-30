@@ -214,3 +214,18 @@ export type MassiveColumn = {
     kind: "text" | "number" | "integer" | "date" | "month";
     required?: boolean;
 };
+
+export type Button2AddProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
+};
+
+export type Button2DeleteProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
+};
+
+export type Button2EditProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
+};

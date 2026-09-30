@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { PlusIcon } from "@/features/view/components/Icons/icons";
-
-type Button2AddProps = {
-  label: string;
-  children: (close: () => void) => ReactNode;
-};
+import { Button2AddProps } from "@/lib/types/components/components";
 
 export function Button2Add({ label, children }: Button2AddProps) {
   const [open, setOpen] = useState(false);

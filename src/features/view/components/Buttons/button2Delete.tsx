@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { TrashIcon } from "@/features/view/components/Icons/icons";
-
-type Button2DeleteProps = {
-  label: string;
-  children: (close: () => void) => ReactNode;
-};
+import { Button2DeleteProps } from "@/lib/types/components/components";
 
 export function Button2Delete({ label, children }: Button2DeleteProps) {
   const [open, setOpen] = useState(false);

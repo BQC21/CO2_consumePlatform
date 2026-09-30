@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { EditIcon } from "@/features/view/components/Icons/icons";
-
-type Button2EditProps = {
-  label: string;
-  children: (close: () => void) => ReactNode;
-};
+import { Button2EditProps } from "@/lib/types/components/components";
 
 export function Button2Edit({ label, children }: Button2EditProps) {
   const [open, setOpen] = useState(false);
