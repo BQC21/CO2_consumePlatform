@@ -3,7 +3,10 @@ import { Project, ProjectFormState } from "../supabase/project-types";
 import { ProjectMonth, ProjectMonthFormState } from "../supabase/projectMonth-types";
 import { ProjectSortingOrder } from "./options";
 
+//--------
 // Fields
+//--------
+
 export type FieldProps = {
     label: string;
     required?: boolean; 
@@ -18,6 +21,29 @@ export type FieldProps = {
     centered?: boolean; // centra la etiqueta y el valor dentro del campo
 };
 
+export type SelectProps = FieldProps & {
+    options: readonly string[];
+    searchPlaceholder?: string;
+    emptyMessage?: string;
+};
+
+export type NativeSelectProps = FieldProps & 
+    SelectHTMLAttributes<HTMLSelectElement> & 
+    { options: { value: string; label: string }[] 
+};
+
+export type SelectOption = {
+    value: string;
+    label: string;
+};
+
+export type SelectFieldOptions = string[] | SelectOption[];
+
+export type IconProps = { className?: string };
+
+//--------
+// Shells
+//--------
 
 export type ExcelWorkbookSheet = {
     id: string;
@@ -25,9 +51,44 @@ export type ExcelWorkbookSheet = {
     content: ReactNode;
 };
 
+export type CollapsibleTableSectionProps = {
+    title: string;
+    meta?: string;
+    children: ReactNode;
+};
+
+export type ExcelWorkbookProps = {
+    sheets: ExcelWorkbookSheet[];
+    defaultSheetId?: string;
+    layout?: "split" | "tabs";
+};
+
+export type PortalShellProps = {
+    title: string;
+    subtitle: string;
+    activePath: string;
+    children: ReactNode;
+    tone?: "light" | "dark";
+    actions?: ReactNode;
+};
+
+//--------
+// Images
+//--------
+
 export type LogoProps = {
     compact?: boolean;
 };
+
+export type PeruMapProps = {
+    projects: Project[];
+    selected: string | null;
+    onSelect: (nombre: string) => void;
+};
+
+//--------
+// Filters
+//--------
 
 export type ProjectFilters = {
     search: string;
@@ -42,33 +103,18 @@ export type ProjectFiltersBarProps = {
     onMarca: (value: string) => void;
 };
 
-export type ModalFrameProps = {
-    title: string;
-    onClose: () => void;
-    children: ReactNode;
-};
-
-export type SelectProps = FieldProps & {
-    options: readonly string[];
-};
-
-export type NativeSelectProps = FieldProps & 
-    SelectHTMLAttributes<HTMLSelectElement> & 
-    { options: { value: string; label: string }[] 
-};
-
-export type IconProps = { className?: string };
-
-export type PeruMapProps = {
-    projects: Project[];
-    selected: string | null;
-    onSelect: (nombre: string) => void;
-};
+//--------
+// Sorters
+//--------
 
 export type ProjectSorterProps = {
     value: ProjectSortingOrder;
     onChange: (value: ProjectSortingOrder) => void;
 };
+
+//--------
+// Tables
+//--------
 
 export type ProjectAnnualTableProps = {
     projects: Project[];
@@ -84,6 +130,11 @@ export type ProjectMonthTableProps = {
     onDelete: (id: string) => Promise<void>;
 };
 
+//--------
+// Modals
+//--------
+
+// Operaciones masivas
 export type MassiveCleanModalProps = {
     title: string;
     description: string;
@@ -107,6 +158,14 @@ export type MassiveUploadModalProps = {
     onClose: () => void;
 };
 
+// GENERAL
+export type ModalFrameProps = {
+    title: string;
+    onClose: () => void;
+    children: ReactNode;
+};
+
+// Proyecto anual
 export type AddProjectModalProps = {
     onAdd: (form: ProjectFormState) => Promise<void>;
     onClose: () => void;
@@ -133,6 +192,7 @@ export type ProjectFormModalProps = {
     onClose: () => void;
 };
 
+// Proyecto mensual
 export type AddMonthModalProps = {
     projects: Project[];
     onAdd: (form: ProjectMonthFormState) => Promise<void>;
@@ -161,29 +221,30 @@ export type MonthFormModalProps = {
     onClose: () => void;
 };
 
-export type CollapsibleTableSectionProps = {
-    title: string;
-    meta?: string;
-    children: ReactNode;
+//---------
+// Botones
+// --------
+
+export type Button2AddProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
 };
 
-export type ExcelWorkbookProps = {
-    sheets: ExcelWorkbookSheet[];
-    defaultSheetId?: string;
-    layout?: "split" | "tabs";
+export type Button2DeleteProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
 };
 
-export type PortalShellProps = {
-    title: string;
-    subtitle: string;
-    activePath: string;
-    children: ReactNode;
-    tone?: "light" | "dark";
-    actions?: ReactNode;
+export type Button2EditProps = {
+    label: string;
+    children: (close: () => void) => ReactNode;
 };
 
-/** Contornos departamentales proyectados desde el GeoJSON público de los 24 departamentos. 
- * Callao queda dentro de Lima. */
+//-------------
+// Adicionales
+// ------------
+
+// Contornos departamentales
 export type DepartmentShape = {
     id: string;
     nombre: string;
@@ -192,6 +253,7 @@ export type DepartmentShape = {
     labelY: number;
 };
 
+// Energía mensual
 export type MonthEnergy = {
     mes: string;
     tipicoDiario: number;
@@ -201,6 +263,7 @@ export type MonthEnergy = {
     arboles: number;
 };
 
+// metricas para el dashboard
 export type DashboardMetrics = {
     proyectosRegistrados: number;
     proyectosCompletados: number;
@@ -216,24 +279,10 @@ export type DashboardMetrics = {
     avanceMensual: number;
 };
 
+// operaciones masivas
 export type MassiveColumn = {
     header: string;
     field: string;
     kind: "text" | "number" | "integer" | "date" | "month";
     required?: boolean;
-};
-
-export type Button2AddProps = {
-    label: string;
-    children: (close: () => void) => ReactNode;
-};
-
-export type Button2DeleteProps = {
-    label: string;
-    children: (close: () => void) => ReactNode;
-};
-
-export type Button2EditProps = {
-    label: string;
-    children: (close: () => void) => ReactNode;
 };
