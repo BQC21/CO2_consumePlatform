@@ -1,4 +1,4 @@
-import { DashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { DashboardMetrics } from "@/lib/types/components/components";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
 
 export function MetricCards({ metrics }: { metrics: DashboardMetrics }) {
