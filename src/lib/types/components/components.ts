@@ -3,13 +3,21 @@ import { Project, ProjectFormState } from "../supabase/project-types";
 import { ProjectMonth, ProjectMonthFormState } from "../supabase/projectMonth-types";
 import { ProjectSortingOrder } from "./options";
 
+// Fields
 export type FieldProps = {
     label: string;
+    required?: boolean; 
     value: string;
     onChange: (value: string) => void;
     error?: string;
     placeholder?: string;
+    step?: number | "";
+    min?: number | "";
+    max?: number | "";
+    disabled?: boolean;
+    centered?: boolean; // centra la etiqueta y el valor dentro del campo
 };
+
 
 export type ExcelWorkbookSheet = {
     id: string;
