@@ -104,8 +104,8 @@ export default function ProjectPage() {
       return {
         proyecto_id: project.id,
         mes: valueByHeader(row, "Mes"),
-        tipico_diario: valueByHeader(row, "TÍPICO DIARIO"),
-        pot_nominal_kw: valueByHeader(row, "POT. NOMINAL (kW)"),
+        rendimiento_fv: valueByHeader(row, "RENDIMIENTO FV (KWh"),
+        rendimiento_grid: valueByHeader(row, "RENDIMIENTO GRID (kWh)"),
         reduccion_co2: valueByHeader(row, "CO2 REDUCIDO (KG)"),
         reduccion_carbon: valueByHeader(row, "CARBÓN REDUCIDO (KG)"),
         arboles: valueByHeader(row, "ÁRBOLES EQUIVALENTES"),
@@ -271,7 +271,7 @@ export default function ProjectPage() {
                           headers={[...MONTH_HEADERS]}
                           rows={visibleMonths.map((month) => {
                             const project = projectsState.items.find((item) => item.id === month.proyecto_id);
-                            return [project?.nombre ?? "", month.mes, String(month.tipico_diario), month.pot_nominal_kw === null ? "" : String(month.pot_nominal_kw)];
+                            return [project?.nombre ?? "", month.mes, String(month.rendimiento_fv), month.rendimiento_grid === null ? "" : String(month.rendimiento_grid)];
                           })}
                           onClose={close}
                         />
