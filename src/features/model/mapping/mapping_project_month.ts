@@ -8,6 +8,9 @@ export function mapSupabaseRowToProjectMonth(row: SupabaseProjectMonthRow): Proj
     mes: toYearMonth(row.mes),
     tipico_diario: toNumber(row.tipico_diario),
     pot_nominal_kw: toNullableNumber(row.pot_nominal_kw),
+    reduccion_co2: toNullableNumber(row.reduccion_co2),
+    reduccion_carbon: toNullableNumber(row.reduccion_carbon),
+    arboles: toNullableNumber(row.arboles),
     updated_at: toText(row.updated_at),
   };
 }
@@ -18,6 +21,9 @@ export function createProjectMonthFormStateFromProjectMonth(month: ProjectMonth)
     mes: month.mes,
     tipico_diario: numberToInput(month.tipico_diario),
     pot_nominal_kw: numberToInput(month.pot_nominal_kw),
+    reduccion_co2: numberToInput(month.reduccion_co2),
+    reduccion_carbon: numberToInput(month.reduccion_carbon),
+    arboles: numberToInput(month.arboles),
   };
 }
 
@@ -27,6 +33,9 @@ export function mapProjectMonthToSupabaseRow(form: ProjectMonthFormState): Recor
     mes: toYearMonth(form.mes),
     tipico_diario: toNumber(form.tipico_diario),
     pot_nominal_kw: toNullableNumber(form.pot_nominal_kw),
+    reduccion_co2: toNullableNumber(form.reduccion_co2),
+    reduccion_carbon: toNullableNumber(form.reduccion_carbon),
+    arboles: toNullableNumber(form.arboles),
     updated_at: new Date().toISOString(),
   };
 }

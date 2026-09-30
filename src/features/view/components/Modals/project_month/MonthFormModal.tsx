@@ -24,7 +24,10 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
   // ------------------------------
 
   // calculo del total de energía anual
-  const preview = useMemo(() => computeMonthEnergy(toNumber(form.tipico_diario), toYearMonth(form.mes)), [form.mes, form.tipico_diario]);
+  const preview = useMemo(() => computeMonthEnergy(toNumber(form.tipico_diario), toYearMonth(form.mes),
+                                toNumber(form.reduccion_co2), toNumber(form.reduccion_carbon), toNumber(form.arboles)), 
+                          [form.mes, form.tipico_diario, 
+                            form.reduccion_co2, form.reduccion_carbon, form.arboles]);
 
   // -----------------------
   // ----- Funciones -------

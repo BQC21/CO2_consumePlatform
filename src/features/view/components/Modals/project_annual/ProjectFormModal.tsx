@@ -60,11 +60,11 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
 
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <AddSectionTitle>Datos del proyecto</AddSectionTitle>
-        <AddTextField label="Nombre del proyecto Proyecto" value={form.nombre} 
+        <AddTextField label="Nombre del proyecto" value={form.nombre} 
                       onChange={(value) => update("nombre", value)} />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <AddSearchableSelectField label="Departamento" value={form.ubicacion} 
+          <AddSearchableSelectField label="Departamento" value={form.ubicacion} searchPlaceholder = "Buscar..."
                                     options={DEPARTMENT_OPTIONS} onChange={(value) => update("ubicacion", value)} />
           <AddTextField label="Distrito o referencia" value={form.distrito} 
                         onChange={(value) => update("distrito", value)} />

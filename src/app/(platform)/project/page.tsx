@@ -106,6 +106,9 @@ export default function ProjectPage() {
         mes: valueByHeader(row, "Mes"),
         tipico_diario: valueByHeader(row, "TÍPICO DIARIO"),
         pot_nominal_kw: valueByHeader(row, "POT. NOMINAL (kW)"),
+        reduccion_co2: valueByHeader(row, "CO2 REDUCIDO (KG)"),
+        reduccion_carbon: valueByHeader(row, "CARBÓN REDUCIDO (KG)"),
+        arboles: valueByHeader(row, "ÁRBOLES EQUIVALENTES"),
       };
     });
     await monthMutations.createMany(forms);
