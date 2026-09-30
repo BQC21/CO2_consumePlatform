@@ -7,8 +7,8 @@ export function Logo({ compact = false }: LogoProps) {
       <Image
         src="/tec_logo.png"
         alt="TEC Energy Solutions"
-        width={36}
-        height={36}
+        width={225}
+        height={307}
         priority
         style={{ width: 36, height: "auto" }}
       />
@@ -19,8 +19,8 @@ export function Logo({ compact = false }: LogoProps) {
     <Image
       src="/Tec_ES_logo.png"
       alt="TEC Energy Solutions"
-      width={210}
-      height={72}
+      width={380}
+      height={165}
       priority
       style={{ width: 210, height: "auto" }}
     />
