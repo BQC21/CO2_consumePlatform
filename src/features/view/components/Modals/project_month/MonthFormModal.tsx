@@ -9,15 +9,31 @@ import { toNumber, toYearMonth } from "@/lib/utils/helpers/normalization";
 import { MonthFormModalProps } from "@/lib/types/components/components";
 
 export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: MonthFormModalProps) {
+  
+  // -----------------------
+  // ----- Estados ---------
+  // -----------------------
+
   const [form, setForm] = useState(initial);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  
+  
+  // ------------------------------
+  // ----- Almacenamiento ---------
+  // ------------------------------
+
+  // calculo del total de energía anual
   const preview = useMemo(() => computeMonthEnergy(toNumber(form.tipico_diario), toYearMonth(form.mes)), [form.mes, form.tipico_diario]);
+
+  // -----------------------
+  // ----- Funciones -------
+  // -----------------------
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!form.proyecto_id || !toYearMonth(form.mes)) {
-      setError("Elige la planta y un mes válido.");
+      setError("Elige el proyecto y un mes válido.");
       return;
     }
     setBusy(true);
@@ -29,9 +45,14 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
     }
   }
 
+  // -----------------------
+  // ----- Renderizado -----
+  // -----------------------
+
   return (
     <ModalFrame title={title} onClose={onClose}>
       <form className="grid gap-4" onSubmit={handleSubmit}>
+
         <AddSearchableSelectField
           label="Proyecto"
           value={projects.find((project) => project.id === form.proyecto_id)?.nombre ?? ""}
@@ -45,17 +66,28 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
             }));
           }}
         />
-        <AddTextField label="Mes (2026-01 o 01.2026)" value={form.mes} onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
+
+        <AddTextField label="Mes (2026-01 o 01.2026)" value={form.mes} 
+                      onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
+        
         <div className="grid gap-4 sm:grid-cols-2">
-          <AddNumberField label="Típico diario (kWh)" value={form.tipico_diario} onChange={(value) => setForm((current) => ({ ...current, tipico_diario: value }))} />
-          <AddNumberField label="Pot. nominal (kW)" value={form.pot_nominal_kw} onChange={(value) => setForm((current) => ({ ...current, pot_nominal_kw: value }))} />
+          {/* rendimiento fotovoltaico */}
+          <AddNumberField label="Típico diario (kWh)" value={form.tipico_diario} 
+                          onChange={(value) => setForm((current) => ({ ...current, tipico_diario: value }))} />
+          {/* rendimiento de la red eléctrica */}
+          <AddNumberField label="Pot. nominal (kW)" value={form.pot_nominal_kw} 
+                          onChange={(value) => setForm((current) => ({ ...current, pot_nominal_kw: value }))} />
         </div>
+        
         <div className="grid gap-4 sm:grid-cols-3">
           <AddReadOnlyField label="Reducción de CO2 (kg)" value={formatNumber(preview.co2Kg, 1)} />
           <AddReadOnlyField label="Árboles plantados" value={formatNumber(preview.arboles, 1)} />
           <AddReadOnlyField label="Ahorro de carbón (kg)" value={formatNumber(preview.carbonKg, 1)} />
         </div>
+
+        {/* En caso haya error al suscribir cambios */}
         {error ? <p className="field-error">{error}</p> : null}
+
         <button className="btn-primary" type="submit" disabled={busy}>
           {busy ? "Guardando…" : "Guardar mes"}
         </button>
