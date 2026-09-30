@@ -27,27 +27,49 @@ import { Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } fro
 import { ProjectFormState } from "@/lib/types/supabase/project-types";
 
 export default function ProjectPage() {
+
+  // ------------------------
+  // ------- estados --------
+  // ------------------------
+
+  // obtener informacion
   const projectsState = useRealtimeProject();
   const monthsState = useRealtimeProjectMonth();
+  
+  // mutaciones en las tablas
   const projectMutations = useProjectMutations();
   const monthMutations = useProjectMonthMutations();
-  const [search, setSearch] = useState("");
-  const [ubicacion, setUbicacion] = useState("");
-  const [marcaInversor, setMarcaInversor] = useState("");
-  const [sorting, setSorting] = useState<ProjectSortingOrder>("fecha_desc");
+  
+  const [search, setSearch] = useState(""); // busqueda
+  const [ubicacion, setUbicacion] = useState(""); // ubicacion
+  const [marcaInversor, setMarcaInversor] = useState(""); // marcaInversor
+  const [sorting, setSorting] = useState<ProjectSortingOrder>("fecha_desc"); // ordenamiento
 
-  const filtered = useMemo(
-    () => sortProjects(filterProjects(projectsState.items, { search, ubicacion, marcaInversor }), sorting),
-    [projectsState.items, search, ubicacion, marcaInversor, sorting],
-  );
-  const visibleMonths = useMemo(() => filterMonthsByProjects(monthsState.items, filtered), [monthsState.items, filtered]);
+  // mensaje de error
   const error = projectsState.error || monthsState.error || projectMutations.error || monthMutations.error;
 
+  // ------------------------
+  // ------- filtrado --------
+  // ------------------------
+
+  // filtrado de proyectos
+  const filtered = useMemo(
+    () => sortProjects(filterProjects(projectsState.items, { search, ubicacion, marcaInversor }), sorting),
+    [projectsState.items, search, ubicacion, marcaInversor, sorting],);
+  // meses visibles
+  const visibleMonths = useMemo(() => filterMonthsByProjects(monthsState.items, filtered), [monthsState.items, filtered]);
+
+  // ------------------------
+  // ------- funciones ------
+  // ------------------------
+
+  // refrescar estados
   async function refresh() {
     await projectsState.refetch();
     await monthsState.refetch();
   }
 
+  // importar de la tabla anual de proyectos
   async function importAnnual(rows: Record<string, string>[]) {
     const forms: ProjectFormState[] = rows.map((row, index) => {
       transformAnnualRow(row, index);
@@ -70,6 +92,7 @@ export default function ProjectPage() {
     await refresh();
   }
 
+  // importar de la tabla mensual de proyectos
   async function importMonths(rows: Record<string, string>[]) {
     const forms: ProjectMonthFormState[] = rows.map((row, index) => {
       transformMonthRow(row, index);
@@ -92,7 +115,7 @@ export default function ProjectPage() {
   return (
     <PortalShell
       title="Lista de proyectos"
-      subtitle="Registra, edita o elimina plantas. Los meses se despliegan bajo cada proyecto y los totales siguen visibles."
+      subtitle="Registra, edita o elimina proyectos. Los meses se despliegan bajo cada proyecto y los totales siguen visibles."
       activePath="/project"
       actions={
         <Button2Add label="Proyecto">
@@ -118,11 +141,16 @@ export default function ProjectPage() {
           </button>
         </div>
       ) : null}
+
       <div className="mb-4 flex flex-wrap items-center gap-3">
+
         <SearchBar value={search} onChange={setSearch} placeholder="Buscar por planta, distrito o descripción" />
-        <ProjectFiltersBar ubicacion={ubicacion} marcaInversor={marcaInversor} onUbicacion={setUbicacion} onMarca={setMarcaInversor} />
+        <ProjectFiltersBar ubicacion={ubicacion} marcaInversor={marcaInversor} 
+                          onUbicacion={setUbicacion} onMarca={setMarcaInversor} />
         <ProjectSorter value={sorting} onChange={setSorting} />
+
       </div>
+      
       {projectsState.loading ? (
         <div className="skeleton h-64 rounded-[var(--radius-lg)]" />
       ) : (
