@@ -1,9 +1,9 @@
-import { DashboardMetrics, MonthEnergy } from "@/lib/types/components/components";
+import { DashboardMetrics } from "@/lib/types/components/components";
 import { Meta } from "@/lib/types/supabase/meta-types";
 import { Project } from "@/lib/types/supabase/project-types";
 import { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
-import { computeMonthEnergy } from "./energy_total";
 
+// Calcular el progreso
 export function computeProgress(actual: number, meta: number): number {
   if (meta <= 0) {
     return 0;
@@ -11,6 +11,7 @@ export function computeProgress(actual: number, meta: number): number {
   return (actual / meta) * 100;
 }
 
+// Separar mes y año de instalación
 function installationParts(fecha: string): { year: number; month: number } | null {
   const match = /^(\d{4})-(\d{2})/.exec(fecha);
   if (!match) {
@@ -19,10 +20,12 @@ function installationParts(fecha: string): { year: number; month: number } | nul
   return { year: Number(match[1]), month: Number(match[2]) };
 }
 
+// Referenciar mes
 export function referenceMonth(anio: number, today = new Date()): string {
   const month = anio === today.getFullYear() ? today.getMonth() + 1 : 12;
   return `${anio}-${String(month).padStart(2, "0")}`;
 }
+
 
 export function computeDashboardMetrics(
   projects: Project[],
@@ -31,33 +34,43 @@ export function computeDashboardMetrics(
   today = new Date(),
   selectedMonth?: number,
 ): DashboardMetrics {
+
+  // Mes de referencia
   const monthKey =
     selectedMonth && selectedMonth >= 1 && selectedMonth <= 12
       ? `${meta.anio}-${String(selectedMonth).padStart(2, "0")}`
       : referenceMonth(meta.anio, today);
-  const energies: MonthEnergy[] = months.map((row) => computeMonthEnergy(row.tipico_diario, row.mes));
 
+  // Paneles por año
   const panelesAnio = projects.reduce((total, project) => {
     const parts = installationParts(project.fecha_instalacion);
     return parts?.year === meta.anio ? total + project.paneles_instalados : total;
   }, 0);
 
+  // Paneles por mes
   const panelesMes = projects.reduce((total, project) => {
     const parts = installationParts(project.fecha_instalacion);
     const key = parts ? `${parts.year}-${String(parts.month).padStart(2, "0")}` : "";
     return key === monthKey ? total + project.paneles_instalados : total;
   }, 0);
 
-  const produccionAnualKwh = energies
+  // Producción anual
+  const produccionAnualKwh = months
     .filter((row) => row.mes.startsWith(`${meta.anio}-`))
-    .reduce((total, row) => total + row.energiaKwh, 0);
-  const produccionMensualKwh = energies
+    .reduce((total, row) => total + Number(row.rendimiento_fv) , 0);
+  
+  // Producción mensual
+    const produccionMensualKwh = months
     .filter((row) => row.mes === monthKey)
-    .reduce((total, row) => total + row.energiaKwh, 0);
-  const carbonAnualKg = energies
+    .reduce((total, row) => total + Number(row.rendimiento_fv), 0);
+  
+  // Carbón anual
+  const carbonAnualKg = months
     .filter((row) => row.mes.startsWith(`${meta.anio}-`))
-    .reduce((total, row) => total + row.carbonKg, 0);
-  const carbonAcumuladoKg = energies.reduce((total, row) => total + row.carbonKg, 0);
+    .reduce((total, row) => total + Number(row.reduccion_carbon), 0);
+  
+  // Carbon acumulado
+  const carbonAcumuladoKg = months.reduce((total, row) => total + Number(row.reduccion_carbon), 0);
 
   return {
     proyectosRegistrados: projects.length,
