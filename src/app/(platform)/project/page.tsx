@@ -69,7 +69,7 @@ export default function ProjectPage() {
     await monthsState.refetch();
   }
 
-  // importar de la tabla anual de proyectos
+  // importar plantilla para la tabla anual (SUBIDA MASIVA)
   async function importAnnual(rows: Record<string, string>[]) {
     const forms: ProjectFormState[] = rows.map((row, index) => {
       transformAnnualRow(row, index);
@@ -92,7 +92,7 @@ export default function ProjectPage() {
     await refresh();
   }
 
-  // importar de la tabla mensual de proyectos
+  // importar plantilla para la tabla mensual (SUBIDA MASIVA)
   async function importMonths(rows: Record<string, string>[]) {
     const forms: ProjectMonthFormState[] = rows.map((row, index) => {
       transformMonthRow(row, index);
