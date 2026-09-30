@@ -1,15 +1,7 @@
-import type { Project, ProjectMonth } from "@/lib/types/supabase/project-types";
-import { computeMonthEnergy } from "@/lib/utils/helpers/computes/energy_total";
+import { DepartmentCardProps } from "@/lib/types/components/components";
 import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
 
-type DepartmentCardProps = {
-  department: string | null;
-  projects: Project[];
-  months: ProjectMonth[];
-  year: number;
-};
-
-export function DepartmentCard({ department, projects, months, year }: DepartmentCardProps) {
+export function DepartmentCard({ department, projects }: DepartmentCardProps) {
   const local = projects.filter((project) => project.ubicacion === department);
   const project = local.find((item) => item.estado === "en_ejecucion") ?? local[0];
 
@@ -25,13 +17,6 @@ export function DepartmentCard({ department, projects, months, year }: Departmen
     );
   }
 
-  const projectMonths = months.filter((month) => month.proyecto_id === project.id);
-  const latest = [...projectMonths].sort((left, right) => right.mes.localeCompare(left.mes))[0];
-  const latestEnergy = latest ? computeMonthEnergy(latest.tipico_diario, latest.mes) : null;
-  const annualKwh = projectMonths
-    .filter((month) => month.mes.startsWith(`${year}-`))
-    .reduce((total, month) => total + computeMonthEnergy(month.tipico_diario, month.mes).energiaKwh, 0);
-
   return (
     <article className="rounded-[var(--radius-xl)] bg-white p-5 text-[var(--color-text-primary)]">
       <p className="text-xs font-semibold tracking-[0.14em] text-[var(--color-text-secondary)]">DEPARTAMENTO · {department.toUpperCase()}</p>
@@ -44,9 +29,6 @@ export function DepartmentCard({ department, projects, months, year }: Departmen
         <Metric label="Fecha inst." value={formatDate(project.fecha_instalacion)} />
         <Metric label="Tipo de sistema" value={project.tipo_de_sistema || "—"} />
         <Metric label="Pot. nominal" value={project.pot_nominal_kw === null ? "—" : `${formatNumber(project.pot_nominal_kw, 2)} kW`} />
-        <Metric label="Prod. diaria" value={latest ? `${formatNumber(latest.tipico_diario, 1)} kWh` : "—"} />
-        <Metric label="Prod. mensual" value={latestEnergy ? `${formatNumber(latestEnergy.energiaKwh, 1)} kWh` : "—"} />
-        <Metric label="Prod. anual" value={`${formatNumber(annualKwh / 1000, 2)} MWh`} />
         <Metric label="Paneles" value={formatNumber(project.paneles_instalados, 0)} />
       </dl>
       {local.length > 1 ? <p className="mt-3 text-xs text-[var(--color-text-secondary)]">{local.length} plantas en este departamento. Se muestra la que sigue en ejecución.</p> : null}
