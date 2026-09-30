@@ -7,15 +7,11 @@ import { DeleteMonthModal } from "@/features/view/components/Modals/project_mont
 import { EditMonthModal } from "@/features/view/components/Modals/project_month/EditMonthModal";
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectMonthFormStateFromProjectMonth } from "@/features/model/mapping/mapping_project_month";
-import { computeMonthEnergy } from "@/lib/utils/helpers/computes/energy_total";
 import { PROJECT_MONTH_HEADERS } from "@/lib/utils/headers";
 import { formatMonthLabel, formatNumber } from "@/lib/utils/helpers/render/format";
 import { ProjectMonthTableProps } from "@/lib/types/components/components";
 
 export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: ProjectMonthTableProps) {
-
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({}); // activar colapso de filas
-  const visibleRows = months.filter((month) => projects.some((project) => project.id === month.proyecto_id));
 
   return (
     <section>
@@ -42,55 +38,42 @@ export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: Proj
                 const rows = months
                   .filter((month) => month.proyecto_id === project.id)
                   .sort((left, right) => right.mes.localeCompare(left.mes));
-                const isCollapsed = collapsed[project.id];
                 return (
                   <Fragment key={project.id}>
                     <tr className="excel-group">
                       <td colSpan={PROJECT_MONTH_HEADERS.length + 1}>
-                        <button
-                          type="button"
-                          className="text-left"
-                          aria-expanded={!isCollapsed}
-                          onClick={() => setCollapsed((current) => ({ ...current, [project.id]: !current[project.id] }))}
-                        >
-                          {isCollapsed ? "▸" : "▾"} {project.nombre}
-                          <span className="ml-2 font-normal text-[var(--color-text-secondary)]">{rows.length} meses</span>
-                        </button>
                       </td>
                     </tr>
-                    {isCollapsed
-                      ? null
-                      : rows.map((month) => {
-                          const energy = computeMonthEnergy(month.tipico_diario, month.mes);
+                    {rows.map((month) => {
                           return (
                             <tr key={month.id}>
                               <td className="pl-6">{formatMonthLabel(month.mes)}</td>
                               <td>
                                 <ExcelCell
-                                  key={`${month.id}-tipico-${month.tipico_diario}`}
+                                  key={`${month.id}-tipico-${month.rendimiento_fv}`}
                                   kind="editable"
                                   ariaLabel={`Típico diario de ${project.nombre} ${month.mes}`}
-                                  value={String(month.tipico_diario)}
-                                  onCommit={(value) => onUpdate(month.id, { ...createProjectMonthFormStateFromProjectMonth(month), tipico_diario: value })}
+                                  value={String(month.rendimiento_fv)}
+                                  onCommit={(value) => onUpdate(month.id, { ...createProjectMonthFormStateFromProjectMonth(month), rendimiento_fv: value })}
                                 />
                               </td>
                               <td>
                                 <ExcelCell
-                                  key={`${month.id}-pot-${month.pot_nominal_kw}`}
+                                  key={`${month.id}-pot-${month.rendimiento_grid}`}
                                   kind="editable"
                                   ariaLabel={`Potencia de ${project.nombre} ${month.mes}`}
-                                  value={month.pot_nominal_kw === null ? "" : String(month.pot_nominal_kw)}
-                                  onCommit={(value) => onUpdate(month.id, { ...createProjectMonthFormStateFromProjectMonth(month), pot_nominal_kw: value })}
+                                  value={month.rendimiento_grid === null ? "" : String(month.rendimiento_grid)}
+                                  onCommit={(value) => onUpdate(month.id, { ...createProjectMonthFormStateFromProjectMonth(month), rendimiento_grid: value })}
                                 />
                               </td>
                               <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(energy.co2Kg, 1)}</span>
+                                <span className="excel-cell excel-calculated">{formatNumber(month.reduccion_co2, 1)}</span>
                               </td>
                               <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(energy.arboles, 1)}</span>
+                                <span className="excel-cell excel-calculated">{formatNumber(month.reduccion_carbon, 1)}</span>
                               </td>
                               <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(energy.carbonKg, 1)}</span>
+                                <span className="excel-cell excel-calculated">{formatNumber(month.arboles, 1)}</span>
                               </td>
                               <td>
                                 <div className="flex gap-1">
@@ -140,7 +123,7 @@ export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: Proj
           Celda calculada
         </span>
         <span>
-          {projects.length} proyectos · {visibleRows.length} filas visibles
+          {projects.length} proyectos
         </span>
       </footer>
     </section>

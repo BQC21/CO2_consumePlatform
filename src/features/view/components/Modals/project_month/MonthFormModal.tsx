@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AddNumberField, AddReadOnlyField, AddSearchableSelectField, AddTextField } from "@/features/view/components/Form_fields/fields";
+import { useState } from "react";
+import { AddNumberField, AddSearchableSelectField, AddTextField } from "@/features/view/components/Form_fields/fields";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
-import { computeMonthEnergy } from "@/lib/utils/helpers/computes/energy_total";
-import { formatNumber } from "@/lib/utils/helpers/render/format";
-import { toNumber, toYearMonth } from "@/lib/utils/helpers/normalization";
+import { toYearMonth } from "@/lib/utils/helpers/normalization";
 import { MonthFormModalProps } from "@/lib/types/components/components";
 
 export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: MonthFormModalProps) {
@@ -18,16 +16,6 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   
-  
-  // ------------------------------
-  // ----- Almacenamiento ---------
-  // ------------------------------
-
-  // calculo del total de energía anual
-  const preview = useMemo(() => computeMonthEnergy(toNumber(form.tipico_diario), toYearMonth(form.mes),
-                                toNumber(form.reduccion_co2), toNumber(form.reduccion_carbon), toNumber(form.arboles)), 
-                          [form.mes, form.tipico_diario, 
-                            form.reduccion_co2, form.reduccion_carbon, form.arboles]);
 
   // -----------------------
   // ----- Funciones -------
@@ -65,7 +53,6 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
             setForm((current) => ({
               ...current,
               proyecto_id: project?.id ?? "",
-              pot_nominal_kw: current.pot_nominal_kw || (project?.pot_nominal_kw?.toString() ?? ""),
             }));
           }}
         />
@@ -74,10 +61,10 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
                       onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
         
         <div className="grid gap-4 sm:grid-cols-2">
-          <AddNumberField label="Rendimiento FV (KWh)" value={form.tipico_diario} 
-                          onChange={(value) => setForm((current) => ({ ...current, tipico_diario: value }))} />
-          <AddNumberField label="Energía importada de la red (kWh)" value={form.pot_nominal_kw} 
-                          onChange={(value) => setForm((current) => ({ ...current, pot_nominal_kw: value }))} />
+          <AddNumberField label="Rendimiento FV (KWh)" value={form.rendimiento_fv} 
+                          onChange={(value) => setForm((current) => ({ ...current, rendimiento_fv: value }))} />
+          <AddNumberField label="Energía importada de la red (kWh)" value={form.rendimiento_grid} 
+                          onChange={(value) => setForm((current) => ({ ...current, rendimiento_grid: value }))} />
         </div>
         
         <div className="grid gap-4 sm:grid-cols-3">
