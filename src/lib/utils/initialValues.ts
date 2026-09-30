@@ -23,6 +23,9 @@ export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
   mes: "",
   tipico_diario: "",
   pot_nominal_kw: "",
+  reduccion_co2: "",
+  reduccion_carbon: "",
+  arboles: "",
 };
 
 // Meta 
