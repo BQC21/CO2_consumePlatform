@@ -2,6 +2,7 @@ import { DepartmentShape } from "@/lib/types/components/components";
 
 export const PERU_MAP_VIEWBOX = "0 0 420 640";
 
+// Contornos para cada departamento
 export const DEPARTMENT_SHAPES: DepartmentShape[] = [
   {
     id: "amazonas",

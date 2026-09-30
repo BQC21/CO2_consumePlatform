@@ -1,3 +1,5 @@
+// Lista de meses
+
 export const MONTH_NAMES = [
     "Enero",
     "Febrero",
