@@ -273,6 +273,14 @@ export type DashboardMetrics = {
     avanceMensual: number;
 };
 
+// Tarjeta de la info de los proyectos por cada departamento
+export type DepartmentCardProps = {
+    department: string | null;
+    projects: Project[];
+    months: ProjectMonth[];
+    year: number;
+};
+
 // operaciones masivas
 export type MassiveColumn = {
     header: string;
