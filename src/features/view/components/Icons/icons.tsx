@@ -1,5 +1,6 @@
 import { IconProps } from "@/lib/types/components/components";
 
+// añadir
 export function PlusIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -8,6 +9,7 @@ export function PlusIcon({ className }: IconProps) {
   );
 }
 
+// editar
 export function EditIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -16,6 +18,7 @@ export function EditIcon({ className }: IconProps) {
   );
 }
 
+// eliminar
 export function TrashIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -24,6 +27,7 @@ export function TrashIcon({ className }: IconProps) {
   );
 }
 
+// filtrar
 export function FilterIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -32,6 +36,7 @@ export function FilterIcon({ className }: IconProps) {
   );
 }
 
+// ordenar
 export function SortIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -40,6 +45,7 @@ export function SortIcon({ className }: IconProps) {
   );
 }
 
+// buscar
 export function SearchIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -49,6 +55,7 @@ export function SearchIcon({ className }: IconProps) {
   );
 }
 
+// cerrar ventana
 export function CloseIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -57,6 +64,7 @@ export function CloseIcon({ className }: IconProps) {
   );
 }
 
+// mostrar texto
 export function EyeIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -66,6 +74,7 @@ export function EyeIcon({ className }: IconProps) {
   );
 }
 
+// ocultar texto
 export function EyeSlashIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -74,6 +83,7 @@ export function EyeSlashIcon({ className }: IconProps) {
   );
 }
 
+// subida masiva
 export function UploadIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -82,6 +92,7 @@ export function UploadIcon({ className }: IconProps) {
   );
 }
 
+// descarga masiva
 export function DownloadIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -90,6 +101,7 @@ export function DownloadIcon({ className }: IconProps) {
   );
 }
 
+// limpieza masiva
 export function CleanIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
