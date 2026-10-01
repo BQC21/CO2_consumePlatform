@@ -28,16 +28,16 @@ export type SelectProps = FieldProps & {
 };
 
 export type NativeSelectProps = FieldProps & 
-    SelectHTMLAttributes<HTMLSelectElement> & 
-    { options: { value: string; label: string }[] 
-};
+    Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange"> & {
+        options: SelectFieldOptions;
+    };
+
+export type SelectFieldOptions = readonly (string | SelectOption)[];
 
 export type SelectOption = {
     value: string;
     label: string;
 };
-
-export type SelectFieldOptions = string[] | SelectOption[];
 
 export type IconProps = { className?: string };
 

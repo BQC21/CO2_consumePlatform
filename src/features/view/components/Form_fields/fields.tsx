@@ -43,23 +43,15 @@ export function AddNumberField({ label, required, value, onChange, error,
       </label>
     
       <input
-        type="number"
+        className="field-input input-focus numeric"
+        inputMode="decimal"
         required={required}
-        value={value === "" ? "" : Number.isFinite(value) ? value : ""}
+        value={value}
         onChange={(event) => onChange(event.target.value)}
-        step={step === "" || step === undefined ? undefined : String(step)}
         min={typeof min === "number" && Number.isFinite(min) ? min : undefined}
-        max={
-            typeof max === "number" &&
-            Number.isFinite(max) &&
-            max !== Number.POSITIVE_INFINITY &&
-            (typeof min !== "number" || !Number.isFinite(min) || max >= min)
-                ? max
-                : undefined
-        }
+        step={step === "" || step === undefined ? undefined : String(step)}
         placeholder={typeof min === "number" && Number.isFinite(min) ? String(min) : "0"}
-        className={`input-focus w-full rounded-xl border border-slate-300 px-4 py-3 text-lg text-slate-900 transition placeholder:text-slate-400 disabled:bg-slate-100 disabled:text-slate-500 ${centered ? "text-center" : ""}`}
-    />
+      />
     </div>
   );
 }

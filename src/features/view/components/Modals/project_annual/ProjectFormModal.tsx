@@ -64,22 +64,34 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
                       onChange={(value) => update("nombre", value)} />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <AddSearchableSelectField label="Departamento" value={form.ubicacion} searchPlaceholder = "Buscar..."
-                                    options={DEPARTMENT_OPTIONS} onChange={(value) => update("ubicacion", value)} />
+          <AddSelectField
+            label="Departamento"
+            value={form.ubicacion}
+            options={DEPARTMENT_OPTIONS}
+            onChange={(value) => update("ubicacion", value)}
+          />
           <AddTextField label="Distrito o referencia" value={form.distrito} 
                         onChange={(value) => update("distrito", value)} />
-          <AddSearchableSelectField label="Tipo de sistema" value={form.tipo_de_sistema} 
-                                    options={SYSTEM_TYPE_OPTIONS} onChange={(value) => update("tipo_de_sistema", value)} />
-          <AddSearchableSelectField label="Marca del inversor" value={form.marca_inversor} 
-                                    options={INVERTER_BRAND_OPTIONS} onChange={(value) => update("marca_inversor", value)} />
+          <AddSelectField
+            label="Tipo de sistema"
+            value={form.tipo_de_sistema}
+            options={SYSTEM_TYPE_OPTIONS}
+            onChange={(value) => update("tipo_de_sistema", value)}
+          />
+          <AddSelectField
+            label="Marca del inversor"
+            value={form.marca_inversor}
+            options={INVERTER_BRAND_OPTIONS}
+            onChange={(value) => update("marca_inversor", value)}
+          />
           <AddNumberField label="Pot. nominal (kW)" value={form.pot_nominal_kw} 
-                          onChange={(value) => update("pot_nominal_kw", value)} />
+                          onChange={(value) => update("pot_nominal_kw", value)}/>
           <AddNumberField label="Cap. instalada (kWp)" value={form.cap_instalada_kwp} 
-                          onChange={(value) => update("cap_instalada_kwp", value)} />
+                          onChange={(value) => update("cap_instalada_kwp", value)}/>
           <AddDateField label="Fecha de instalación" value={form.fecha_instalacion} 
                         onChange={(value) => update("fecha_instalacion", value)} />
           <AddNumberField label="Paneles instalados" value={form.paneles_instalados} 
-                          onChange={(value) => update("paneles_instalados", value)} />
+                          onChange={(value) => update("paneles_instalados", value)}/>
         </div>
 
         <AddSelectField
