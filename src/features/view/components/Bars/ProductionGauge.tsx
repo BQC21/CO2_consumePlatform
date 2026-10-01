@@ -9,9 +9,8 @@ export function ProductionGauge({ label, value, color }: { label: string; value:
             {formatNumber(value, 3)}
             </text>
         </svg>
-        <figcaption className="text-sm" style={{ color: "var(--color-text-on-dark-muted)" }}>
+        <figcaption className="text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
             {label}
-            <span className="mt-1 block text-xs">MWh</span>
         </figcaption>
         </figure>
     );

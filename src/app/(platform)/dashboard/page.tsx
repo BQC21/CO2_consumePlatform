@@ -136,26 +136,26 @@ export default function DashboardPage() {
                 style={{ borderColor: "rgb(255 255 255 / 0.08)", background: "var(--color-surface-dark)" }}>
         
         {/* COLUMNA 1 */}
-        <div className="grid gap-4 xl:grid-cols-[180px_1fr_320px]">
+        <div className="grid gap-4 xl:grid-cols-[300px_1fr_320px]">
           <div className="grid content-center gap-4">
-            <ProductionGauge label="Producción mensual total" value={metrics.produccionMensualMwh} color="var(--color-info)" />
+            <ProductionGauge label="Producción mensual total MWh" value={metrics.produccionMensualMwh} color="var(--color-info)" />
             
-            <ProductionGauge label="Producción anual total" value={metrics.produccionAnualMwh} color="var(--color-success)" />
+            <ProductionGauge label="Producción anual total MWh" value={metrics.produccionAnualMwh} color="var(--color-success)" />
             
             <div className="grid content-center gap-4">
-              <p className="font-semibold">Carbón ahorrado</p>
-              <p className="numeric mt-2 text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Annual Yield {formatNumber(metrics.carbonAnualMg, 2)} Mg
+              <p className="mt-8 font-semibold">Carbón ahorrado</p>
+              <p className="numeric mt-2 text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
+                Reducción anual {formatNumber(metrics.carbonAnualMg, 2)} Mg
               </p>
-              <p className="numeric text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Accumulation {formatNumber(metrics.carbonAcumuladoMg, 2)} Mg
+              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
+                Reducción acumulada {formatNumber(metrics.carbonAcumuladoMg, 2)} Mg
               </p>
               <p className="mt-3 font-semibold">Paneles instalados</p>
-              <p className="numeric text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Annual {formatNumber(metrics.panelesAnio, 0)}
+              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
+                Total anual: {formatNumber(metrics.panelesAnio, 0)}
               </p>
-              <p className="numeric text-xs" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Accumulation {formatNumber(metrics.panelesAcumulados, 0)}
+              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
+                Total acumulado: {formatNumber(metrics.panelesAcumulados, 0)}
               </p>
             </div>
           </div>
