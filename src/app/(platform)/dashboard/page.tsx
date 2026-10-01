@@ -28,6 +28,7 @@ export default function DashboardPage() {
   const selectedYear = year ?? metaState.meta.anio; // año seleccionado
   const fallbackMonth = Number(referenceMonth(selectedYear).slice(-2)); // Mes de reserva
 
+  // Departamento seleccionado en el mapa
   const activeDepartment = selected ?? 
       projects.items.find((project) => project.estado === "en_ejecucion")?.ubicacion ?? 
       projects.items[0]?.ubicacion ?? null; // departamento activo
@@ -107,16 +108,6 @@ export default function DashboardPage() {
       activePath="/dashboard"
       tone="dark"
     >
-      {/* En caso haya error al cargar las métricas*/}
-      {error ? (
-        <div className="panel mb-4 p-4 text-[var(--color-text-primary)]">
-          <p className="font-medium">No se pudieron cargar las métricas</p>
-          <p className="text-sm text-[var(--color-text-secondary)]">{error}</p>
-          <button type="button" className="btn-secondary mt-3" onClick={() => void projects.refetch()}>
-            Reintentar
-          </button>
-        </div>
-      ) : null}
 
       {/* Métricas */}
       <div className="grid items-stretch gap-4 xl:grid-cols-[1.4fr_1fr]">
@@ -144,6 +135,7 @@ export default function DashboardPage() {
       <section className="mt-4 rounded-[var(--radius-lg)] border p-4" 
                 style={{ borderColor: "rgb(255 255 255 / 0.08)", background: "var(--color-surface-dark)" }}>
         
+        {/* COLUMNA 1 */}
         <div className="grid gap-4 xl:grid-cols-[180px_1fr_320px]">
           <div className="grid content-center gap-4">
             <ProductionGauge label="Producción mensual total" value={metrics.produccionMensualMwh} color="var(--color-info)" />
@@ -168,10 +160,12 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* COLUMNA 2 */}
           <div className="relative">
             <PeruMap projects={projects.items} selected={activeDepartment} onSelect={setSelected} />
           </div>
 
+          {/* COLUMNA 3 */}
           <div className="flex flex-col gap-4">
             <DepartmentCard 
               department={activeDepartment} 
