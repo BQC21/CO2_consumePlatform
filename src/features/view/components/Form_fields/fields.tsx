@@ -37,21 +37,30 @@ export function AddTextAreaField({ label, required, value, onChange, error }: Fi
 export function AddNumberField({ label, required, value, onChange, error, 
   step, min, max, centered = false}: FieldProps) {
   return (
-    <label className="block">
-      <span className="field-label">{label}</span>
-      <input className="field-input input-focus numeric" 
-            inputMode="decimal" value={value} required={required}
-            onChange={(event) => onChange(event.target.value)} 
-            step={step === "" || step === undefined ? undefined : String(step)}
-            min={typeof min === "number" && Number.isFinite(min) ? min : undefined}
-            max={
-                typeof max === "number" && Number.isFinite(max) && max !== Number.POSITIVE_INFINITY &&
-                (typeof min !== "number" || !Number.isFinite(min) || max >= min)
-                    ? max
-                    : undefined
-            }/>
-      {error ? <span className="field-error">{error}</span> : null}
-    </label>
+    <div className={centered ? "text-center" : undefined}>
+      <label className="mb-2 block text-sm font-bold text-slate-600">
+        {label} {required ? <span className="text-red-500">*</span> : null}
+      </label>
+    
+      <input
+        type="number"
+        required={required}
+        value={value === "" ? "" : Number.isFinite(value) ? value : ""}
+        onChange={(event) => onChange(event.target.value)}
+        step={step === "" || step === undefined ? undefined : String(step)}
+        min={typeof min === "number" && Number.isFinite(min) ? min : undefined}
+        max={
+            typeof max === "number" &&
+            Number.isFinite(max) &&
+            max !== Number.POSITIVE_INFINITY &&
+            (typeof min !== "number" || !Number.isFinite(min) || max >= min)
+                ? max
+                : undefined
+        }
+        placeholder={typeof min === "number" && Number.isFinite(min) ? String(min) : "0"}
+        className={`input-focus w-full rounded-xl border border-slate-300 px-4 py-3 text-lg text-slate-900 transition placeholder:text-slate-400 disabled:bg-slate-100 disabled:text-slate-500 ${centered ? "text-center" : ""}`}
+    />
+    </div>
   );
 }
 
