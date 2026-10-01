@@ -41,9 +41,9 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                   <td>
                     <ExcelCell kind="editable" ariaLabel={`Tipo de ${project.nombre}`} value={project.tipo_de_sistema} options={SYSTEM_TYPE_OPTIONS} onCommit={(value) => commit(project, { tipo_de_sistema: value })} />
                   </td>
-                  <td>
+                  {/* <td>
                     <ExcelCell kind="editable" ariaLabel={`Potencia de ${project.nombre}`} value={project.pot_nominal_kw === null ? "" : String(project.pot_nominal_kw)} onCommit={(value) => commit(project, { pot_nominal_kw: value })} />
-                  </td>
+                  </td> */}
                   <td>
                     <ExcelCell kind="editable" ariaLabel={`Capacidad de ${project.nombre}`} value={project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp)} onCommit={(value) => commit(project, { cap_instalada_kwp: value })} />
                   </td>
@@ -53,9 +53,9 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                   <td>
                     <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
                   </td>
-                  <td>
+                  {/* <td>
                     <ExcelCell kind="editable" ariaLabel={`Paneles de ${project.nombre}`} value={String(project.paneles_instalados)} onCommit={(value) => commit(project, { paneles_instalados: value })} />
-                  </td>
+                  </td> */}
                   <td>
                     <div className="flex gap-1">
                       <Button2Edit label={`Editar ${project.nombre}`}>

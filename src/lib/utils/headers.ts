@@ -5,11 +5,11 @@ export const PROJECT_ANNUAL_HEADERS = [
   "PROYECTO / MES",
   "UBICACIÓN",
   "TIPO DE SISTEMA",
-  "POT. NOMINAL (kW)",
+  // "POT. NOMINAL (kW)",
   "CAP. INSTALADA (kWp)",
   "FECHA INSTALACIÓN",
   "Marca del inversor",
-  "Paneles instalados",
+  // "Paneles instalados",
 ] as const;
 
 // Proyectos mensuales
