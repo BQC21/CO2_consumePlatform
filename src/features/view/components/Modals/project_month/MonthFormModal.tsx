@@ -53,14 +53,14 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
           }}
         />
 
-        <AddTextField label="Mes (2026-01 o 01.2026)" value={form.mes} 
+        <AddTextField required label="Mes (2026-01 o 01.2026)" value={form.mes} 
                       onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
         
         <div className="grid gap-4 sm:grid-cols-2">
-          <AddNumberField label="Rendimiento FV (KWh)" value={form.rendimiento_fv} 
+          <AddNumberField required label="Rendimiento FV (KWh)" value={form.rendimiento_fv} 
                           onChange={(value) => setForm((current) => ({ ...current, rendimiento_fv: value }))}
                           min={0} step={0.001} />
-          <AddNumberField label="Energía importada de la red (kWh)" value={form.rendimiento_grid} 
+          <AddNumberField required label="Energía importada de la red (kWh)" value={form.rendimiento_grid} 
                           onChange={(value) => setForm((current) => ({ ...current, rendimiento_grid: value }))}
                           min={0} step={0.001} />
         </div>
