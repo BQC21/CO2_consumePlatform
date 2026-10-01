@@ -43,7 +43,7 @@ export function MetaModal({ selectedMonth, selectedYear, meta, onSave, onClose }
             <form className="grid gap-4 text-[var(--color-text-primary)]" onSubmit={handleSubmit}>
                 
                 <AddReadOnlyField label="Año seleccionado" value={String(selectedYear)}/>
-                <AddReadOnlyField label="Mes seleccionado" value={selectedMonth}/>
+                <AddReadOnlyField label="Mes seleccionado" value={selectedMonth ?? ""}/>
 
                 <AddNumberField label="Meta anual de paneles" value={form.meta_paneles_anual} 
                     onChange={(value) => setForm((current) => ({ ...current, meta_paneles_anual: value }))} />

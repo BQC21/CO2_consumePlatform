@@ -63,11 +63,12 @@ export default function DashboardPage() {
     ),
     [selectedYear, months.items, projects.items],
   );
-  const selectedMonth = month !== null && monthOptions.includes(month)
-  ? month
-  : monthOptions.includes(fallbackMonth)
-    ? fallbackMonth
-    : monthOptions[monthOptions.length - 1];
+  const selectedMonth = 
+    month !== null && monthOptions.includes(month)
+      ? month
+      : monthOptions.includes(fallbackMonth)
+        ? fallbackMonth
+        : monthOptions[monthOptions.length - 1] ?? fallbackMonth;
 
   // Meta activa
   const activeMeta = useMemo(() => {
@@ -79,10 +80,11 @@ export default function DashboardPage() {
       return {
         id: sameYear ? metaState.meta.id : "",
         anio: selectedYear,
+        mes: String(selectedMonth),
         meta_paneles_anual: sameYear ? metaState.meta.meta_paneles_anual : 0,
         meta_paneles_mensual: sameYear ? metaState.meta.meta_paneles_mensual : 0,
       };
-    }, [metaState.meta, metaState.metas, selectedYear]
+    }, [metaState.meta, metaState.metas, selectedYear, selectedMonth]
   );
 
   // Métricas
