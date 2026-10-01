@@ -26,7 +26,11 @@ export function MetaModal({ selectedMonth, selectedYear, meta, onSave, onClose }
         setBusy(true);
         
         try {
-            await onSave(form);
+            await onSave({
+                ...form,
+                anio: String(selectedYear),
+                mes: String(selectedMonth).padStart(2, "0")
+            });
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : "No se pudo guardar la meta.");
