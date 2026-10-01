@@ -1,10 +1,11 @@
 import { createMetaFormStateFromMeta } from "@/features/model/mapping/mapping_meta";
 import { useState } from "react";
 import { ModalFrame } from "../../refactor/ModalFrame";
-import { AddNumberField } from "../Form_fields/fields";
+import { AddNumberField, AddReadOnlyField } from "../Form_fields/fields";
 import { Meta, MetaFormState } from "@/lib/types/supabase/meta-types";
 
-export function MetaModal({ meta, onSave, onClose }: { 
+export function MetaModal({ selectedMonth, selectedYear, meta, onSave, onClose }: { 
+    selectedMonth: string; selectedYear: number; 
     meta: Meta; onSave: (form: MetaFormState) => Promise<void>; onClose: () => void }) 
 {
     // -----------------------
@@ -41,10 +42,9 @@ export function MetaModal({ meta, onSave, onClose }: {
         <ModalFrame title="Meta de paneles" onClose={onClose}>
             <form className="grid gap-4 text-[var(--color-text-primary)]" onSubmit={handleSubmit}>
                 
-                {/* Mostrar el año y mes seleccionado */}
-                
+                <AddReadOnlyField label="Año seleccionado" value={String(selectedYear)}/>
+                <AddReadOnlyField label="Mes seleccionado" value={selectedMonth}/>
 
-                {/* Mostrar el año y mes seleccionado */}
                 <AddNumberField label="Meta anual de paneles" value={form.meta_paneles_anual} 
                     onChange={(value) => setForm((current) => ({ ...current, meta_paneles_anual: value }))} />
                 <AddNumberField label="Meta mensual de paneles" value={form.meta_paneles_mensual} 

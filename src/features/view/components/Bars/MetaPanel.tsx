@@ -100,7 +100,12 @@ export function MetaPanel({
             />
 
             {/* Modal para editar las metas */}
-            {open ? <MetaModal meta={meta} onSave={onSave} onClose={() => setOpen(false)} /> : null}
+            {open ? <MetaModal 
+                        selectedMonth={MONTH_NAMES[selectedMonth - 1]} 
+                        selectedYear={selectedYear}
+                        meta={meta} onSave={onSave} 
+                        onClose={() => setOpen(false)} 
+                    /> : null}
         </section>
     );
 }
