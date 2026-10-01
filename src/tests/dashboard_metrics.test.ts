@@ -27,8 +27,11 @@ const month: ProjectMonth = {
   id: "m1",
   proyecto_id: "p1",
   mes: "2026-09",
-  tipico_diario: 10,
-  pot_nominal_kw: 5,
+  rendimiento_fv: 10,
+  rendimiento_grid: 5,
+  reduccion_co2: 0,
+  reduccion_carbon: 0,
+  arboles: 0,
   updated_at: "",
 };
 

@@ -31,6 +31,7 @@ export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
 // Meta 
 export const INITIAL_META_FORM: MetaFormState = {
   anio: String(new Date().getFullYear()),
+  mes: String(new Date().getMonth()),
   meta_paneles_anual: "1000",
   meta_paneles_mensual: "100",
 };

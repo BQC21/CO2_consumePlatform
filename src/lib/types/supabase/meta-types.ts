@@ -2,6 +2,7 @@
 export type SupabaseMetaRow = {
     id?: string;
     anio: number | string | null;
+    mes: string | null;
     meta_paneles_anual: number | string | null;
     meta_paneles_mensual: number | string | null;
     created_at?: string | null;
@@ -11,12 +12,14 @@ export type SupabaseMetaRow = {
 export type Meta = {
     id: string;
     anio: number;
+    mes: string;
     meta_paneles_anual: number;
     meta_paneles_mensual: number;
 };
 
 export type MetaFormState = {
     anio: string;
+    mes: string;
     meta_paneles_anual: string;
     meta_paneles_mensual: string;
 };
