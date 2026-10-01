@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { DepartmentCard } from "@/features/view/components/Images/DepartmentCard";
+import { DepartmentCard } from "@/features/view/components/Bars/DepartmentCard";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useRealtimeMeta } from "@/features/ViewModel/hooks/services/useRealtimeMeta";
@@ -113,7 +113,7 @@ export default function DashboardPage() {
       <div className="grid items-stretch gap-4 xl:grid-cols-[1.4fr_1fr]">
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : <MetricCards metrics={metrics} />}
 
-        {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
+        {/* {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
           <MetaPanel
             meta={activeMeta}
             metrics={metrics}
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               setYear(saved.anio);
             }}
           />
-        )}
+        )} */}
       </div>
 
       {/* Mapa del Perú */}
@@ -150,13 +150,13 @@ export default function DashboardPage() {
               <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Reducción acumulada {formatNumber(metrics.carbonAcumuladoMg, 2)} Mg
               </p>
-              <p className="mt-3 font-semibold">Paneles instalados</p>
+              {/* <p className="mt-3 font-semibold">Paneles instalados</p>
               <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Total anual: {formatNumber(metrics.panelesAnio, 0)}
               </p>
               <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Total acumulado: {formatNumber(metrics.panelesAcumulados, 0)}
-              </p>
+              </p> */}
             </div>
           </div>
 

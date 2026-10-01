@@ -28,8 +28,8 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
         <Metric label="Capacidad" value={project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`} />
         <Metric label="Fecha inst." value={formatDate(project.fecha_instalacion)} />
         <Metric label="Tipo de sistema" value={project.tipo_de_sistema || "—"} />
-        <Metric label="Pot. nominal" value={project.pot_nominal_kw === null ? "—" : `${formatNumber(project.pot_nominal_kw, 2)} kW`} />
-        <Metric label="Paneles" value={formatNumber(project.paneles_instalados, 0)} />
+        {/* <Metric label="Pot. nominal" value={project.pot_nominal_kw === null ? "—" : `${formatNumber(project.pot_nominal_kw, 2)} kW`} />
+        <Metric label="Paneles" value={formatNumber(project.paneles_instalados, 0)} /> */}
       </dl>
       {local.length > 1 ? <p className="mt-3 text-xs text-[var(--color-text-secondary)]">{local.length} plantas en este departamento. Se muestra la que sigue en ejecución.</p> : null}
     </article>
