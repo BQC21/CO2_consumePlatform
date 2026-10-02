@@ -124,15 +124,6 @@ export default function DashboardPage() {
             
             <ProductionGauge label="Producción anual total MWh" value={metrics.produccionAnualMwh} color="var(--color-success)" />
             
-            <div className="grid content-center gap-4">
-              <p className="mt-8 font-semibold">Carbón ahorrado</p>
-              <p className="numeric mt-2 text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Reducción anual {formatNumber(metrics.carbonAnualMg, 2)} Mg
-              </p>
-              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Reducción acumulada {formatNumber(metrics.carbonAcumuladoMg, 2)} Mg
-              </p>
-            </div>
           </div>
 
           {/* COLUMNA 2 */}
