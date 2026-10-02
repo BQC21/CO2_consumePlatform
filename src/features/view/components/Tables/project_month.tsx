@@ -67,14 +67,15 @@ export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: Proj
                                 />
                               </td>
                               <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(month.reduccion_co2, 1)}</span>
+                                <ExcelCell
+                                  key={`${month.id}-pot-${month.consumo_carga}`}
+                                  kind="editable"
+                                  ariaLabel={`Carga consumida de ${project.nombre} ${month.mes}`}
+                                  value={month.consumo_carga === null ? "" : String(month.consumo_carga)}
+                                  onCommit={(value) => onUpdate(month.id, { ...createProjectMonthFormStateFromProjectMonth(month), consumo_carga: value })}
+                                />
                               </td>
-                              <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(month.reduccion_carbon, 1)}</span>
-                              </td>
-                              <td>
-                                <span className="excel-cell excel-calculated">{formatNumber(month.arboles, 1)}</span>
-                              </td>
+
                               <td>
                                 <div className="flex gap-1">
                                   <Button2Edit label={`Editar ${formatMonthLabel(month.mes)}`}>
