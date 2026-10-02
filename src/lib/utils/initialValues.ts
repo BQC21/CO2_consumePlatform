@@ -13,6 +13,9 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   fecha_instalacion: "",
   marca_inversor: "",
   paneles_instalados: "",
+  reduccion_co2: "",
+  reduccion_carbon: "",
+  arboles: "",
   estado: "en_ejecucion",
   descripcion: "",
 };
@@ -23,9 +26,7 @@ export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
   mes: "",
   rendimiento_fv: "",
   rendimiento_grid: "",
-  reduccion_co2: "",
-  reduccion_carbon: "",
-  arboles: "",
+  consumo_carga: "",
 };
 
 // Meta 

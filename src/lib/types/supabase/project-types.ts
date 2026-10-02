@@ -12,6 +12,9 @@ export type SupabaseProjectRow = {
   fecha_instalacion: string | null;
   marca_inversor: string | null;
   paneles_instalados: number | string | null;
+  reduccion_co2: number | string | null;
+  reduccion_carbon: number | string | null;
+  arboles: number | string | null;
   estado: string | null;
   descripcion: string | null;
   created_at?: string | null;
@@ -28,7 +31,10 @@ export type Project = {
   cap_instalada_kwp: number | null;
   fecha_instalacion: string;
   marca_inversor: string;
-  paneles_instalados: number;
+  paneles_instalados: number | null;
+  reduccion_co2: number | null;
+  reduccion_carbon: number | null; 
+  arboles: number | null;
   estado: ProjectStatus;
   descripcion: string;
   updated_at: string;
@@ -45,6 +51,9 @@ export type ProjectFormState = {
   fecha_instalacion: string;
   marca_inversor: string;
   paneles_instalados: string;
+  reduccion_co2: string;
+  reduccion_carbon: string;
+  arboles: string;
   estado: ProjectStatus;
   descripcion: string;
 };

@@ -8,9 +8,7 @@ export function mapSupabaseRowToProjectMonth(row: SupabaseProjectMonthRow): Proj
     mes: toYearMonth(row.mes),
     rendimiento_fv: toNumber(row.rendimiento_fv),
     rendimiento_grid: toNullableNumber(row.rendimiento_grid),
-    reduccion_co2: toNullableNumber(row.reduccion_co2),
-    reduccion_carbon: toNullableNumber(row.reduccion_carbon),
-    arboles: toNullableNumber(row.arboles),
+    consumo_carga: toNullableNumber(row.consumo_carga),    
     updated_at: toText(row.updated_at),
   };
 }
@@ -21,9 +19,7 @@ export function createProjectMonthFormStateFromProjectMonth(month: ProjectMonth)
     mes: month.mes,
     rendimiento_fv: numberToInput(month.rendimiento_fv),
     rendimiento_grid: numberToInput(month.rendimiento_grid),
-    reduccion_co2: numberToInput(month.reduccion_co2),
-    reduccion_carbon: numberToInput(month.reduccion_carbon),
-    arboles: numberToInput(month.arboles),
+    consumo_carga: numberToInput(month.consumo_carga), 
   };
 }
 
@@ -31,11 +27,9 @@ export function mapProjectMonthToSupabaseRow(form: ProjectMonthFormState): Recor
   return {
     proyecto_id: toText(form.proyecto_id) || null,
     mes: toYearMonth(form.mes),
-    rendimiento_fv: toNumber(form.rendimiento_fv),
+    rendimiento_fv: toNullableNumber(form.rendimiento_fv),
     rendimiento_grid: toNullableNumber(form.rendimiento_grid),
-    reduccion_co2: toNullableNumber(form.reduccion_co2),
-    reduccion_carbon: toNullableNumber(form.reduccion_carbon),
-    arboles: toNullableNumber(form.arboles),
+    consumo_carga: toNullableNumber(form.consumo_carga), 
     updated_at: new Date().toISOString(),
   };
 }

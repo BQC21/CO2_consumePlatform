@@ -8,8 +8,14 @@ export const PROJECT_ANNUAL_HEADERS = [
   // "POT. NOMINAL (kW)",
   "CAP. INSTALADA (kWp)",
   "FECHA INSTALACIÓN",
-  "Marca del inversor",
-  // "Paneles instalados",
+  "MARCA DEL INVERSOR",
+  // "PANELES INSTALADOS",
+  "RENDIMIENTO FV TOTAL",
+  "RENDIMIENTO GRID TOTAL",
+  "CONSUMO CARGA TOTAL",
+  "REDUCCIÓN CO2 TOTAL", 
+  "REDUCCIÓN CARBON TOTAL",
+  "ÁRBOLES TOTALES"
 ] as const;
 
 // Proyectos mensuales
@@ -17,9 +23,7 @@ export const PROJECT_MONTH_HEADERS = [
   "PROYECTO / MES",
   "RENDIMIENTO FV (KWH)",
   "RENDIMIENTO GRID (KWH)",
-  "Reducción de CO2 (kg)",
-  "Árboles plantados",
-  "Ahorro de carbón (kg)",
+  "CONSUMO CARGA (KWH)",
 ] as const;
 
 // Para el modal de llenado de mes
