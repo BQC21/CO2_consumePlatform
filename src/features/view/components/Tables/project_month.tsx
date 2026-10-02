@@ -8,14 +8,27 @@ import { EditMonthModal } from "@/features/view/components/Modals/project_month/
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectMonthFormStateFromProjectMonth } from "@/features/model/mapping/mapping_project_month";
 import { PROJECT_MONTH_HEADERS } from "@/lib/utils/headers";
-import { formatMonthLabel, formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatMonthLabel } from "@/lib/utils/helpers/render/format";
 import { ProjectMonthTableProps } from "@/lib/types/components/components";
 
 export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: ProjectMonthTableProps) {
+  const [collapsedIds, setCollapsedIds] = useState<ReadonlySet<string>>(() => new Set());
+
+  function toggleProject(id: string) {
+    setCollapsedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
 
   return (
     <section>
-      <div className="overflow-x-auto">
+      <div className="excel-scroll">
         <table className="excel-table">
           <thead>
             <tr>
@@ -38,13 +51,23 @@ export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: Proj
                 const rows = months
                   .filter((month) => month.proyecto_id === project.id)
                   .sort((left, right) => right.mes.localeCompare(left.mes));
+                const open = !collapsedIds.has(project.id);
                 return (
                   <Fragment key={project.id}>
                     <tr className="excel-group">
                       <td colSpan={PROJECT_MONTH_HEADERS.length + 1}>
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-2 bg-transparent py-1 text-left text-sm font-semibold text-[var(--color-text-primary)]"
+                          aria-expanded={open}
+                          onClick={() => toggleProject(project.id)}
+                        >
+                          <span aria-hidden="true">{open ? "▾" : "▸"}</span>
+                          {project.nombre}
+                        </button>
                       </td>
                     </tr>
-                    {rows.map((month) => {
+                    {open ? rows.map((month) => {
                           return (
                             <tr key={month.id}>
                               <td className="pl-6">{formatMonthLabel(month.mes)}</td>
@@ -108,7 +131,7 @@ export function ProjectMonthTable({ projects, months, onUpdate, onDelete }: Proj
                               </td>
                             </tr>
                           );
-                        })}
+                        }) : null}
                   </Fragment>
                 );
               })

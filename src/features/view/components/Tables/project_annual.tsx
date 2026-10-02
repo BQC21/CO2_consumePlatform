@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
 import { Button2Edit } from "@/features/view/components/Buttons/button2Edit";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
@@ -8,19 +9,30 @@ import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
-import { formatDate } from "@/lib/utils/helpers/render/format";
+import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 
-export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
-  
+export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
+  const totals = useMemo(() => {
+    const byProject = new Map<string, { fv: number; grid: number; carga: number }>();
+    for (const month of months) {
+      const current = byProject.get(month.proyecto_id) ?? { fv: 0, grid: 0, carga: 0 };
+      current.fv += month.rendimiento_fv ?? 0;
+      current.grid += month.rendimiento_grid ?? 0;
+      current.carga += month.consumo_carga ?? 0;
+      byProject.set(month.proyecto_id, current);
+    }
+    return byProject;
+  }, [months]);
+
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
   }
 
   return (
     <section>
-      <div className="overflow-x-auto">
+      <div className="excel-scroll">
         <table className="excel-table">
           <thead>
             <tr>
@@ -51,15 +63,14 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                     <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
                   </td>
 
-                  {/* Deben ser los totales del proyecto asociado a project_month*/}
                   <td>
-                    <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
+                    <ExcelCell kind="calculated" ariaLabel={`Rendimiento FV total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.fv ?? 0, 1)} />
                   </td>
                   <td>
-                    <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
+                    <ExcelCell kind="calculated" ariaLabel={`Rendimiento grid total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.grid ?? 0, 1)} />
                   </td>
                   <td>
-                    <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
+                    <ExcelCell kind="calculated" ariaLabel={`Carga consumida total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.carga ?? 0, 1)} />
                   </td>
 
                   <td>
@@ -117,6 +128,8 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-editable)" }} />
           Celda editable
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
+          Celda calculada
         </span>
         <span>
           {projects.length} proyectos · {total} totales visibles
