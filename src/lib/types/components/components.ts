@@ -263,15 +263,8 @@ export type DashboardMetrics = {
     proyectosRegistrados: number;
     proyectosCompletados: number;
     capacidadInstaladaKwp: number;
-    panelesAnio: number;
-    panelesMes: number;
-    panelesAcumulados: number;
     produccionMensualMwh: number;
     produccionAnualMwh: number;
-    carbonAnualMg: number;
-    carbonAcumuladoMg: number;
-    avanceAnual: number;
-    avanceMensual: number;
 };
 
 // Tarjeta de la info de los proyectos por cada departamento
