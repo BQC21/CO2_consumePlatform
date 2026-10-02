@@ -135,15 +135,6 @@ export default function ProjectPage() {
         </Button2Add>
       }
     >
-      {error ? (
-        <div className="panel mb-4 p-4">
-          <p className="font-medium">No se pudo sincronizar la lista</p>
-          <p className="text-sm text-[var(--color-text-secondary)]">{error}</p>
-          <button type="button" className="btn-secondary mt-3" onClick={() => void refresh()}>
-            Reintentar
-          </button>
-        </div>
-      ) : null}
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
 

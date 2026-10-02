@@ -1,10 +1,31 @@
+"use client";
+
+import { useState } from "react";
 import { DepartmentCardProps } from "@/lib/types/components/components";
-import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatDate, formatNumber, Metric } from "@/lib/utils/helpers/render/format";
 
 export function DepartmentCard({ department, projects }: DepartmentCardProps) {
-  const local = projects.filter((project) => project.ubicacion === department);
-  const project = local.find((item) => item.estado === "en_ejecucion") ?? local[0];
 
+  // ------------------------
+  // ----- Estados ----------
+  // ------------------------
+
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const [trackedDepartment, setTrackedDepartment] = useState(department); // departamento seleccionado
+  const local = projects.filter((project) => project.ubicacion === department); // proyectos asociados
+
+  if (department !== trackedDepartment) {
+    setTrackedDepartment(department);
+    setProjectId(null);
+  }
+
+  const activeId = department === trackedDepartment ? projectId : null; // en caso se tenga más de 1 proyecto por departamento
+  const project =
+    local.find((item) => item.id === activeId) ??
+    local.find((item) => item.estado === "en_ejecucion") ??
+    local[0];
+
+  // En caso no haya departamento o proyecto
   if (!department || !project) {
     return (
       <article className="rounded-[var(--radius-xl)] bg-white p-5 text-[var(--color-text-primary)]">
@@ -24,23 +45,31 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
       <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
         {project.descripcion || `${project.tipo_de_sistema || "Sistema FV"} en ${project.estado === "completado" ? "operación cerrada" : "operación"}.`}
       </p>
-      <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
+
+      {local.length > 1 ? (
+        <label className="mt-10 block text-xs text-[var(--color-text-secondary)]">
+          {local.length} plantas en este departamento
+          <select
+            className="field-select input-focus mt-1"
+            aria-label="Proyecto del departamento"
+            value={project.id}
+            onChange={(event) => setProjectId(event.target.value)}
+          >
+            {local.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
+      <dl className="mt-10 grid grid-cols-2 gap-2 text-sm">
         <Metric label="Capacidad" value={project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`} />
         <Metric label="Fecha inst." value={formatDate(project.fecha_instalacion)} />
         <Metric label="Tipo de sistema" value={project.tipo_de_sistema || "—"} />
-        {/* <Metric label="Pot. nominal" value={project.pot_nominal_kw === null ? "—" : `${formatNumber(project.pot_nominal_kw, 2)} kW`} />
-        <Metric label="Paneles" value={formatNumber(project.paneles_instalados, 0)} /> */}
       </dl>
-      {local.length > 1 ? <p className="mt-3 text-xs text-[var(--color-text-secondary)]">{local.length} plantas en este departamento. Se muestra la que sigue en ejecución.</p> : null}
-    </article>
-  );
-}
 
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl bg-[var(--color-background)] px-3 py-2">
-      <dt className="text-[0.65rem] tracking-wide text-[var(--color-text-secondary)] uppercase">{label}</dt>
-      <dd className="numeric font-semibold">{value}</dd>
-    </div>
+    </article>
   );
 }
