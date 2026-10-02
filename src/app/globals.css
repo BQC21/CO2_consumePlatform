@@ -207,6 +207,11 @@ button {
   border-radius: var(--radius-lg);
 }
 
+.excel-scroll {
+  max-height: calc(100dvh - 20rem);
+  overflow: auto;
+}
+
 .excel-table {
   width: max-content;
   min-width: 100%;
@@ -215,7 +220,11 @@ button {
 }
 
 .excel-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   padding: 0.55rem 0.65rem;
+  background: var(--color-surface);
   color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);

@@ -212,6 +212,7 @@ export default function ProjectPage() {
                   </div>
                   <ProjectAnnualTable
                     projects={filtered}
+                    months={visibleMonths}
                     total={projectsState.items.length}
                     onUpdate={async (id, form) => {
                       await projectMutations.update(id, form);
