@@ -9,7 +9,7 @@ export function ExcelWorkbook({ sheets, defaultSheetId, layout = "split" }: Exce
   // En caso se separe el layout de la hoja de trabajo
   if (layout === "split") {
     return (
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         {sheets.map((sheet) => (
           <section key={sheet.id} className="panel p-4">
             <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--color-section-title)" }}>

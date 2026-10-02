@@ -56,26 +56,18 @@ export function MonthFormModal({ title, initial, projects, onSubmit, onClose }: 
         <AddTextField required label="Mes (2026-01 o 01.2026)" value={form.mes} 
                       onChange={(value) => setForm((current) => ({ ...current, mes: value }))} />
         
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <AddNumberField required label="Rendimiento FV (KWh)" value={form.rendimiento_fv} 
                           onChange={(value) => setForm((current) => ({ ...current, rendimiento_fv: value }))}
                           min={0} step={0.001} />
           <AddNumberField required label="Energía importada de la red (kWh)" value={form.rendimiento_grid} 
                           onChange={(value) => setForm((current) => ({ ...current, rendimiento_grid: value }))}
                           min={0} step={0.001} />
+          <AddNumberField required label="Consumo de la carga (kWh)" value={form.consumo_carga} 
+                          onChange={(value) => setForm((current) => ({ ...current, consumo_carga: value }))}
+                          min={0} step={0.001} />
         </div>
         
-        <div className="grid gap-4 sm:grid-cols-3">
-          <AddNumberField label="Reducción de CO2 (kg)" value={form.reduccion_co2} 
-                          onChange={(value) => setForm((current) => ({ ...current, reduccion_co2: value }))} 
-                          min={0} step={0.001} />
-          <AddNumberField label="Árboles plantados" value={form.arboles} 
-                          onChange={(value) => setForm((current) => ({ ...current, arboles: value }))} 
-                          min={0} step={0.001} />
-          <AddNumberField label="Ahorro de carbón (kg)" value={form.reduccion_carbon} 
-                          onChange={(value) => setForm((current) => ({ ...current, reduccion_carbon: value }))} 
-                          min={0} step={0.001} />
-        </div>
 
         {/* En caso haya error al suscribir cambios */}
         {error ? <p className="field-error">{error}</p> : null}

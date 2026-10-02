@@ -89,16 +89,22 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             options={INVERTER_BRAND_OPTIONS}
             onChange={(value) => update("marca_inversor", value)}
           />
-          {/* <AddNumberField label="Pot. nominal (kW)" value={form.pot_nominal_kw} 
-                          onChange={(value) => update("pot_nominal_kw", value)}/> */}
           <AddNumberField label="Cap. instalada (kWp)" value={form.cap_instalada_kwp} 
                           onChange={(value) => update("cap_instalada_kwp", value)}/>
           <AddDateField label="Fecha de instalación" value={form.fecha_instalacion} 
                         onChange={(value) => update("fecha_instalacion", value)} />
-          {/* <AddNumberField label="Paneles instalados" value={form.paneles_instalados} 
-                          onChange={(value) => update("paneles_instalados", value)}/> */}
         </div>
-
+        <div className="grid gap-4 sm:grid-cols-3">
+            <AddNumberField label="Reducción de CO2 (kg) TOTAL" value={form.reduccion_co2} 
+                            onChange={(value) => setForm((current) => ({ ...current, reduccion_co2: value }))} 
+                            min={0} step={0.001} />
+            <AddNumberField label="Árboles plantados TOTALES" value={form.arboles} 
+                            onChange={(value) => setForm((current) => ({ ...current, arboles: value }))} 
+                            min={0} step={0.001} />
+            <AddNumberField label="Ahorro de carbón (kg) TOTAL" value={form.reduccion_carbon} 
+                            onChange={(value) => setForm((current) => ({ ...current, reduccion_carbon: value }))} 
+                            min={0} step={0.001} />
+        </div>
         <AddSelectField
           label="Estado" required
           value={form.estado}
