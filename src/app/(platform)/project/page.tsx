@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Button2Add } from "@/features/view/components/Buttons/button2Add";
-import { SearchBar } from "@/features/view/components/Bars/SearchBar";
+import { SearchBar } from "@/features/view/components/Metrics/SearchBar";
 import { ProjectFiltersBar } from "@/features/view/components/Filters/ProjectFiltersBar";
 import { MassiveCleanModal } from "@/features/view/components/MassiveModals/MassiveCleanModal";
 import { MassiveDownloadModal } from "@/features/view/components/MassiveModals/MassiveDownloadModal";

@@ -1,4 +1,4 @@
-import type { ProjectStatus } from "@/lib/utils/options";
+import type { ProjectStatus } from "@/lib/types/components/options";
 
 /** Fila de `proyectos` tal como llega de Supabase. */
 export type SupabaseProjectRow = {

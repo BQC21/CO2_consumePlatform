@@ -277,8 +277,6 @@ export type DashboardMetrics = {
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
-    months: ProjectMonth[];
-    year: number;
 };
 
 // operaciones masivas

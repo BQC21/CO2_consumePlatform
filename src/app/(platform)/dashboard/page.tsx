@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { DepartmentCard } from "@/features/view/components/Bars/DepartmentCard";
+import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCard";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useRealtimeMeta } from "@/features/ViewModel/hooks/services/useRealtimeMeta";
@@ -10,10 +10,9 @@ import { useRealtimeProjectMonth } from "@/features/ViewModel/hooks/services/use
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics, referenceMonth } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { formatNumber, monthsForYear } from "@/lib/utils/helpers/render/format";
-import { MetricCards } from "@/features/view/components/Bars/MetricCards";
-import { MetaPanel } from "@/features/view/components/Bars/MetaPanel";
+import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 import type { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
-import { ProductionGauge } from "@/features/view/components/Bars/ProductionGauge";
+import { ProductionGauge } from "@/features/view/components/Metrics/ProductionGauge";
 
 export default function DashboardPage() {
 
@@ -112,23 +111,6 @@ export default function DashboardPage() {
       {/* Métricas */}
       <div className="grid items-stretch gap-4 xl:grid-cols-[1.4fr_1fr]">
         {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : <MetricCards metrics={metrics} />}
-
-        {/* {loading ? <div className="skeleton h-28 rounded-[var(--radius-lg)]" /> : (
-          <MetaPanel
-            meta={activeMeta}
-            metrics={metrics}
-            years={years}
-            selectedYear={selectedYear}
-            selectedMonth={selectedMonth}
-            monthOptions={monthOptions}
-            onYearChange={setYear}
-            onMonthChange={setMonth}
-            onSave={async (form) => {
-              const saved = await metaState.save(form, activeMeta.id || undefined);
-              setYear(saved.anio);
-            }}
-          />
-        )} */}
       </div>
 
       {/* Mapa del Perú */}
@@ -150,13 +132,6 @@ export default function DashboardPage() {
               <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
                 Reducción acumulada {formatNumber(metrics.carbonAcumuladoMg, 2)} Mg
               </p>
-              {/* <p className="mt-3 font-semibold">Paneles instalados</p>
-              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Total anual: {formatNumber(metrics.panelesAnio, 0)}
-              </p>
-              <p className="numeric text-lg" style={{ color: "var(--color-text-on-dark-muted)" }}>
-                Total acumulado: {formatNumber(metrics.panelesAcumulados, 0)}
-              </p> */}
             </div>
           </div>
 
@@ -169,9 +144,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4">
             <DepartmentCard 
               department={activeDepartment} 
-              projects={projects.items} 
-              months={months.items} 
-              year={selectedYear} />
+              projects={projects.items} />
             <Link href="/project" className="btn-primary">
               Ver lista de proyectos
             </Link>

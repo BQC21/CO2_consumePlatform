@@ -1,5 +1,5 @@
 import type { Project, ProjectFormState, SupabaseProjectRow } from "../../../lib/types/supabase/project-types";
-import type { ProjectStatus } from "../../../lib/utils/options";
+import type { ProjectStatus } from "../../../lib/types/components/options";
 import { numberToInput, toInteger, toIsoDate, toNullableNumber, toText } from "../../../lib/utils/helpers/normalization";
 
 function toStatus(value: string): ProjectStatus {
