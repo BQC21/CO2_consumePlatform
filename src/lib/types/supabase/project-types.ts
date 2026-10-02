@@ -12,6 +12,9 @@ export type SupabaseProjectRow = {
   fecha_instalacion: string | null;
   marca_inversor: string | null;
   paneles_instalados: number | string | null;
+  rendimiento_fv_total: number | string | null;
+  rendimiento_grid_total: number | string | null;
+  carga_consumida_total: number | string | null;
   reduccion_co2: number | string | null;
   reduccion_carbon: number | string | null;
   arboles: number | string | null;
@@ -32,6 +35,9 @@ export type Project = {
   fecha_instalacion: string;
   marca_inversor: string;
   paneles_instalados: number | null;
+  rendimiento_fv_total: number | null;
+  rendimiento_grid_total: number | null;
+  carga_consumida_total: number | null;
   reduccion_co2: number | null;
   reduccion_carbon: number | null; 
   arboles: number | null;
@@ -51,6 +57,9 @@ export type ProjectFormState = {
   fecha_instalacion: string;
   marca_inversor: string;
   paneles_instalados: string;
+  rendimiento_fv_total: string;
+  rendimiento_grid_total: string;
+  carga_consumida_total: string;
   reduccion_co2: string;
   reduccion_carbon: string;
   arboles: string;
