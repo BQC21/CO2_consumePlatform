@@ -84,6 +84,9 @@ export default function ProjectPage() {
         fecha_instalacion: valueByHeader(row, "FECHA INSTALACIÓN"),
         marca_inversor: valueByHeader(row, "Marca del inversor"),
         paneles_instalados: valueByHeader(row, "Paneles instalados"),
+        reduccion_co2: valueByHeader(row, "CO2 REDUCIDO (KG)"),
+        reduccion_carbon: valueByHeader(row, "CARBÓN REDUCIDO (KG)"),
+        arboles: valueByHeader(row, "ÁRBOLES EQUIVALENTES"),
         estado: estado.includes("complet") ? "completado" : "en_ejecucion",
         descripcion: valueByHeader(row, "Descripción"),
       };
@@ -106,9 +109,7 @@ export default function ProjectPage() {
         mes: valueByHeader(row, "Mes"),
         rendimiento_fv: valueByHeader(row, "RENDIMIENTO FV (KWh"),
         rendimiento_grid: valueByHeader(row, "RENDIMIENTO GRID (kWh)"),
-        reduccion_co2: valueByHeader(row, "CO2 REDUCIDO (KG)"),
-        reduccion_carbon: valueByHeader(row, "CARBÓN REDUCIDO (KG)"),
-        arboles: valueByHeader(row, "ÁRBOLES EQUIVALENTES"),
+        consumo_carga: valueByHeader(row, "CONSUMO DE CARGA (kWh)"),
       };
     });
     await monthMutations.createMany(forms);
