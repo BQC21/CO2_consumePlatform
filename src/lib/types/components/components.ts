@@ -118,6 +118,7 @@ export type ProjectSorterProps = {
 
 export type ProjectAnnualTableProps = {
     projects: Project[];
+    months: ProjectMonth[];
     total: number;
     onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
