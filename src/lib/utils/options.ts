@@ -14,8 +14,6 @@ export const PROJECT_STATUS_OPTIONS = [
 export const SORTING_OPTIONS = [
   { value: "fecha_desc", label: "Fecha de instalación · reciente" },
   { value: "fecha_asc", label: "Fecha de instalación · antigua" },
-  { value: "paneles_desc", label: "Paneles · mayor a menor" },
-  { value: "paneles_asc", label: "Paneles · menor a mayor" },
 ] as const;
 
 // Opciones para seleccionar depertamento
