@@ -1,6 +1,4 @@
-import { MetaFormState } from "../types/supabase/meta-types";
 import { ProjectFormState } from "../types/supabase/project-types";
-import { ProjectMonthFormState } from "../types/supabase/projectMonth-types";
 
 // Proyectos anuales
 export const INITIAL_PROJECT_FORM: ProjectFormState = {
@@ -21,21 +19,6 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   arboles: "",
   estado: "en_ejecucion",
   descripcion: "",
-};
-
-// Proyectos mensuales
-export const INITIAL_PROJECT_MONTH_FORM: ProjectMonthFormState = {
-  proyecto_id: "",
-  mes: "",
-  rendimiento_fv: "",
-  rendimiento_grid: "",
-  consumo_carga: "",
-};
-
-// Meta 
-export const INITIAL_META_FORM: MetaFormState = {
-  anio: String(new Date().getFullYear()),
-  mes: String(new Date().getMonth()),
-  meta_paneles_anual: "1000",
-  meta_paneles_mensual: "100",
+  insercion: "independiente",
+  portal_proyecto_id: "",
 };
