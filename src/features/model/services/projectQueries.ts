@@ -1,7 +1,7 @@
 import { mapProjectToSupabaseRow, mapSupabaseRowToProject } from "@/features/model/mapping/mapping_project";
 import { createClient } from "@/features/model/supabase/client";
 import type { Project, ProjectFormData, SupabaseProjectRow } from "@/lib/types/supabase/project-types";
-import { PROJECT_TABLE } from "@/lib/utils/namingTolerance";
+import { PROJECT_IMAGE_BUCKET, PROJECT_TABLE } from "@/lib/utils/namingTolerance";
 
 export async function getProjects(): Promise<Project[]> {
   const supabase = createClient();
@@ -54,6 +54,32 @@ export async function deleteProject(id: string): Promise<void> {
   if (error) {
     throw new Error(`Error al eliminar el proyecto: ${error.message}`);
   }
+}
+
+export async function updateProjectImage(id: string, imagenUrl: string): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from(PROJECT_TABLE)
+    .update({ imagen_url: imagenUrl, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) {
+    throw new Error(`Error al guardar la imagen del proyecto: ${error.message}`);
+  }
+}
+
+export async function uploadProjectImage(projectId: string, file: File): Promise<string> {
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const path = `${projectId}/${Date.now()}.${extension}`;
+  const supabase = createClient();
+  const { error } = await supabase.storage.from(PROJECT_IMAGE_BUCKET).upload(path, file, {
+    upsert: true,
+    contentType: file.type || "image/jpeg",
+  });
+  if (error) {
+    throw new Error(`Error al subir la imagen: ${error.message}`);
+  }
+  const { data } = supabase.storage.from(PROJECT_IMAGE_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function deleteAllProjects(): Promise<void> {
