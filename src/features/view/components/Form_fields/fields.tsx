@@ -36,13 +36,14 @@ export function AddSectionTitle({ children }: { children: ReactNode }) {
 }
 
 // Campo de texto
-export function AddTextField({ label, required, value, onChange, error, placeholder }: FieldProps) {
+export function AddTextField({ label, required, value, onChange, error, placeholder, disabled }: FieldProps) {
   return (
     <label className="block">
       <FieldLabel label={label} required={required} />
       <input
         className="field-input input-focus"
         required={required}
+        disabled={disabled}
         value={value}
         placeholder={placeholder}
         onInvalid={required ? markRequired : undefined}
@@ -74,7 +75,7 @@ export function AddTextAreaField({ label, required, value, onChange, error }: Fi
 
 // Campo para ingresar números
 export function AddNumberField({ label, required = false, value, onChange, error,
-  step, min, max, centered = false}: FieldProps) {
+  step, min, max, centered = false, disabled}: FieldProps) {
   return (
     <div className={centered ? "text-center" : undefined}>
       <label className="mb-2 block text-sm font-bold text-slate-600">
@@ -86,6 +87,7 @@ export function AddNumberField({ label, required = false, value, onChange, error
         className="field-input input-focus numeric"
         inputMode="decimal"
         required={required}
+        disabled={disabled}
         value={value}
         onInvalid={required ? markRequired : undefined}
         onInput={required ? clearRequired : undefined}
@@ -100,7 +102,7 @@ export function AddNumberField({ label, required = false, value, onChange, error
 }
 
 // Campo para ingresar fecha
-export function AddDateField({ label, value, required, onChange, error }: FieldProps) {
+export function AddDateField({ label, value, required, onChange, error, disabled }: FieldProps) {
   return (
     <label className="block">
       <FieldLabel label={label} required={required} />
@@ -108,6 +110,7 @@ export function AddDateField({ label, value, required, onChange, error }: FieldP
         className="field-input input-focus"
         type="date"
         required={required}
+        disabled={disabled}
         value={value}
         onInvalid={required ? markRequired : undefined}
         onInput={required ? clearRequired : undefined}
@@ -157,7 +160,7 @@ export function AddSearchableSelectField({ label, required, value, onChange, opt
 }
 
 // Campo selector
-export function AddSelectField({ label, required, value, onChange, options, error }: NativeSelectProps) {
+export function AddSelectField({ label, required, value, onChange, options, error, disabled }: NativeSelectProps) {
   const normalizedOptions = normalizeSelectOptions(options);
 
   return (
@@ -167,6 +170,7 @@ export function AddSelectField({ label, required, value, onChange, options, erro
         className="field-select input-focus"
         value={value}
         required={required}
+        disabled={disabled}
         onInvalid={required ? markRequired : undefined}
         onInput={required ? clearRequired : undefined}
         onChange={(event) => onChange(event.target.value)}
