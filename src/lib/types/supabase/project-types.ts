@@ -1,5 +1,7 @@
 import type { ProjectStatus } from "@/lib/types/components/options";
 
+export type ProjectOrigin = "independiente" | "existente";
+
 /** Fila de `proyectos` tal como llega de Supabase. */
 export type SupabaseProjectRow = {
   id?: string;
@@ -20,6 +22,9 @@ export type SupabaseProjectRow = {
   arboles: number | string | null;
   estado: string | null;
   descripcion: string | null;
+  insercion?: string | null;
+  portal_proyecto_id?: number | string | null;
+  imagen_url?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
 };
@@ -43,6 +48,9 @@ export type Project = {
   arboles: number | null;
   estado: ProjectStatus;
   descripcion: string;
+  insercion: ProjectOrigin;
+  portal_proyecto_id: number | null;
+  imagen_url: string;
   updated_at: string;
 };
 
@@ -65,6 +73,8 @@ export type ProjectFormState = {
   arboles: string;
   estado: ProjectStatus;
   descripcion: string;
+  insercion: ProjectOrigin;
+  portal_proyecto_id: string;
 };
 
 export type ProjectFormData = ProjectFormState;
