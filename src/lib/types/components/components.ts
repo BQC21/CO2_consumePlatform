@@ -1,6 +1,6 @@
 import type { ReactNode, SelectHTMLAttributes } from "react";
+import { MonthlyEnergy } from "../supabase/monthly-energy";
 import { Project, ProjectFormState } from "../supabase/project-types";
-import { ProjectMonth, ProjectMonthFormState } from "../supabase/projectMonth-types";
 import { ProjectSortingOrder } from "./options";
 
 //--------
@@ -70,6 +70,8 @@ export type PortalShellProps = {
     children: ReactNode;
     tone?: "light" | "dark";
     actions?: ReactNode;
+    headerExtra?: ReactNode;
+    backgroundImage?: string;
 };
 
 //--------
@@ -118,16 +120,9 @@ export type ProjectSorterProps = {
 
 export type ProjectAnnualTableProps = {
     projects: Project[];
-    months: ProjectMonth[];
+    months: MonthlyEnergy[];
     total: number;
     onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
-    onDelete: (id: string) => Promise<void>;
-};
-
-export type ProjectMonthTableProps = {
-    projects: Project[];
-    months: ProjectMonth[];
-    onUpdate: (id: string, form: ProjectMonthFormState) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
 };
 
@@ -164,6 +159,7 @@ export type ModalFrameProps = {
     title: string;
     onClose: () => void;
     children: ReactNode;
+    wide?: boolean;
 };
 
 // Proyecto anual
@@ -190,35 +186,6 @@ export type ProjectFormModalProps = {
     busyLabel: string;
     initial: ProjectFormState;
     onSubmit: (form: ProjectFormState) => Promise<void>;
-    onClose: () => void;
-};
-
-// Proyecto mensual
-export type AddMonthModalProps = {
-    projects: Project[];
-    onAdd: (form: ProjectMonthFormState) => Promise<void>;
-    onClose: () => void;
-};
-
-export type DeleteMonthModalProps = {
-    month: ProjectMonth;
-    projectName: string;
-    onDelete: (id: string) => Promise<void>;
-    onClose: () => void;
-};
-
-export type EditMonthModalProps = {
-    month: ProjectMonth;
-    projects: Project[];
-    onUpdate: (form: ProjectMonthFormState) => Promise<void>;
-    onClose: () => void;
-};
-
-export type MonthFormModalProps = {
-    title: string;
-    initial: ProjectMonthFormState;
-    projects: Project[];
-    onSubmit: (form: ProjectMonthFormState) => Promise<void>;
     onClose: () => void;
 };
 
@@ -265,12 +232,16 @@ export type DashboardMetrics = {
     capacidadInstaladaKwp: number;
     produccionMensualMwh: number;
     produccionAnualMwh: number;
+    co2Kg: number | null;
+    carbonKg: number | null;
+    arboles: number | null;
 };
 
 // Tarjeta de la info de los proyectos por cada departamento
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
+    onUploadImage: (projectId: string, file: File) => Promise<void>;
 };
 
 // operaciones masivas

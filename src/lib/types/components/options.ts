@@ -1,4 +1,4 @@
-import { PROJECT_ANNUAL_HEADERS, PROJECT_MONTH_HEADERS } from "@/lib/utils/headers";
+import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, 
     SORTING_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 
@@ -13,4 +13,3 @@ export type ProjectStatus = (typeof PROJECT_STATUS_OPTIONS)[number]["value"]; //
 export type ProjectSortingOrder = (typeof SORTING_OPTIONS)[number]["value"]; // opciones de ordenamiento
 
 export type ProjectAnnualHeader = (typeof PROJECT_ANNUAL_HEADERS)[number]; // encabezado de la vista anual del proyecto
-export type ProjectMonthHeader = (typeof PROJECT_MONTH_HEADERS)[number]; // encabezado de la vista mensual del proyecto

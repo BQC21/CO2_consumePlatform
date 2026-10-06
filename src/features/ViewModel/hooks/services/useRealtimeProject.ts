@@ -9,6 +9,8 @@ import {
   deleteProject,
   getProjects,
   updateProject,
+  updateProjectImage,
+  uploadProjectImage,
 } from "@/features/model/services/projectQueries";
 import type { Project, ProjectFormData } from "@/lib/types/supabase/project-types";
 import type { UseListResult, UseMutationsResult } from "@/lib/types/hooks/hooks";
@@ -68,6 +70,7 @@ export function useRealtimeProject(): UseListResult<Project> {
 export function useProjectMutations(): UseMutationsResult<ProjectFormData, Project> & {
   removeAll: () => Promise<void>;
   createMany: (forms: ProjectFormData[]) => Promise<Project[]>;
+  saveImage: (id: string, file: File) => Promise<void>;
 } {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,6 +97,14 @@ export function useProjectMutations(): UseMutationsResult<ProjectFormData, Proje
   const remove = useCallback((id: string) => run(() => deleteProject(id), "Error al eliminar el proyecto"), [run]);
   const removeAll = useCallback(() => run(() => deleteAllProjects(), "Error al limpiar los proyectos"), [run]);
   const createMany = useCallback((forms: ProjectFormData[]) => run(() => createProjects(forms), "Error al importar los proyectos"), [run]);
+  const saveImage = useCallback(
+    (id: string, file: File) =>
+      run(async () => {
+        const url = await uploadProjectImage(id, file);
+        await updateProjectImage(id, url);
+      }, "Error al subir la imagen"),
+    [run],
+  );
 
-  return { loading, error, create, update, remove, removeAll, createMany };
+  return { loading, error, create, update, remove, removeAll, createMany, saveImage };
 }
