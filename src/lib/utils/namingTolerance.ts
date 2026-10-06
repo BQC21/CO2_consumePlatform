@@ -1,8 +1,7 @@
 // ------------- TABLAS --------------------
 export const PROJECT_TABLE = "proyectos";
-export const PROJECT_MONTH_TABLE = "registros_mensuales";
-export const META_TABLE = "metas";
-
+export const MONTH_TABLE = "registros_mensuales"; // Modal interna de cada fila del proyecto
+export const PROJECT_IMAGE_BUCKET = "project-images"; // Imagen asociada al proyecto
 
 
 // ------------- COLUMNAS -------------------
@@ -19,11 +18,4 @@ export const PROJECT_COLUMN_CANDIDATES = {
   paneles_instalados: ["paneles instalados", "paneles"],
   estado: ["estado"],
   descripcion: ["descripción", "descripcion"],
-} as const;
-
-export const PROJECT_MONTH_COLUMN_CANDIDATES = {
-  proyecto: ["proyecto / mes", "proyecto", "nombre", "planta"],
-  mes: ["mes", "periodo", "período", "datetime"],
-  tipico_diario: ["típico diario", "tipico diario", "producción diaria", "produccion diaria", "rendimiento_FV"],
-  pot_nominal_kw: ["pot. nominal (kw)", "potencia nominal", "pot nominal", "rendimiento_GRID"],
 } as const;
