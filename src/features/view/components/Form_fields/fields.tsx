@@ -1,6 +1,7 @@
 import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
 import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
+import { formatNumber } from "@/lib/utils/helpers/render/format";
 import type { FormEvent, ReactNode } from "react";
 
 // ----------------------------------------------
@@ -184,5 +185,37 @@ export function AddSelectField({ label, required, value, onChange, options, erro
       </select>
       {error ? <span className="field-error">{error}</span> : null}
     </label>
+  );
+}
+
+// Tarjetas de métricas
+export function ImpactCard({
+  title,
+  annual,
+  accumulated,
+  unit,
+  icon,
+}: {
+  title: string;
+  annual: number | null;
+  accumulated: number | null;
+  unit: string;
+  icon: string;
+}) {
+  const annualText = annual === null ? "—" : `${formatNumber(annual, 2)} ${unit}`;
+  const accumulatedText = accumulated === null ? "—" : `${formatNumber(accumulated, 2)} ${unit}`;
+  return (
+    <article className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-black/35 px-3 py-3">
+      <div>
+        <p className="text-xs font-semibold tracking-wide text-white/80">{title}</p>
+        <p className="mt-2 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Anual</p>
+        <p className="numeric text-sm font-semibold">{annualText}</p>
+        <p className="mt-1 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Acumulado</p>
+        <p className="numeric text-sm font-semibold">{accumulatedText}</p>
+      </div>
+      <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#12345c] text-2xl" aria-hidden="true">
+        {icon}
+      </span>
+    </article>
   );
 }
