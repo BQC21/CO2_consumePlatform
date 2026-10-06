@@ -1,6 +1,5 @@
 import { ProjectFilters } from "@/lib/types/components/components";
 import type { Project } from "@/lib/types/supabase/project-types";
-import { ProjectMonth } from "@/lib/types/supabase/projectMonth-types";
 
 export function filterProjects(projects: Project[], filters: ProjectFilters): Project[] {
   const search = filters.search.trim().toLowerCase();
@@ -14,11 +13,6 @@ export function filterProjects(projects: Project[], filters: ProjectFilters): Pr
     const matchesBrand = !filters.marcaInversor || project.marca_inversor === filters.marcaInversor;
     return matchesSearch && matchesDepartment && matchesBrand;
   });
-}
-
-export function filterMonthsByProjects(months: ProjectMonth[], projects: Project[]): ProjectMonth[] {
-  const ids = new Set(projects.map((project) => project.id));
-  return months.filter((month) => ids.has(month.proyecto_id));
 }
 
 export function PeriodSelect({
