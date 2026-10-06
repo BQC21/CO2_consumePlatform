@@ -55,6 +55,16 @@ export function SearchIcon({ className }: IconProps) {
   );
 }
 
+// gráficas
+export function ChartIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 13.5V2.5M2 13.5h12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M4.5 10.5 7 7.2l2.2 2.1L13 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 // cerrar ventana
 export function CloseIcon({ className }: IconProps) {
   return (
