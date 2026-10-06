@@ -1,6 +1,7 @@
-import { createPortalClient, hasPortalEnv } from "@/features/model/supabase/portalClient";
+import { createPortalClient } from "@/features/model/supabase/portalClient";
 import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import { mapPortalCatalog } from "@/lib/utils/helpers/supabase/mappers";
+import { hasPortalEnv } from "@/lib/utils/helpers/supabase/validator";
 
 export async function getPortalProjects(): Promise<PortalProjectOption[]> {
   // En caso no se conecte con el portal corporativo TEC
