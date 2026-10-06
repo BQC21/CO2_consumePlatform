@@ -1,30 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
-import { Button2Edit } from "@/features/view/components/Buttons/button2Edit";
+import { ChartIcon } from "@/features/view/components/Icons/icons";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
-import { EditProjectModal } from "@/features/view/components/Modals/project_annual/EditProjectModal";
+import { ProjectMetricsModal } from "@/features/view/components/Modals/project_annual/ProjectMetricsModal";
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
+import type { MonthlyEnergy } from "@/lib/types/supabase/monthly-energy";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
+import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
 import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
+import { MetricsButton } from "../Buttons/MetricsButton";
 
 export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
-  const totals = useMemo(() => {
-    const byProject = new Map<string, { fv: number; grid: number; carga: number }>();
-    for (const month of months) {
-      const current = byProject.get(month.proyecto_id) ?? { fv: 0, grid: 0, carga: 0 };
-      current.fv += month.rendimiento_fv ?? 0;
-      current.grid += month.rendimiento_grid ?? 0;
-      current.carga += month.consumo_carga ?? 0;
-      byProject.set(month.proyecto_id, current);
-    }
-    return byProject;
-  }, [months]);
+  const totals = useMemo(() => totalsByProject(months), [months]);
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
@@ -44,75 +37,109 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
           </thead>
           <tbody>
             {projects.length > 0 ? (
-              projects.map((project) => (
-                <tr key={project.id}>
-                  <td className="whitespace-nowrap font-medium">{project.nombre}</td>
-                  <td>
-                    <ExcelCell key={`${project.id}-ubi-${project.ubicacion}`} kind="editable" ariaLabel={`Ubicación de ${project.nombre}`} value={project.ubicacion} options={DEPARTMENT_OPTIONS} onCommit={(value) => commit(project, { ubicacion: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Tipo de ${project.nombre}`} value={project.tipo_de_sistema} options={SYSTEM_TYPE_OPTIONS} onCommit={(value) => commit(project, { tipo_de_sistema: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Capacidad de ${project.nombre}`} value={project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp)} onCommit={(value) => commit(project, { cap_instalada_kwp: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Fecha de ${project.nombre}`} value={formatDate(project.fecha_instalacion)} onCommit={(value) => commit(project, { fecha_instalacion: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Inversor de ${project.nombre}`} value={project.marca_inversor} options={INVERTER_BRAND_OPTIONS} onCommit={(value) => commit(project, { marca_inversor: value })} />
-                  </td>
-
-                  <td>
-                    <ExcelCell kind="calculated" ariaLabel={`Rendimiento FV total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.fv ?? 0, 1)} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="calculated" ariaLabel={`Rendimiento grid total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.grid ?? 0, 1)} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="calculated" ariaLabel={`Carga consumida total de ${project.nombre}`} value={formatNumber(totals.get(project.id)?.carga ?? 0, 1)} />
-                  </td>
-
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Reducción de CO2 de ${project.reduccion_co2}`} value={project.reduccion_co2 === null ? "" : String(project.reduccion_co2)} onCommit={(value) => commit(project, { reduccion_co2: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`Reducción de carbon ${project.reduccion_carbon}`} value={project.reduccion_carbon === null ? "" : String(project.reduccion_carbon)} onCommit={(value) => commit(project, { reduccion_carbon: value })} />
-                  </td>
-                  <td>
-                    <ExcelCell kind="editable" ariaLabel={`arboles plantados ${project.arboles}`} value={project.arboles === null ? "" : String(project.arboles)} onCommit={(value) => commit(project, { arboles: value })} />
-                  </td>
-                  
-                  <td>
-                    <div className="flex gap-1">
-                      <Button2Edit label={`Editar ${project.nombre}`}>
-                        {(close) => (
-                          <EditProjectModal
-                            project={project}
-                            onUpdate={async (form) => {
-                              await onUpdate(project.id, form);
-                              close();
-                            }}
-                            onClose={close}
-                          />
-                        )}
-                      </Button2Edit>
-                      <Button2Delete label={`Eliminar ${project.nombre}`}>
-                        {(close) => (
-                          <DeleteProjectModal
-                            project={project}
-                            onDelete={async (id) => {
-                              await onDelete(id);
-                              close();
-                            }}
-                            onClose={close}
-                          />
-                        )}
-                      </Button2Delete>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              projects.map((project) => {
+                const locked = project.insercion === "existente";
+                const energy = totals.get(project.id);
+                return (
+                  <tr key={project.id}>
+                    <td className="whitespace-nowrap font-medium">
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Nombre de ${project.nombre}`}
+                        value={project.nombre}
+                        onCommit={locked ? undefined : (value) => commit(project, { nombre: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Ubicación de ${project.nombre}`}
+                        value={project.ubicacion}
+                        options={DEPARTMENT_OPTIONS}
+                        onCommit={locked ? undefined : (value) => commit(project, { ubicacion: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Tipo de ${project.nombre}`}
+                        value={project.tipo_de_sistema}
+                        options={SYSTEM_TYPE_OPTIONS}
+                        onCommit={locked ? undefined : (value) => commit(project, { tipo_de_sistema: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Capacidad de ${project.nombre}`}
+                        value={project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp)}
+                        onCommit={locked ? undefined : (value) => commit(project, { cap_instalada_kwp: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de ${project.nombre}`}
+                        value={formatDate(project.fecha_instalacion)}
+                        onCommit={(value) => commit(project, { fecha_instalacion: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Inversor de ${project.nombre}`}
+                        value={project.marca_inversor}
+                        options={INVERTER_BRAND_OPTIONS}
+                        onCommit={locked ? undefined : (value) => commit(project, { marca_inversor: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Rendimiento FV total de ${project.nombre}`} value={formatNumber(energy?.fv ?? 0, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Rendimiento grid total de ${project.nombre}`} value={formatNumber(energy?.grid ?? 0, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Carga consumida total de ${project.nombre}`} value={formatNumber(energy?.carga ?? 0, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Reducción de CO2 de ${project.nombre}`} value={formatNumber(project.reduccion_co2, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Reducción de carbón de ${project.nombre}`} value={formatNumber(project.reduccion_carbon, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell kind="calculated" ariaLabel={`Árboles de ${project.nombre}`} value={formatNumber(project.arboles, 1)} />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Estado de ${project.nombre}`}
+                        value={project.estado === "completado" ? "Completado" : "En ejecución"}
+                        options={["En ejecución", "Completado"]}
+                        onCommit={(value) => commit(project, { estado: value.toLowerCase().includes("complet") ? "completado" : "en_ejecucion" })}
+                      />
+                    </td>
+                    <td>
+                      <div className="flex gap-1">
+                        <MetricsButton project={project} months={months} />
+                        <Button2Delete label={`Eliminar ${project.nombre}`}>
+                          {(close) => (
+                            <DeleteProjectModal
+                              project={project}
+                              onDelete={async (id) => {
+                                await onDelete(id);
+                                close();
+                              }}
+                              onClose={close}
+                            />
+                          )}
+                        </Button2Delete>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={PROJECT_ANNUAL_HEADERS.length + 1} className="px-3 py-8 text-sm">
@@ -125,16 +152,17 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
         </table>
       </div>
       <footer className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--color-text-secondary)]">
-        <span className="inline-flex items-center gap-2">
+        <span className="inline-flex flex-wrap items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-editable)" }} />
           Celda editable
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
+          Celda de otra base
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
           Celda calculada
         </span>
         <span>
-          {projects.length} proyectos · {total} totales visibles
+          {projects.length} de {total} proyectos
         </span>
-        <span>Eliminar solo afecta al proyecto completo</span>
       </footer>
     </section>
   );
