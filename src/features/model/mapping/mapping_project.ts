@@ -1,10 +1,6 @@
+import { toOrigin, toStatus } from "@/lib/utils/togglers";
 import type { Project, ProjectFormState, SupabaseProjectRow } from "../../../lib/types/supabase/project-types";
-import type { ProjectStatus } from "../../../lib/types/components/options";
-import { numberToInput, toInteger, toIsoDate, toNullableNumber, toText } from "../../../lib/utils/helpers/normalization";
-
-function toStatus(value: string): ProjectStatus {
-  return value === "completado" ? "completado" : "en_ejecucion";
-}
+import { numberToInput, toIsoDate, toNullableInteger, toNullableNumber, toText } from "../../../lib/utils/helpers/normalization";
 
 export function mapSupabaseRowToProject(row: SupabaseProjectRow): Project {
   return {
@@ -26,6 +22,9 @@ export function mapSupabaseRowToProject(row: SupabaseProjectRow): Project {
     arboles: toNullableNumber(row.arboles),
     estado: toStatus(toText(row.estado)),
     descripcion: toText(row.descripcion),
+    insercion: toOrigin(toText(row.insercion)),
+    portal_proyecto_id: toNullableInteger(row.portal_proyecto_id),
+    imagen_url: toText(row.imagen_url),
     updated_at: toText(row.updated_at),
   };
 }
@@ -49,6 +48,8 @@ export function createProjectFormStateFromProject(project: Project): ProjectForm
     arboles: numberToInput(project.arboles),
     estado: project.estado,
     descripcion: project.descripcion,
+    insercion: project.insercion,
+    portal_proyecto_id: project.portal_proyecto_id === null ? "" : String(project.portal_proyecto_id),
   };
 }
 
@@ -71,6 +72,8 @@ export function mapProjectToSupabaseRow(form: ProjectFormState): Record<string, 
     arboles: toNullableNumber(form.arboles),
     estado: toStatus(form.estado),
     descripcion: toText(form.descripcion),
+    insercion: toOrigin(form.insercion),
+    portal_proyecto_id: toNullableInteger(form.portal_proyecto_id),
     updated_at: new Date().toISOString(),
   };
 }
