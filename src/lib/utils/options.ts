@@ -1,3 +1,5 @@
+import { Impact } from "../types/components/options";
+
 // Opciones del tipo de sistema
 export const SYSTEM_TYPE_OPTIONS = ["On-grid", "Híbrido", "Off-grid"] as const;
 
@@ -43,3 +45,9 @@ export const DEPARTMENT_OPTIONS = [
   "Tumbes",
   "Ucayali",
 ] as const;
+
+export const IMPACT_OPTIONS: { value: Impact; label: string; unit: string }[] = [
+  { value: "co2", label: "CO2 reducido", unit: "kg" },
+  { value: "carbon", label: "Carbón reducido", unit: "kg" },
+  { value: "arboles", label: "Árboles reducidos", unit: "" },
+];

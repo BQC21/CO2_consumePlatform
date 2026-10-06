@@ -6,30 +6,9 @@ import type { MonthlyEnergy } from "@/lib/types/supabase/monthly-energy";
 import type { Project } from "@/lib/types/supabase/project-types";
 import { monthPoint, multiYearSeries, seriesHasValues, yearSeries, type SeriesPoint } from "@/lib/utils/helpers/computes/project_series";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
-
-type Period = "diario" | "mes" | "anio";
-type Impact = "co2" | "carbon" | "arboles";
-
-const MONTHS = [
-  { value: 1, label: "Enero" },
-  { value: 2, label: "Febrero" },
-  { value: 3, label: "Marzo" },
-  { value: 4, label: "Abril" },
-  { value: 5, label: "Mayo" },
-  { value: 6, label: "Junio" },
-  { value: 7, label: "Julio" },
-  { value: 8, label: "Agosto" },
-  { value: 9, label: "Septiembre" },
-  { value: 10, label: "Octubre" },
-  { value: 11, label: "Noviembre" },
-  { value: 12, label: "Diciembre" },
-];
-
-const IMPACT_OPTIONS: { value: Impact; label: string; unit: string }[] = [
-  { value: "co2", label: "CO2 reducido", unit: "kg" },
-  { value: "carbon", label: "Carbón reducido", unit: "kg" },
-  { value: "arboles", label: "Árboles reducidos", unit: "" },
-];
+import { Impact, Period } from "@/lib/types/components/options";
+import { IMPACT_OPTIONS } from "@/lib/utils/options";
+import { MONTHS } from "@/lib/utils/consts/months";
 
 function impactValue(project: Project, impact: Impact): number | null {
   if (impact === "co2") {

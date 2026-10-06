@@ -13,3 +13,6 @@ export type ProjectStatus = (typeof PROJECT_STATUS_OPTIONS)[number]["value"]; //
 export type ProjectSortingOrder = (typeof SORTING_OPTIONS)[number]["value"]; // opciones de ordenamiento
 
 export type ProjectAnnualHeader = (typeof PROJECT_ANNUAL_HEADERS)[number]; // encabezado de la vista anual del proyecto
+
+export type Period = "diario" | "mes" | "anio";
+export type Impact = "co2" | "carbon" | "arboles";
