@@ -260,9 +260,30 @@ button {
   background: var(--color-cell-editable);
 }
 
+input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
 .excel-calculated {
   background: var(--color-cell-calculated);
   font-variant-numeric: tabular-nums;
+}
+
+.excel-locked {
+  background: #d7ebf8;
+  color: #1e4f86;
+}
+
+.field-input:disabled,
+.field-select:disabled,
+.field-textarea:disabled {
+  background: #d7ebf8;
+  color: #1e4f86;
+  cursor: not-allowed;
+}
+
+.modal-card-wide {
+  width: min(68rem, 100%);
 }
 
 .excel-group td {
