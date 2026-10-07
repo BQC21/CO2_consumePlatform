@@ -5,7 +5,7 @@
 import { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import { DEPARTMENT_OPTIONS } from "../../options";
 import { toNullableNumber, toText } from "../normalization";
-import { PortalEquipmentRow, PortalJoinRow, PortalProjectRow, PortalZoneRow } from "@/features/model/mapping/mapping_portal";
+import { PortalEquipmentRow, PortalJoinRow, PortalProjectRow, PortalZoneRow } from "@/lib/types/supabase/portal-project";
 
 export function fold(value: string): string {
     return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -74,6 +74,7 @@ export function mapPortalCatalog(
     return {
         id: project.id,
         nombre: toText(project.nombre),
+        version: toText(project.version),
         departamento: matchDepartment(toText(zone?.departamento)),
         distrito: toText(zone?.zona),
         tipo_de_sistema: mapSystem(toText(project.tipo_instalacion)),
