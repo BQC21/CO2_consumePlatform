@@ -75,17 +75,31 @@ export function BarChart({ points }: { points: SeriesPoint[] }) {
   );
 }
   
-export function ImpactChart({ value, label }: { value: number | null; label: string }) {
-  const shown = value ?? 0;
-  const height = shown > 0 ? 90 : 4;
+export function ImpactChart({ points, label }: { points: { label: string; value: number }[]; label: string }) {
+  const width = 360;
+  const height = 180;
+  const pad = 28;
+  const max = Math.max(1, ...points.map((point) => point.value));
+  const step = points.length > 1 ? (width - pad * 2) / (points.length - 1) : 0;
+  const xAt = (index: number) => (points.length === 1 ? width / 2 : pad + index * step);
+  const yAt = (value: number) => height - pad - (value / max) * (height - pad * 2);
+  const path = points
+    .map((point, index) => `${index === 0 ? "M" : "L"}${xAt(index)} ${yAt(point.value)}`)
+    .join(" ");
+
   return (
-    <svg viewBox="0 0 360 180" className="h-80 w-full" role="img" aria-label={label}>
-      <line x1="28" y1="152" x2="340" y2="152" stroke="#94a3b8" />
-      <line x1="28" y1="12" x2="28" y2="152" stroke="#94a3b8" />
-      <rect x="156" y={152 - height} width="28" height={height} fill="#111827" />
-      <text x="170" y="168" textAnchor="middle" fontSize="10" fill="#64748b">
-        Total
-      </text>
+    <svg viewBox={`0 0 ${width} ${height}`} className="h-80 w-full" role="img" aria-label={label}>
+      <line x1={pad} y1={height - pad} x2={width - 8} y2={height - pad} stroke="#94a3b8" />
+      <line x1={pad} y1={12} x2={pad} y2={height - pad} stroke="#94a3b8" />
+      {path ? <path d={path} fill="none" stroke="#111827" strokeWidth="2" /> : null}
+      {points.map((point, index) => (
+        <g key={`${point.label}-${index}`}>
+          <circle cx={xAt(index)} cy={yAt(point.value)} r="3" fill="#111827" />
+          <text x={xAt(index)} y={height - 8} textAnchor="middle" fontSize="10" fill="#64748b">
+            {point.label}
+          </text>
+        </g>
+      ))}
     </svg>
   );
 }
