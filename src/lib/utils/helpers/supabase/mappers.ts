@@ -81,8 +81,8 @@ export function mapPortalCatalog(
             tipo_de_sistema: mapSystem(toText(project.tipo_instalacion)),
             marca_inversor: marca,
             pot_nominal_kw: hasInverter ? potNominal : null,
-            cap_instalada_kwp: hasModule ? capInstalada : null,
-            };
+            cap_instalada_kwp: hasModule ? Number(capInstalada.toFixed(2)) : null,
+        };
     })
     .filter((project) => project.nombre)
     .sort((left, right) => left.nombre.localeCompare(right.nombre, "es"));
