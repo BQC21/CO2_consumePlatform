@@ -112,6 +112,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
       marca_inversor: item.marca_inversor,
       pot_nominal_kw: item.pot_nominal_kw === null ? "" : String(item.pot_nominal_kw),
       cap_instalada_kwp: item.cap_instalada_kwp === null ? "" : String(item.cap_instalada_kwp),
+      paneles_instalados: String(item.paneles_instalados),
     }));
   }
 

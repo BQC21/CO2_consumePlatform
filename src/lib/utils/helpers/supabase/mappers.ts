@@ -7,15 +7,18 @@ import { DEPARTMENT_OPTIONS } from "../../options";
 import { toNullableNumber, toText } from "../normalization";
 import { PortalEquipmentRow, PortalJoinRow, PortalProjectRow, PortalZoneRow } from "@/lib/types/supabase/portal-project";
 
+// Normalización de texto (Hola -> h o l a)
 export function fold(value: string): string {
     return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
 
+// Enlazar con departamentos
 export function matchDepartment(value: string): string {
     const target = fold(value);
     return DEPARTMENT_OPTIONS.find((option) => fold(option) === target) ?? value.trim();
 }
 
+// Enlazar tipo de sistema
 export function mapSystem(value: string): string {
     const text = fold(value);
     if (text.includes("off")) {
@@ -30,6 +33,7 @@ export function mapSystem(value: string): string {
     return value.trim();
 }
 
+// Enlazamiento general con el Portal TEC
 export function mapPortalCatalog(
     projects: PortalProjectRow[],
     zones: PortalZoneRow[],
@@ -44,6 +48,7 @@ export function mapPortalCatalog(
         const zone = project.zona_id === null ? undefined : zoneById.get(project.zona_id);
         let potNominal = 0;
         let capInstalada = 0;
+        let panelesInstalados = 0;
         let hasInverter = false;
         let hasModule = false;
         let marca = "";
@@ -69,6 +74,7 @@ export function mapPortalCatalog(
             if (tipo === "modulo fv") {
                 hasModule = true;
                 capInstalada += power;
+                panelesInstalados += toNullableNumber(join.cantidad) ?? 0;
             }
         }
 
@@ -82,6 +88,7 @@ export function mapPortalCatalog(
             marca_inversor: marca,
             pot_nominal_kw: hasInverter ? potNominal : null,
             cap_instalada_kwp: hasModule ? Number(capInstalada.toFixed(2)) : null,
+            paneles_instalados: Math.round(panelesInstalados),
         };
     })
     .filter((project) => project.nombre)
