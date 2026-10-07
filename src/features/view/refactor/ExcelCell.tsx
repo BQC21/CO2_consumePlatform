@@ -18,9 +18,11 @@ export function ExcelCell({ value, kind, ariaLabel, onCommit, options }: ExcelCe
       ? "excel-cell excel-calculated numeric"
       : kind === "locked"
         ? "excel-cell excel-locked"
-        : kind === "editable"
-          ? "excel-cell excel-editable"
-          : "excel-cell";
+        : kind === "editable" && options
+          ? "excel-cell excel-select"
+          : kind === "editable"
+            ? "excel-cell excel-editable"
+            : "excel-cell";
 
   if (!focused && draft !== value) {
     setDraft(value);
@@ -31,29 +33,25 @@ export function ExcelCell({ value, kind, ariaLabel, onCommit, options }: ExcelCe
   }
 
   if (options) {
-    const listId = `excel-${ariaLabel.replace(/\s+/g, "-").toLowerCase()}`;
+    const choices = options.some((option) => option === value) || !value ? options : [value, ...options];
     return (
-      <>
-        <input
-          className={className}
-          aria-label={ariaLabel}
-          list={listId}
-          value={draft}
-          onFocus={() => setFocused(true)}
-          onChange={(event) => setDraft(event.target.value)}
-          onBlur={() => {
-            setFocused(false);
-            if (draft !== value) {
-              onCommit(draft);
-            }
-          }}
-        />
-        <datalist id={listId}>
-          {options.map((option) => (
-            <option key={option} value={option} />
-          ))}
-        </datalist>
-      </>
+      <select
+        className={className}
+        aria-label={ariaLabel}
+        value={value}
+        onChange={(event) => {
+          if (event.target.value !== value) {
+            onCommit(event.target.value);
+          }
+        }}
+      >
+        {!value ? <option value="">—</option> : null}
+        {choices.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     );
   }
 

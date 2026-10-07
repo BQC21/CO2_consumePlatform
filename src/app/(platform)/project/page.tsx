@@ -17,6 +17,7 @@ import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
 import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
 import { transformAnnualRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
 import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
+import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
@@ -100,8 +101,11 @@ export default function ProjectPage() {
         <Button2Add label="Proyecto">
           {(close) => (
             <AddProjectModal
-              onAdd={async (form) => {
-                await projectMutations.create(form);
+              onAdd={async (form, image) => {
+                const created = await projectMutations.create(form);
+                if (image) {
+                  await projectMutations.saveImage(created.id, image);
+                }
                 await refresh();
                 close();
               }}
@@ -162,6 +166,7 @@ export default function ProjectPage() {
                       project.reduccion_carbon === null ? "" : String(project.reduccion_carbon),
                       project.arboles === null ? "" : String(project.arboles),
                       project.estado === "completado" ? "Completado" : "En ejecución",
+                      platformProjectImageName(project.imagen_url),
                     ];
                   })}
                   onClose={close}
@@ -194,6 +199,10 @@ export default function ProjectPage() {
             }}
             onDelete={async (id) => {
               await projectMutations.remove(id);
+              await refresh();
+            }}
+            onReplaceImage={async (id, file) => {
+              await projectMutations.saveImage(id, file);
               await refresh();
             }}
           />

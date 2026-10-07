@@ -49,6 +49,9 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                       />
                     </td>
                     <td>
+                      <ProjectImageCell project={project} onReplace={onReplaceImage} />
+                    </td>
+                    <td>
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
                         ariaLabel={`Ubicación de ${project.nombre}`}
@@ -121,9 +124,6 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                       />
                     </td>
                     <td>
-                      <ProjectImageCell project={project} onReplace={onReplaceImage} />
-                    </td>
-                    <td>
                       <div className="flex gap-1">
                         <MetricsButton project={project} months={months} />
                         <Button2Delete label={`Eliminar ${project.nombre}`}>
@@ -158,6 +158,10 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
         <span className="inline-flex flex-wrap items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-editable)" }} />
           Celda editable
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-select)" }} />
+          Celda con selector
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-image)" }} />
+          Imagen
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
           Celda fija
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />

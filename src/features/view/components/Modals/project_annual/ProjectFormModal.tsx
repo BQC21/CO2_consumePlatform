@@ -8,6 +8,7 @@ import {
   AddSectionTitle,
   AddSelectField,
   AddTextField,
+  ProjectImageCell,
 } from "@/features/view/components/Form_fields/fields";
 import { ModalFrame } from "@/features/view/refactor/ModalFrame";
 import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
@@ -207,18 +208,19 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
           options={PROJECT_STATUS_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
           onChange={(value) => update("estado", value === "completado" ? "completado" : "en_ejecucion")}
         />
-        <label className="block">
+        <div>
           <span className="field-label">Imagen del proyecto</span>
-          <input
-            className="field-input input-focus"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-            onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
-          />
-          <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-            {imageFile ? imageFile.name : "JPG, PNG o WebP. Hasta 5 MB."}
-          </p>
-        </label>
+          <label className="excel-cell excel-image flex cursor-pointer items-center truncate">
+            <span className="truncate">{imageFile ? imageFile.name : "Subir imagen"}</span>
+            <input
+              className="sr-only"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+              aria-label="Imagen del proyecto"
+              onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+            />
+          </label>
+        </div>
 
         {error ? <p className="field-error">{error}</p> : null}
 

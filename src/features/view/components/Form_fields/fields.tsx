@@ -3,7 +3,7 @@ import { Project } from "@/lib/types/supabase/project-types";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
 import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
-import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
+import { platformProjectImageName, platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
 import { useState, type FormEvent, type ReactNode } from "react";
 
 // ----------------------------------------------
@@ -226,7 +226,7 @@ export function ImpactCard({
 export function ProjectImageCell({ project, onReplace }: { project: Project; onReplace: (id: string, file: File) => Promise<void> }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const name = platformProjectImageName(project.imagen_url);
+  const storedName = platformProjectImageUrl(project.imagen_url) ? platformProjectImageName(project.imagen_url) : "";
 
   async function change(file: File | undefined) {
     if (!file) {
@@ -244,8 +244,8 @@ export function ProjectImageCell({ project, onReplace }: { project: Project; onR
   }
 
   return (
-    <label className="excel-cell excel-editable flex cursor-pointer items-center truncate" title={error || "Cambiar imagen"}>
-      <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || name}</span>
+    <label className="excel-cell excel-image flex cursor-pointer items-center truncate" title={error || "Subir imagen"}>
+      <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || storedName || "Subir imagen"}</span>
       <input
         className="sr-only"
         type="file"
