@@ -1,6 +1,7 @@
 import { mapProjectToSupabaseRow, mapSupabaseRowToProject } from "@/features/model/mapping/mapping_project";
 import { createClient } from "@/features/model/supabase/client";
 import type { Project, ProjectFormData, SupabaseProjectRow } from "@/lib/types/supabase/project-types";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
 import { PROJECT_IMAGE_BUCKET, PROJECT_TABLE } from "@/lib/utils/namingTolerance";
 
 export async function getProjects(): Promise<Project[]> {
@@ -67,9 +68,6 @@ export async function updateProjectImage(id: string, imagenUrl: string): Promise
   }
 }
 
-const ACCEPTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-
 function storageObjectName(file: File): string {
   const raw = file.name.split(/[/\\]/).pop()?.trim() || "imagen";
   const cleaned = raw.replace(/[^\w.\-]+/g, "_");
@@ -77,11 +75,11 @@ function storageObjectName(file: File): string {
 }
 
 export async function uploadProjectImage(projectId: string, file: File): Promise<string> {
-  if (!ACCEPTED_IMAGE_TYPES.has(file.type)) {
+  if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
     throw new Error("Usa una imagen JPG, PNG o WebP.");
   }
   if (file.size > MAX_IMAGE_BYTES) {
-    throw new Error("La imagen supera 5 MB.");
+    throw new Error(`La imagen supera ${MAX_IMAGE_LABEL}.`);
   }
   const path = `${projectId}/${storageObjectName(file)}`;
   const supabase = createClient();

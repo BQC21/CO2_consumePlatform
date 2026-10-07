@@ -14,7 +14,8 @@ import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import type { ProjectFormState, ProjectOrigin } from "@/lib/types/supabase/project-types";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectFormModalProps } from "@/lib/types/components/components";
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/utils/consts/image_props";
+import { EditIcon, TrashIcon } from "@/features/view/components/Icons/icons";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
 
 export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSubmit, onClose }: ProjectFormModalProps) {
   
@@ -140,7 +141,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
 
     // Condiciona el tamaño máximo de la imagen
     if (imageFile && imageFile.size > MAX_IMAGE_BYTES) {
-      setError("La imagen supera 5 MB.");
+      setError(`La imagen supera ${MAX_IMAGE_LABEL}.`);
       return;
     }
 
@@ -265,16 +266,46 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
         
         <div>
           <span className="field-label">Imagen del proyecto</span>
-          <label className="excel-cell excel-image flex cursor-pointer items-center truncate">
-            <span className="truncate">{imageFile ? imageFile.name : "Subir imagen"}</span>
-            <input
-              className="sr-only"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-              aria-label="Imagen del proyecto"
-              onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
-            />
-          </label>
+          <div className="flex items-center gap-1">
+            <label className="excel-cell excel-image flex min-w-0 flex-1 cursor-pointer items-center truncate">
+              <span className="truncate">{imageFile ? imageFile.name : "Subir imagen"}</span>
+              <input
+                className="sr-only"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                aria-label="Imagen del proyecto"
+                onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+              />
+            </label>
+            {imageFile ? (
+              <>
+                <label
+                  className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
+                  style={{ background: "var(--color-cell-image)" }}
+                  title="Cambiar imagen"
+                >
+                  <EditIcon />
+                  <input
+                    className="sr-only"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                    aria-label="Cambiar imagen del proyecto"
+                    onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+                  />
+                </label>
+                <button
+                  className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
+                  style={{ background: "var(--color-cell-image)" }}
+                  type="button"
+                  title="Quitar imagen"
+                  aria-label="Quitar imagen del proyecto"
+                  onClick={() => setImageFile(null)}
+                >
+                  <TrashIcon />
+                </button>
+              </>
+            ) : null}
+          </div>
         </div>
 
         {error ? <p className="field-error">{error}</p> : null}

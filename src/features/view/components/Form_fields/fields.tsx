@@ -1,3 +1,4 @@
+import { EditIcon } from "@/features/view/components/Icons/icons";
 import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
@@ -244,19 +245,41 @@ export function ProjectImageCell({ project, onReplace }: { project: Project; onR
   }
 
   return (
-    <label className="excel-cell excel-image flex cursor-pointer items-center truncate" title={error || "Subir imagen"}>
-      <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || storedName || "Subir imagen"}</span>
-      <input
-        className="sr-only"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-        aria-label={`Cambiar imagen de ${project.nombre}`}
-        disabled={busy}
-        onChange={(event) => {
-          void change(event.target.files?.[0]);
-          event.target.value = "";
-        }}
-      />
-    </label>
+    <div className="flex items-center gap-1">
+      <label className="excel-cell excel-image flex min-w-0 flex-1 cursor-pointer items-center truncate" title={error || storedName || "Subir imagen"}>
+        <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || storedName || "Subir imagen"}</span>
+        <input
+          className="sr-only"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+          aria-label={`Subir imagen de ${project.nombre}`}
+          disabled={busy}
+          onChange={(event) => {
+            void change(event.target.files?.[0]);
+            event.target.value = "";
+          }}
+        />
+      </label>
+      {storedName ? (
+        <label
+          className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
+          style={{ background: "var(--color-cell-image)" }}
+          title="Cambiar imagen"
+        >
+          <EditIcon />
+          <input
+            className="sr-only"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+            aria-label={`Cambiar imagen de ${project.nombre}`}
+            disabled={busy}
+            onChange={(event) => {
+              void change(event.target.files?.[0]);
+              event.target.value = "";
+            }}
+          />
+        </label>
+      ) : null}
+    </div>
   );
 }
