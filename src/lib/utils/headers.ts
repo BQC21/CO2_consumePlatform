@@ -3,6 +3,7 @@
 // Proyectos anuales
 export const PROJECT_ANNUAL_HEADERS = [
   "PROYECTO / MES",
+  "IMAGEN ASOCIADA",
   "UBICACIÓN",
   "TIPO DE SISTEMA",
   // "POT. NOMINAL (kW)",
@@ -17,5 +18,4 @@ export const PROJECT_ANNUAL_HEADERS = [
   "REDUCCIÓN CARBON TOTAL",
   "ÁRBOLES TOTALES",
   "ESTADO",
-  "IMAGEN ASOCIADA"
 ] as const;
