@@ -12,7 +12,7 @@ export async function getPortalProjects(): Promise<PortalProjectOption[]> {
   const portal = createPortalClient();
   // Reunir qué queremos extraer
   const [projects, zones, joins, equipment] = await Promise.all([
-    portal.from("proyectos").select("id, nombre, tipo_instalacion, zona_id"),
+    portal.from("proyectos").select("id, nombre, version, tipo_instalacion, zona_id"),
     portal.from("zonas").select("id, departamento, zona"),
     portal.from("join_proyecto_equipos").select("proyecto_id, equipo_id, cantidad"),
     portal.from("equipo_principales").select("id, tipo_de_producto, marca, potencia_maxima"),
