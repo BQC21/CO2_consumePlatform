@@ -15,6 +15,8 @@
   --color-surface-dark: #12161c;
   --color-surface-muted: #eef2f8;
   --color-cell-editable: #fcf4ec;
+  --color-cell-select: #eadcff;
+  --color-cell-image: #9a3412;
   --color-cell-calculated: #e0ecd8;
   --color-text-primary: #122134;
   --color-text-secondary: #8894a4;
@@ -258,6 +260,22 @@ button {
 
 .excel-editable {
   background: var(--color-cell-editable);
+}
+
+.excel-select {
+  background: var(--color-cell-select);
+  color: #5b21b6;
+  cursor: pointer;
+}
+
+select.excel-select {
+  appearance: auto;
+  padding-right: 1.35rem;
+}
+
+.excel-image {
+  background: var(--color-cell-image);
+  color: #fff7ed;
 }
 
 input[type="radio"] {
