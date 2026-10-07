@@ -7,7 +7,7 @@ import { EnvironmentalCards } from "@/features/view/components/Metrics/Environme
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyEnergy } from "@/features/ViewModel/hooks/services/useMonthlyEnergy";
-import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
+import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 import { ProductionGauge } from "@/features/view/components/Metrics/ProductionGauge";
@@ -16,9 +16,6 @@ export default function DashboardPage() {
 
   const projects = useRealtimeProject();
   const months = useMonthlyEnergy();
-  const mutations = useProjectMutations();
-
-  const error = projects.error || months.error || mutations.error;
   const loading = projects.loading || months.loading;
 
   // ------------------
@@ -72,14 +69,7 @@ export default function DashboardPage() {
           />
           {/* Columna 3 */}
           <div className="flex flex-col gap-4">
-            <DepartmentCard
-              department={activeDepartment}
-              projects={projects.items}
-              onUploadImage={async (projectId, file) => {
-                await mutations.saveImage(projectId, file);
-                await projects.refetch();
-              }}
-            />
+            <DepartmentCard department={activeDepartment} projects={projects.items} />
             <Link href="/project" className="btn-primary">
               Ver lista de proyectos
             </Link>
