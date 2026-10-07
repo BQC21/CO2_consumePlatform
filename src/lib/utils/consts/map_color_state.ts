@@ -13,3 +13,9 @@ export const FILL: Record<MapStatus, string> = {
     completado: "var(--color-accent-green)",
     sin_proyecto: "#2f6fbf",
 };
+
+// Colores para colorear los puntos del mapa según estado del proyecto
+export const DOT_COLOR = {
+    en_ejecucion: "#f05a1a",
+    completado: "#3caf53",
+} as const;
