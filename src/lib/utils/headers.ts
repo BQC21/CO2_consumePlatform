@@ -17,4 +17,5 @@ export const PROJECT_ANNUAL_HEADERS = [
   "REDUCCIÓN CARBON TOTAL",
   "ÁRBOLES TOTALES",
   "ESTADO",
+  "IMAGEN ASOCIADA"
 ] as const;
