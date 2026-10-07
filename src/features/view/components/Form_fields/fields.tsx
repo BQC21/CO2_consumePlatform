@@ -5,7 +5,7 @@ import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
 import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
 import { platformProjectImageName, platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 
 // ----------------------------------------------
 // ---- Condicionar el requerimiento del campo --
@@ -227,12 +227,10 @@ export function ImpactCard({
 export function ProjectImageCell({ project, onReplace }: { project: Project; onReplace: (id: string, file: File) => Promise<void> }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const resetting = useRef(false);
   const storedName = platformProjectImageUrl(project.imagen_url) ? platformProjectImageName(project.imagen_url) : "";
 
-  async function change(file: File | undefined) {
-    if (!file) {
-      return;
-    }
+  async function change(file: File) {
     setBusy(true);
     setError("");
     try {
@@ -242,6 +240,22 @@ export function ProjectImageCell({ project, onReplace }: { project: Project; onR
     } finally {
       setBusy(false);
     }
+  }
+
+  function pick(event: ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    if (resetting.current || busy) {
+      return;
+    }
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+    void change(file).finally(() => {
+      resetting.current = true;
+      input.value = "";
+      resetting.current = false;
+    });
   }
 
   return (
@@ -254,10 +268,7 @@ export function ProjectImageCell({ project, onReplace }: { project: Project; onR
           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
           aria-label={`Subir imagen de ${project.nombre}`}
           disabled={busy}
-          onChange={(event) => {
-            void change(event.target.files?.[0]);
-            event.target.value = "";
-          }}
+          onChange={pick}
         />
       </label>
       {storedName ? (
@@ -273,10 +284,7 @@ export function ProjectImageCell({ project, onReplace }: { project: Project; onR
             accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
             aria-label={`Cambiar imagen de ${project.nombre}`}
             disabled={busy}
-            onChange={(event) => {
-              void change(event.target.files?.[0]);
-              event.target.value = "";
-            }}
+            onChange={pick}
           />
         </label>
       ) : null}

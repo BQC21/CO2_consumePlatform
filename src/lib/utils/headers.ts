@@ -3,7 +3,7 @@
 // Proyectos anuales
 export const PROJECT_ANNUAL_HEADERS = [
   "PROYECTO / MES",
-  "IMAGEN ASOCIADA",
+  // "IMAGEN ASOCIADA",
   "UBICACIÓN",
   "TIPO DE SISTEMA",
   // "POT. NOMINAL (kW)",

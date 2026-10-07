@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
@@ -13,9 +13,11 @@ import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from 
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
 import { ProjectImageCell } from "../Form_fields/fields";
+import { EditIcon, TrashIcon } from "../Icons/icons";
 
 export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete, onReplaceImage }: ProjectAnnualTableProps) {
   const totals = useMemo(() => totalsByProject(months), [months]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
@@ -48,9 +50,37 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         onCommit={locked ? undefined : (value) => commit(project, { nombre: value })}
                       />
                     </td>
-                    <td>
+                    {/* <td>
                       <ProjectImageCell project={project} onReplace={onReplaceImage} />
-                    </td>
+                      {imageFile ? (
+                          <>
+                            <label
+                              className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
+                              style={{ background: "var(--color-cell-image)" }}
+                              title="Cambiar imagen"
+                            >
+                              <EditIcon />
+                              <input
+                                className="sr-only"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                                aria-label="Cambiar imagen del proyecto"
+                                onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+                              />
+                            </label>
+                            <button
+                              className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
+                              style={{ background: "var(--color-cell-image)" }}
+                              type="button"
+                              title="Quitar imagen"
+                              aria-label="Quitar imagen del proyecto"
+                              onClick={() => setImageFile(null)}
+                            >
+                              <TrashIcon />
+                            </button>
+                          </>
+                        ) : null}
+                    </td> */}
                     <td>
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}

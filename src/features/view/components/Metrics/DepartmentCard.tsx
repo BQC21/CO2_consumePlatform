@@ -70,7 +70,7 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
         </article>
       )}
 
-      {project ? (
+      {/* {project ? (
         <section className="overflow-hidden rounded-[var(--radius-xl)] bg-[#d7ebf8] text-[var(--color-text-primary)]">
           {imageUrl ? (
             <div className="relative h-48">
@@ -82,7 +82,7 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
             </p>
           )}
         </section>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

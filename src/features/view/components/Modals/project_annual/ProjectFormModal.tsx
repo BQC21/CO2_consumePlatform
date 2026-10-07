@@ -264,7 +264,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
           onChange={(value) => update("estado", value === "completado" ? "completado" : "en_ejecucion")}
         />
         
-        <div>
+        {/* <div>
           <span className="field-label">Imagen del proyecto</span>
           <div className="flex items-center gap-1">
             <label className="excel-cell excel-image flex min-w-0 flex-1 cursor-pointer items-center truncate">
@@ -306,7 +306,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
               </>
             ) : null}
           </div>
-        </div>
+        </div> */}
 
         {error ? <p className="field-error">{error}</p> : null}
 
