@@ -300,8 +300,9 @@ input[type="radio"] {
   cursor: not-allowed;
 }
 
-.modal-card-wide {
-  width: min(68rem, 100%);
+.modal-card.modal-card-wide {
+  width: min(92vw, 100%);
+  max-height: min(92vh, 100%);
 }
 
 .excel-group td {
