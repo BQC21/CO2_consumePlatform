@@ -26,12 +26,13 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
     [],
   );
   const labelById = new Map(labels.map((label) => [label.id, label]));
+  const selectedShape = DEPARTMENT_SHAPES.find((shape) => shape.nombre === selected);
 
   return (
     <div className="relative mx-auto h-[28rem] w-full max-w-5xl rounded-2xl bg-white p-7 md:h-[46rem]">
       <svg viewBox={PERU_MAP_VIEWBOX} className="h-full w-full" role="img" aria-label="Mapa del Perú por departamentos">
         <rect width="420*1.5" height="640*1.5" fill="#eef6fb" rx="16" />
-        {/* Dibuja el contorno de cada departamento cuando este haya sido seleccionado */}
+        {/* Dibuja cada departamento; el borde del seleccionado se pinta después */}
         {DEPARTMENT_SHAPES.map((shape) => {
           const isSelected = shape.nombre === selected;
           const count = projects.filter((project) => project.ubicacion === shape.nombre).length;
@@ -41,8 +42,8 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
               key={shape.id}
               d={shape.d}
               fill={isSelected ? "#b7daf2" : "#c5e3f6"}
-              stroke={isSelected ? "#f05a1a" : "#ffffff"}
-              strokeWidth={isSelected ? 2.2 : 1}
+              stroke="#ffffff"
+              strokeWidth={1}
               className="cursor-pointer"
               aria-label={label}
               onClick={() => onSelect(shape.nombre)}
@@ -51,6 +52,16 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
             </path>
           );
         })}
+        {selectedShape ? (
+          <path
+            d={selectedShape.d}
+            fill="none"
+            stroke="#f05a1a"
+            strokeWidth={2.2}
+            strokeLinejoin="round"
+            style={{ pointerEvents: "none" }}
+          />
+        ) : null}
         {/* Colorea los puntos por proyectos según el estado de este */}
         {DEPARTMENT_SHAPES.map((shape) => {
           const local = projects.filter((project) => project.ubicacion === shape.nombre);
