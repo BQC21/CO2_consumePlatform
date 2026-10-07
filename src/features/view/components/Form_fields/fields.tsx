@@ -1,8 +1,10 @@
 import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
+import { Project } from "@/lib/types/supabase/project-types";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
 import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
 import { formatNumber } from "@/lib/utils/helpers/render/format";
-import type { FormEvent, ReactNode } from "react";
+import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
+import { useState, type FormEvent, type ReactNode } from "react";
 
 // ----------------------------------------------
 // ---- Condicionar el requerimiento del campo --
@@ -217,5 +219,44 @@ export function ImpactCard({
         {icon}
       </span>
     </article>
+  );
+}
+
+// Celda para cambiar imagen asociada 
+export function ProjectImageCell({ project, onReplace }: { project: Project; onReplace: (id: string, file: File) => Promise<void> }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const name = platformProjectImageName(project.imagen_url);
+
+  async function change(file: File | undefined) {
+    if (!file) {
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      await onReplace(project.id, file);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo cambiar la imagen.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <label className="excel-cell excel-editable flex cursor-pointer items-center truncate" title={error || "Cambiar imagen"}>
+      <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || name}</span>
+      <input
+        className="sr-only"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+        aria-label={`Cambiar imagen de ${project.nombre}`}
+        disabled={busy}
+        onChange={(event) => {
+          void change(event.target.files?.[0]);
+          event.target.value = "";
+        }}
+      />
+    </label>
   );
 }

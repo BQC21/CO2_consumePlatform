@@ -9,12 +9,12 @@ import type { Project, ProjectFormState } from "@/lib/types/supabase/project-typ
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
 import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
-import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
+import { ProjectImageCell } from "../Form_fields/fields";
 
-export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
+export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete, onReplaceImage }: ProjectAnnualTableProps) {
   const totals = useMemo(() => totalsByProject(months), [months]);
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
@@ -121,11 +121,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                       />
                     </td>
                     <td>
-                      <ExcelCell
-                        kind="locked"
-                        ariaLabel={`Imagen de ${project.nombre}`}
-                        value={platformProjectImageName(project.imagen_url)}
-                      />
+                      <ProjectImageCell project={project} onReplace={onReplaceImage} />
                     </td>
                     <td>
                       <div className="flex gap-1">
