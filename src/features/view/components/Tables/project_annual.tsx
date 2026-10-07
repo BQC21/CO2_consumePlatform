@@ -1,17 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
-import { ChartIcon } from "@/features/view/components/Icons/icons";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
-import { ProjectMetricsModal } from "@/features/view/components/Modals/project_annual/ProjectMetricsModal";
 import { ExcelCell } from "@/features/view/refactor/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
-import type { MonthlyEnergy } from "@/lib/types/supabase/monthly-energy";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
 import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
+import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
@@ -106,10 +104,12 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                       <ExcelCell kind="calculated" ariaLabel={`Reducción de CO2 de ${project.nombre}`} value={formatNumber(project.reduccion_co2, 1)} />
                     </td>
                     <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Reducción de carbón de ${project.nombre}`} value={formatNumber(project.reduccion_carbon, 1)} />
+                      <ExcelCell kind="calculated" ariaLabel={`Reducción de carbón de ${project.nombre}`} 
+                                value={formatNumber(project.reduccion_carbon, 1)} />
                     </td>
                     <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Árboles de ${project.nombre}`} value={formatNumber(project.arboles, 1)} />
+                      <ExcelCell kind="calculated" ariaLabel={`Árboles de ${project.nombre}`} 
+                                value={formatNumber(project.arboles, 1)} />
                     </td>
                     <td>
                       <ExcelCell
@@ -118,6 +118,13 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         value={project.estado === "completado" ? "Completado" : "En ejecución"}
                         options={["En ejecución", "Completado"]}
                         onCommit={(value) => commit(project, { estado: value.toLowerCase().includes("complet") ? "completado" : "en_ejecucion" })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind="locked"
+                        ariaLabel={`Imagen de ${project.nombre}`}
+                        value={platformProjectImageName(project.imagen_url)}
                       />
                     </td>
                     <td>
@@ -144,7 +151,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
               <tr>
                 <td colSpan={PROJECT_ANNUAL_HEADERS.length + 1} className="px-3 py-8 text-sm">
                   <p className="font-medium">No hay proyectos en esta vista</p>
-                  <p className="text-[var(--color-text-secondary)]">El filtro no encontró plantas o todavía no hay altas. Usa + Proyecto o limpia el filtro.</p>
+                  <p className="text-[var(--color-text-secondary)]">El filtro no encontró plantas o todavía no hay altas.</p>
                 </td>
               </tr>
             )}
@@ -156,7 +163,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-editable)" }} />
           Celda editable
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
-          Celda de otra base
+          Celda fija
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
           Celda calculada
         </span>

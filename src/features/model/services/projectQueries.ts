@@ -67,9 +67,23 @@ export async function updateProjectImage(id: string, imagenUrl: string): Promise
   }
 }
 
+const ACCEPTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+function storageObjectName(file: File): string {
+  const raw = file.name.split(/[/\\]/).pop()?.trim() || "imagen";
+  const cleaned = raw.replace(/[^\w.\-]+/g, "_");
+  return cleaned || "imagen";
+}
+
 export async function uploadProjectImage(projectId: string, file: File): Promise<string> {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const path = `${projectId}/${Date.now()}.${extension}`;
+  if (!ACCEPTED_IMAGE_TYPES.has(file.type)) {
+    throw new Error("Usa una imagen JPG, PNG o WebP.");
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    throw new Error("La imagen supera 5 MB.");
+  }
+  const path = `${projectId}/${storageObjectName(file)}`;
   const supabase = createClient();
   const { error } = await supabase.storage.from(PROJECT_IMAGE_BUCKET).upload(path, file, {
     upsert: true,

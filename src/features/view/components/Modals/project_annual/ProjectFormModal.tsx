@@ -15,8 +15,12 @@ import type { ProjectFormState, ProjectOrigin } from "@/lib/types/supabase/proje
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectFormModalProps } from "@/lib/types/components/components";
 
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
 export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSubmit, onClose }: ProjectFormModalProps) {
   const [form, setForm] = useState<ProjectFormState>(initial);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [catalog, setCatalog] = useState<PortalProjectOption[]>([]);
@@ -100,10 +104,18 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
       setError("Selecciona un proyecto del portal TEC.");
       return;
     }
+    if (imageFile && !ACCEPTED_IMAGE_TYPES.includes(imageFile.type)) {
+      setError("Usa una imagen JPG, PNG o WebP.");
+      return;
+    }
+    if (imageFile && imageFile.size > MAX_IMAGE_BYTES) {
+      setError("La imagen supera 5 MB.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
-      await onSubmit(form);
+      await onSubmit(form, imageFile ?? undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar el proyecto.");
       setBusy(false);
@@ -195,6 +207,18 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
           options={PROJECT_STATUS_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
           onChange={(value) => update("estado", value === "completado" ? "completado" : "en_ejecucion")}
         />
+        <label className="block">
+          <span className="field-label">Imagen del proyecto</span>
+          <input
+            className="field-input input-focus"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+            onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+          />
+          <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
+            {imageFile ? imageFile.name : "JPG, PNG o WebP. Hasta 5 MB."}
+          </p>
+        </label>
 
         {error ? <p className="field-error">{error}</p> : null}
 

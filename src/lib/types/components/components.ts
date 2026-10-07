@@ -164,7 +164,7 @@ export type ModalFrameProps = {
 
 // Proyecto anual
 export type AddProjectModalProps = {
-    onAdd: (form: ProjectFormState) => Promise<void>;
+    onAdd: (form: ProjectFormState, image?: File) => Promise<void>;
     onClose: () => void;
 };
 
@@ -185,7 +185,7 @@ export type ProjectFormModalProps = {
     submitLabel: string;
     busyLabel: string;
     initial: ProjectFormState;
-    onSubmit: (form: ProjectFormState) => Promise<void>;
+    onSubmit: (form: ProjectFormState, image?: File) => Promise<void>;
     onClose: () => void;
 };
 
@@ -241,7 +241,6 @@ export type DashboardMetrics = {
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
-    onUploadImage: (projectId: string, file: File) => Promise<void>;
 };
 
 // operaciones masivas
