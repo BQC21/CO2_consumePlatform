@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
-import { AddNumberField } from "../../Form_fields/fields";
+import { AddNumberField, AddReadOnlyField } from "../../Form_fields/fields";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 
 export function ProjectMetricsModal({
@@ -67,10 +67,9 @@ export function ProjectMetricsModal({
             onChange={(value) => update("rendimiento_grid_total", value)}
           /> 
 
-          <AddNumberField
+          <AddReadOnlyField
             label="Rendimiento de la carga (KWh)"
-            value={form.carga_consumida_total}
-            onChange={(value) => update("carga_consumida_total", value)}
+            value={String(Number(form.rendimiento_fv_total) + Number(form.rendimiento_grid_total))}
           /> 
 
           {/* Ambientales */}
