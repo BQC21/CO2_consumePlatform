@@ -1,20 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
-import { ExcelCell } from "@/features/view/refactor/ExcelCell";
+import { ExcelCell } from "@/features/view/components/Shells/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
-import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
-import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatDate } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
 
-export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
-  const totals = useMemo(() => totalsByProject(months), [months]);
+export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
@@ -36,7 +33,6 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
             {projects.length > 0 ? (
               projects.map((project) => {
                 const locked = project.insercion === "existente";
-                const energy = totals.get(project.id);
                 return (
                   <tr key={project.id}>
                     <td className="whitespace-nowrap font-medium">

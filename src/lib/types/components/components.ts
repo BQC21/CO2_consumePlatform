@@ -1,5 +1,4 @@
 import type { ReactNode, SelectHTMLAttributes } from "react";
-import { MonthlyEnergy } from "../supabase/monthly-energy";
 import { Project, ProjectFormState } from "../supabase/project-types";
 import { ProjectSortingOrder } from "./options";
 
@@ -120,7 +119,6 @@ export type ProjectSorterProps = {
 
 export type ProjectAnnualTableProps = {
     projects: Project[];
-    months: MonthlyEnergy[];
     total: number;
     onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
@@ -221,10 +219,6 @@ export type DepartmentShape = {
     labelX: number;
     labelY: number;
 };
-
-// Energía mensual
-
-
 
 // metricas para el dashboard
 export type DashboardMetrics = {

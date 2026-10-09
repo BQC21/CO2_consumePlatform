@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalFrame } from "@/features/view/refactor/ModalFrame";
+import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { MassiveDownloadModalProps } from "@/lib/types/components/components";
 import { downloadWorkbook } from "@/lib/utils/helpers/massive/buildWorkbook";
 

@@ -6,7 +6,6 @@ import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCar
 import { EnvironmentalCards } from "@/features/view/components/Metrics/EnvironmentalCards";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
-import { useMonthlyEnergy } from "@/features/ViewModel/hooks/services/useMonthlyEnergy";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
@@ -14,8 +13,7 @@ import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 export default function DashboardPage() {
 
   const projects = useRealtimeProject();
-  const months = useMonthlyEnergy();
-  const loading = projects.loading || months.loading;
+  const loading = projects.loading;
 
   // ------------------
   // -- Seleccionado --

@@ -11,12 +11,10 @@ import { AddProjectModal } from "@/features/view/components/Modals/project_annua
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { ProjectSorter } from "@/features/view/components/Sorter/ProjectSorter";
 import { ProjectAnnualTable } from "@/features/view/components/Tables/project_annual";
-import { useMonthlyEnergy } from "@/features/ViewModel/hooks/services/useMonthlyEnergy";
 import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
-import { totalsByProject } from "@/lib/utils/helpers/computes/project_series";
 import { transformAnnualRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
-import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatDate } from "@/lib/utils/helpers/render/format";
 import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
@@ -28,9 +26,6 @@ export default function ProjectPage() {
 
   const projectsState = useRealtimeProject();
   const projectMutations = useProjectMutations();
-  const monthsState = useMonthlyEnergy();
-
-  const error = projectsState.error || monthsState.error || projectMutations.error
   // -------------------------------
   // Estados de filtrado y sorting
   // -------------------------------
@@ -47,7 +42,6 @@ export default function ProjectPage() {
   const filtered = useMemo(
     () => sortProjects(filterProjects(projectsState.items, { search, ubicacion, marcaInversor }), sorting),
     [projectsState.items, search, ubicacion, marcaInversor, sorting]);
-  const totals = useMemo(() => totalsByProject(monthsState.items), [monthsState.items]);
 
   // ----------------------------------
   // --- Refrescar estados ------------
@@ -55,7 +49,6 @@ export default function ProjectPage() {
 
   async function refresh() {
     await projectsState.refetch();
-    await monthsState.refetch();
   }
 
   // --------------------------------------------
@@ -153,7 +146,6 @@ export default function ProjectPage() {
                   filename="proyectos.xlsx"
                   headers={[...PROJECT_ANNUAL_HEADERS]}
                   rows={filtered.map((project) => {
-                    const energy = totals.get(project.id);
                     return [
                       project.nombre,
                       project.ubicacion,
@@ -161,12 +153,6 @@ export default function ProjectPage() {
                       project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp),
                       formatDate(project.fecha_instalacion),
                       project.marca_inversor,
-                      formatNumber(energy?.fv ?? 0, 1),
-                      formatNumber(energy?.grid ?? 0, 1),
-                      formatNumber(energy?.carga ?? 0, 1),
-                      project.reduccion_co2 === null ? "" : String(project.reduccion_co2),
-                      project.reduccion_carbon === null ? "" : String(project.reduccion_carbon),
-                      project.arboles === null ? "" : String(project.arboles),
                       project.estado === "completado" ? "Completado" : "En ejecución",
                       platformProjectImageName(project.imagen_url),
                     ];
@@ -193,7 +179,6 @@ export default function ProjectPage() {
           {/* Contenido per se */}
           <ProjectAnnualTable
             projects={filtered}
-            months={monthsState.items}
             total={projectsState.items.length}
             onUpdate={async (id, form) => {
               await projectMutations.update(id, form);

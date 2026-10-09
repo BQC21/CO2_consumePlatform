@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ModalFrame } from "@/features/view/refactor/ModalFrame";
+import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { AddNumberField } from "../../Form_fields/fields";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";

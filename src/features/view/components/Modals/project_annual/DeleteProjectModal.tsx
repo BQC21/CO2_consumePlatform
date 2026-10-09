@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ModalFrame } from "@/features/view/refactor/ModalFrame";
+import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { DeleteProjectModalProps } from "@/lib/types/components/components";
 
 export function DeleteProjectModal({ project, onDelete, onClose }: DeleteProjectModalProps) {
