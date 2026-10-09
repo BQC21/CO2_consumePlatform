@@ -27,6 +27,9 @@ export type PortalEquipmentRow = {
   tipo_de_producto: string | null;
   marca: string | null;
   potencia_maxima: number | string | null;
+  descripcion?: string | null;
+  unidad?: string | null;
+  paneles_palet?: number | string | null;
 };
 
 

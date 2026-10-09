@@ -15,7 +15,7 @@ export async function getPortalProjects(): Promise<PortalProjectOption[]> {
     portal.from("proyectos").select("id, nombre, version, tipo_instalacion, zona_id"),
     portal.from("zonas").select("id, departamento, zona"),
     portal.from("join_proyecto_equipos").select("proyecto_id, equipo_id, cantidad"),
-    portal.from("equipo_principales").select("id, tipo_de_producto, marca, potencia_maxima"),
+    portal.from("equipo_principales").select("id, tipo_de_producto, marca, potencia_maxima, descripcion, unidad, paneles_palet"),
   ]);
   
   // Errores de lectura
