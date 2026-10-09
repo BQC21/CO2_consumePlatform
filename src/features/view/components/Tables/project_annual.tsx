@@ -91,6 +91,14 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         onCommit={locked ? undefined : (value) => commit(project, { marca_inversor: value })}
                       />
                     </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Número de paneles para ${project.nombre}`}
+                        value={String(project.paneles_instalados)}
+                        onCommit={locked ? undefined : (value) => commit(project, { paneles_instalados: value })}
+                      />
+                    </td>
 
       
                     <td>
