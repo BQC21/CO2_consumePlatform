@@ -10,7 +10,6 @@ import { useMonthlyEnergy } from "@/features/ViewModel/hooks/services/useMonthly
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
-import { ProductionGauge } from "@/features/view/components/Metrics/ProductionGauge";
 
 export default function DashboardPage() {
 
@@ -50,15 +49,11 @@ export default function DashboardPage() {
       headerExtra={loading ? <div className="skeleton h-24 rounded-[var(--radius-lg)]" /> : <MetricCards metrics={metrics} />}
     >
 
-      <section className="rounded-[var(--radius-lg)] border p-6" 
-        // style={{ borderColor: "rgb(255 255 255 / 0.08)", background: "rgb(10 14 20 / 0.55)"}} 
-      >
+      <section className="rounded-[var(--radius-lg)] border p-6">
         
         <div className="grid gap-4 xl:grid-cols-[280px_1fr_320px]">
           {/* Columna 1 */}
-          <div className="grid content-start gap-4">
-            <ProductionGauge label="Producción mensual total MWh" value={metrics.produccionMensualMwh} color="var(--color-info)" />
-            <ProductionGauge label="Producción anual total MWh" value={metrics.produccionAnualMwh} color="var(--color-success)" />
+          <div className="mt-30 grid content-start gap-4">
             <EnvironmentalCards metrics={metrics} />
           </div>
           {/* Columna 2 */}

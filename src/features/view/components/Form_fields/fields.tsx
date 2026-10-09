@@ -200,7 +200,7 @@ export function ImpactCard({
   icon,
 }: {
   title: string;
-  annual: number | null;
+  annual?: number | null;
   accumulated: number | null;
   unit: string;
   icon: string;
@@ -211,8 +211,6 @@ export function ImpactCard({
     <article className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-black/35 px-3 py-3">
       <div>
         <p className="text-xs font-semibold tracking-wide text-white/80">{title}</p>
-        <p className="mt-2 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Anual</p>
-        <p className="numeric text-sm font-semibold">{annualText}</p>
         <p className="mt-1 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Acumulado</p>
         <p className="numeric text-sm font-semibold">{accumulatedText}</p>
       </div>
