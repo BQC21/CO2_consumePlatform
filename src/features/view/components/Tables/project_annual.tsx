@@ -13,9 +13,8 @@ import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from 
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
 
-export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete, onReplaceImage }: ProjectAnnualTableProps) {
+export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
   const totals = useMemo(() => totalsByProject(months), [months]);
-  // const [imageFile, setImageFile] = useState<File | null>(null);
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
@@ -48,37 +47,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         onCommit={locked ? undefined : (value) => commit(project, { nombre: value })}
                       />
                     </td>
-                    {/* <td>
-                      <ProjectImageCell project={project} onReplace={onReplaceImage} />
-                      {imageFile ? (
-                          <>
-                            <label
-                              className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
-                              style={{ background: "var(--color-cell-image)" }}
-                              title="Cambiar imagen"
-                            >
-                              <EditIcon />
-                              <input
-                                className="sr-only"
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                                aria-label="Cambiar imagen del proyecto"
-                                onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
-                              />
-                            </label>
-                            <button
-                              className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
-                              style={{ background: "var(--color-cell-image)" }}
-                              type="button"
-                              title="Quitar imagen"
-                              aria-label="Quitar imagen del proyecto"
-                              onClick={() => setImageFile(null)}
-                            >
-                              <TrashIcon />
-                            </button>
-                          </>
-                        ) : null}
-                    </td> */}
+                    
                     <td>
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
@@ -122,26 +91,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         onCommit={locked ? undefined : (value) => commit(project, { marca_inversor: value })}
                       />
                     </td>
-                    {/* <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Rendimiento FV total de ${project.nombre}`} value={formatNumber(energy?.fv ?? 0, 1)} />
-                    </td>
-                    <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Rendimiento grid total de ${project.nombre}`} value={formatNumber(energy?.grid ?? 0, 1)} />
-                    </td>
-                    <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Carga consumida total de ${project.nombre}`} value={formatNumber(energy?.carga ?? 0, 1)} />
-                    </td>
-                    <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Reducción de CO2 de ${project.nombre}`} value={formatNumber(project.reduccion_co2, 1)} />
-                    </td>
-                    <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Reducción de carbón de ${project.nombre}`} 
-                                value={formatNumber(project.reduccion_carbon, 1)} />
-                    </td>
-                    <td>
-                      <ExcelCell kind="calculated" ariaLabel={`Árboles de ${project.nombre}`} 
-                                value={formatNumber(project.arboles, 1)} />
-                    </td> */}
+
                     <td>
                       <ExcelCell
                         kind="editable"
@@ -153,7 +103,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                     </td>
                     <td>
                       <div className="flex gap-1">
-                        <MetricsButton project={project} months={months} />
+                        <MetricsButton project={project} onUpdate={onUpdate} />
                         <Button2Delete label={`Eliminar ${project.nombre}`}>
                           {(close) => (
                             <DeleteProjectModal
@@ -188,12 +138,8 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
           Celda editable
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-select)" }} />
           Celda con selector
-          {/* <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-image)" }} />
-          Imagen */}
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
           Celda fija
-          {/* <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
-          Celda calculada */}
         </span>
         <span>
           {projects.length} de {total} proyectos

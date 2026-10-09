@@ -1,10 +1,10 @@
-import { MonthlyEnergy } from "@/lib/types/supabase/monthly-energy";
-import { Project } from "@/lib/types/supabase/project-types";
+import { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { useState } from "react";
 import { ProjectMetricsModal } from "../Modals/project_annual/ProjectMetricsModal";
 import { ChartIcon } from "../Icons/icons";
 
-export function MetricsButton({ project, months }: { project: Project; months: MonthlyEnergy[] }) {
+export function MetricsButton({ project, onUpdate }: { project: Project; 
+    onUpdate: (id: string, form: ProjectFormState) => Promise<void>; }) {
     const [open, setOpen] = useState(false);
     return (
         <>
@@ -17,7 +17,8 @@ export function MetricsButton({ project, months }: { project: Project; months: M
             >
                 <ChartIcon />
             </button>
-            {open ? <ProjectMetricsModal project={project} months={months} onClose={() => setOpen(false)} /> : null}
+            {open ? <ProjectMetricsModal project={project} 
+                        onUpdate={onUpdate} onClose={() => setOpen(false)} /> : null}
         </>
     );
 }
