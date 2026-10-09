@@ -32,7 +32,7 @@ export type PortalEquipmentRow = {
   paneles_palet?: number | string | null;
 };
 
-
+// Tipado -- lo que se mostrará en la plataforma
 export type PortalProjectOption = {
   id: number;
   nombre: string;
