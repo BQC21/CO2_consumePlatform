@@ -35,8 +35,8 @@ export default function DashboardPage() {
   // -------------------------------
 
   const metrics = useMemo(
-    () => computeDashboardMetrics(projects.items, months.items),
-    [projects.items, months.items],
+    () => computeDashboardMetrics(projects.items),
+    [projects.items],
   );
 
   return (

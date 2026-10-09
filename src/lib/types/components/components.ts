@@ -231,8 +231,8 @@ export type DashboardMetrics = {
     proyectosRegistrados: number;
     proyectosCompletados: number;
     capacidadInstaladaKwp: number;
-    produccionMensualMwh: number;
-    produccionAnualMwh: number;
+    produccionAnualMwh: number | null;
+    paneles: number | null;
     co2Kg: number | null;
     carbonKg: number | null;
     arboles: number | null;

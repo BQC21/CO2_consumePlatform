@@ -1,6 +1,6 @@
 import { toOrigin, toStatus } from "@/lib/utils/togglers";
 import type { Project, ProjectFormState, SupabaseProjectRow } from "../../../lib/types/supabase/project-types";
-import { numberToInput, toIsoDate, toNullableInteger, toNullableNumber, toText } from "../../../lib/utils/helpers/normalization";
+import { numberToInput, toIsoDate, toNullableInteger, toNullableNumber, toText, toTimestamp } from "../../../lib/utils/helpers/normalization";
 
 export function mapSupabaseRowToProject(row: SupabaseProjectRow): Project {
   return {
@@ -54,14 +54,6 @@ export function createProjectFormStateFromProject(project: Project): ProjectForm
     created_at: project.created_at,
     updated_at: project.updated_at,
   };
-}
-
-function toTimestamp(value: string): string {
-  const text = value.trim();
-  if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
-    return text;
-  }
-  return toIsoDate(text);
 }
 
 export function mapProjectToSupabaseRow(form: ProjectFormState): Record<string, unknown> {

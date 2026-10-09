@@ -1,5 +1,8 @@
 import { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
 
+// ----------------
+// -- Números ------
+// ----------------
 
 // Convertir a número
 export function toNumber(value: unknown, fallback = 0): number {
@@ -57,6 +60,19 @@ export function numberToInput(value: number | null | undefined): string {
   return String(value);
 }
 
+// Acumular el total de algo
+export function sumOrNull(values: Array<number | null>): number | null {
+  const present = values.filter((value): value is number => value !== null);
+  if (present.length === 0) {
+    return null;
+  }
+  return present.reduce((total, value) => total + value, 0);
+}
+
+// ----------------
+// -- Fechas ------
+// ----------------
+
 /** Acepta 2026-05-03, 03/05/2026 y 03.05.2026. Devuelve ISO yyyy-mm-dd. */
 export function toIsoDate(value: unknown): string {
   const text = toText(value);
@@ -106,12 +122,19 @@ export function splitYearMonth(mes: string): { year: number; month: number } | n
   return { year: Number(match[1]), month: Number(match[2]) };
 }
 
-// Normaliza las opciones a mostrarse en el selector
-export function normalizeSelectOptions(options: SelectFieldOptions): SelectOption[] {
-  return options.map((option) =>
-      typeof option === "string" ? { value: option, label: option } : option
-  );
+// Formato de fecha
+export function toTimestamp(value: string): string {
+  const text = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
+    return text;
+  }
+  return toIsoDate(text);
 }
+
+
+// ----------------
+// -- Celdas ------
+// ----------------
 
 import { EMPTY_MARK } from "../empty";
 
@@ -126,4 +149,11 @@ export function displayOrEmpty(value: string | number | null | undefined): strin
         return EMPTY_MARK;
     }
     return String(value);
+}
+
+// Normaliza las opciones a mostrarse en el selector
+export function normalizeSelectOptions(options: SelectFieldOptions): SelectOption[] {
+  return options.map((option) =>
+      typeof option === "string" ? { value: option, label: option } : option
+  );
 }
