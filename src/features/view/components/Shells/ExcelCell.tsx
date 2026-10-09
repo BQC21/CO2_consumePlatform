@@ -6,11 +6,12 @@ type ExcelCellProps = {
   value: string;
   kind: "editable" | "calculated" | "locked" | "text";
   ariaLabel: string;
+  onChange?: (value: string) => void;
   onCommit?: (value: string) => void;
   options?: readonly string[];
 };
 
-export function ExcelCell({ value, kind, ariaLabel, onCommit, options }: ExcelCellProps) {
+export function ExcelCell({ value, kind, ariaLabel, onChange, onCommit, options }: ExcelCellProps) {
   const [draft, setDraft] = useState(value);
   const [focused, setFocused] = useState(false);
   const className =
@@ -61,7 +62,11 @@ export function ExcelCell({ value, kind, ariaLabel, onCommit, options }: ExcelCe
       aria-label={ariaLabel}
       value={draft}
       onFocus={() => setFocused(true)}
-      onChange={(event) => setDraft(event.target.value)}
+      onChange={(event) => {
+        const next = event.target.value;
+        setDraft(next);
+        onChange?.(next);
+      }}
       onBlur={() => {
         setFocused(false);
         if (draft !== value) {

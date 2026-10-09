@@ -66,6 +66,7 @@ export function MetricCards({ metrics }: { metrics: DashboardMetrics }) {
                         kind="editable"
                         ariaLabel={`Cantidad de paneles a instalar durante el ${year}`}
                         value={panelesMetaAnual}
+                        onChange={commitPanelesMeta}
                         onCommit={commitPanelesMeta}
                     />
                     <span className="text-sm text-[var(--color-text-secondary)]">paneles</span>
