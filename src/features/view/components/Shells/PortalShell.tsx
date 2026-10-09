@@ -8,7 +8,9 @@ import { initialsFromName } from "@/lib/utils/helpers/render/format";
 import { PortalShellProps } from "@/lib/types/components/components";
 import { NAVIGATION } from "@/lib/utils/consts/navigation";
 
-export function PortalShell({ title, subtitle, activePath, children, tone = "light", actions, headerExtra, backgroundImage }: PortalShellProps) {
+export function PortalShell({ title, subtitle, activePath, children, 
+  tone = "light", actions, headerExtra, backgroundImage }: PortalShellProps) 
+{
   const [name, setName] = useState("Usuario");
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -82,7 +84,7 @@ export function PortalShell({ title, subtitle, activePath, children, tone = "lig
       <main className="px-4 py-6 lg:px-8" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <h1 className="text-2xl font-semibold md:text-3xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
+            <h1 className="mb-5 text-2xl font-semibold md:text-3xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
               {title}
             </h1>
             <p className="mt-1 text-sm" style={{ color: tone === "dark" ? "var(--color-text-on-dark-muted)" : "var(--color-text-secondary)" }}>

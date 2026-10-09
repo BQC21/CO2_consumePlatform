@@ -20,9 +20,9 @@ export function MetricCards({ metrics }: { metrics: DashboardMetrics }) {
     // Propieades para trackear progreso en paneles instalados
     const installed = metrics.paneles ?? 0; // paneles instalados
     const target = Number(panelesMetaAnual); // Paneles objetivo
-    const hasTarget = panelesMetaAnual !== "" && Number.isFinite(target) && target > 0; // hay objetivo ?
-    const progress = hasTarget ? (installed / target) * 100 : 0; // progreso
-    const barWidth = Math.min(Math.max(progress, 0), 100); // tramo de la barra a colorearse
+    const hasTarget = panelesMetaAnual !== "" && Number.isFinite(target) && target > 0; // 
+    const progress = hasTarget ? (installed / target) * 100 : 0;
+    const barWidth = Math.min(Math.max(progress, 0), 100);
 
     // --------------------------
     // --- Sincronización -------
@@ -40,15 +40,15 @@ export function MetricCards({ metrics }: { metrics: DashboardMetrics }) {
     }
 
     return (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             <article className="rounded-[var(--radius-lg)] bg-white px-4 py-3 text-[var(--color-text-primary)]">
                 <p className="text-sm font-medium tracking-wide text-[var(--color-text-secondary)]">Proyectos registrados</p>
                 <p className="mt-2 numeric text-3xl font-bold">{metrics.proyectosRegistrados}</p>
             </article>
-            <article className="rounded-[var(--radius-lg)] bg-white px-4 py-3 text-[var(--color-text-primary)]">
+            {/* <article className="rounded-[var(--radius-lg)] bg-white px-4 py-3 text-[var(--color-text-primary)]">
                 <p className="text-sm font-medium tracking-wide text-[var(--color-text-secondary)]">Completados</p>
                 <p className="mt-2 numeric text-3xl font-bold">{metrics.proyectosCompletados}</p>
-            </article>
+            </article> */}
             <article className="rounded-[var(--radius-lg)] bg-white px-4 py-3 text-[var(--color-text-primary)]">
                 <p className="text-sm font-medium tracking-wide text-[var(--color-text-secondary)]">Capacidad instalada</p>
                 <p className="mt-2 numeric text-3xl font-bold">{formatNumber(metrics.capacidadInstaladaKwp, 1)} kWp</p>
