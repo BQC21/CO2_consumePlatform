@@ -12,12 +12,10 @@ import { formatDate, formatNumber } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
-import { ProjectImageCell } from "../Form_fields/fields";
-import { EditIcon, TrashIcon } from "../Icons/icons";
 
 export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete, onReplaceImage }: ProjectAnnualTableProps) {
   const totals = useMemo(() => totalsByProject(months), [months]);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  // const [imageFile, setImageFile] = useState<File | null>(null);
 
   async function commit(project: Project, patch: Partial<ProjectFormState>) {
     await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...patch });
@@ -124,7 +122,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                         onCommit={locked ? undefined : (value) => commit(project, { marca_inversor: value })}
                       />
                     </td>
-                    <td>
+                    {/* <td>
                       <ExcelCell kind="calculated" ariaLabel={`Rendimiento FV total de ${project.nombre}`} value={formatNumber(energy?.fv ?? 0, 1)} />
                     </td>
                     <td>
@@ -143,7 +141,7 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                     <td>
                       <ExcelCell kind="calculated" ariaLabel={`Árboles de ${project.nombre}`} 
                                 value={formatNumber(project.arboles, 1)} />
-                    </td>
+                    </td> */}
                     <td>
                       <ExcelCell
                         kind="editable"
@@ -190,12 +188,12 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
           Celda editable
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-select)" }} />
           Celda con selector
-          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-image)" }} />
-          Imagen
+          {/* <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-image)" }} />
+          Imagen */}
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
           Celda fija
-          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
-          Celda calculada
+          {/* <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-calculated)" }} />
+          Celda calculada */}
         </span>
         <span>
           {projects.length} de {total} proyectos
