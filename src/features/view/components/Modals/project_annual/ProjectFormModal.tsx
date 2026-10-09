@@ -248,21 +248,25 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             disabled={locked}
             onChange={(value) => update("cap_instalada_kwp", value)}
           />
+
+          <AddNumberField
+            label="Número de paneles instalados"
+            value={form.paneles_instalados}
+            disabled={locked}
+            onChange={(value) => update("paneles_instalados", value)}
+          />
           
           <AddDateField label="Fecha de instalación" value={form.fecha_instalacion} 
                         onChange={(value) => update("fecha_instalacion", value)} />
+
+          <AddSelectField
+            label="Estado"
+            required
+            value={form.estado}
+            options={PROJECT_STATUS_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
+            onChange={(value) => update("estado", value === "completado" ? "completado" : "en_ejecucion")}
+          />
         </div>
-
-
-
-        <AddSelectField
-          label="Estado"
-          required
-          value={form.estado}
-          options={PROJECT_STATUS_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
-          onChange={(value) => update("estado", value === "completado" ? "completado" : "en_ejecucion")}
-        />
-
 
         {error ? <p className="field-error">{error}</p> : null}
 
