@@ -1,6 +1,4 @@
-import type { ProjectStatus } from "@/lib/types/components/options";
-
-export type ProjectOrigin = "independiente" | "existente";
+import type { ProjectOrigin, ProjectStatus } from "@/lib/types/components/options";
 
 /** Fila de `proyectos` tal como llega de Supabase. */
 export type SupabaseProjectRow = {

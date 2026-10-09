@@ -5,6 +5,8 @@ import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS,
 // estados de los proyectos a visualizarse en el mapa
 export type MapStatus = "en_ejecucion" | "completado" | "sin_proyecto";
 
+// ¿De dónde se jalará la info?
+export type ProjectOrigin = "independiente" | "existente";
 
 export type SystemType = (typeof SYSTEM_TYPE_OPTIONS)[number]; // tipo del sistema
 export type InverterBrand = (typeof INVERTER_BRAND_OPTIONS)[number]; // marca del inversor
