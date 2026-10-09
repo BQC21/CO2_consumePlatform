@@ -33,6 +33,14 @@ export function mapSystem(value: string): string {
     return value.trim();
 }
 
+/** Un módulo registrado como palet trae la cantidad de palets en el join y los paneles de cada palet en el equipo. */
+function installedPanels(item: PortalEquipmentRow, quantity: number): number {
+    const perPallet = toNullableNumber(item.paneles_palet) ?? 0;
+    const label = fold(`${toText(item.descripcion)} ${toText(item.unidad)}`);
+    const isPallet = perPallet > 0 && (label.includes("pallet") || label.includes("palet"));
+    return isPallet ? quantity * perPallet : quantity;
+}
+
 // Enlazamiento general con el Portal TEC
 export function mapPortalCatalog(
     projects: PortalProjectRow[],
@@ -63,6 +71,7 @@ export function mapPortalCatalog(
                 continue;
             }
             const tipo = fold(toText(item.tipo_de_producto));
+            const quantity = toNullableNumber(join.cantidad) ?? 0;
             const power = (toNullableNumber(item.potencia_maxima) ?? 0) * (toNullableNumber(join.cantidad) ?? 1);
             if (tipo === "inversor") {
                 hasInverter = true;
@@ -74,7 +83,7 @@ export function mapPortalCatalog(
             if (tipo === "modulo fv") {
                 hasModule = true;
                 capInstalada += power;
-                panelesInstalados += toNullableNumber(join.cantidad) ?? 0;
+                panelesInstalados += installedPanels(item, quantity);
             }
         }
 
