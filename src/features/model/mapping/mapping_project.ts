@@ -25,6 +25,7 @@ export function mapSupabaseRowToProject(row: SupabaseProjectRow): Project {
     insercion: toOrigin(toText(row.insercion)),
     portal_proyecto_id: toNullableInteger(row.portal_proyecto_id),
     imagen_url: toText(row.imagen_url),
+    created_at: toText(row.created_at),
     updated_at: toText(row.updated_at),
   };
 }
@@ -50,7 +51,17 @@ export function createProjectFormStateFromProject(project: Project): ProjectForm
     descripcion: project.descripcion,
     insercion: project.insercion,
     portal_proyecto_id: project.portal_proyecto_id === null ? "" : String(project.portal_proyecto_id),
+    created_at: project.created_at,
+    updated_at: project.updated_at,
   };
+}
+
+function toTimestamp(value: string): string {
+  const text = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}T/.test(text)) {
+    return text;
+  }
+  return toIsoDate(text);
 }
 
 export function mapProjectToSupabaseRow(form: ProjectFormState): Record<string, unknown> {
@@ -74,6 +85,7 @@ export function mapProjectToSupabaseRow(form: ProjectFormState): Record<string, 
     descripcion: toText(form.descripcion),
     insercion: toOrigin(form.insercion),
     portal_proyecto_id: toNullableInteger(form.portal_proyecto_id),
-    updated_at: new Date().toISOString(),
+    created_at: toTimestamp(form.created_at) || new Date().toISOString(),
+    updated_at: toTimestamp(form.updated_at) || new Date().toISOString(),
   };
 }

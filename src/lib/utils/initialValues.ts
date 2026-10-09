@@ -21,4 +21,6 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   descripcion: "",
   insercion: "independiente",
   portal_proyecto_id: "",
+  created_at: "",
+  updated_at: "",
 };

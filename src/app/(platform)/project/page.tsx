@@ -86,6 +86,8 @@ export default function ProjectPage() {
         descripcion: valueByHeader(row, "Descripción"),
         insercion: "independiente",
         portal_proyecto_id: "",
+        created_at: valueByHeader(row, "FECHA CREACIÓN"),
+        updated_at: valueByHeader(row, "FECHA ACTUALIZACIÓN"),
       };
     });
     await projectMutations.createMany(forms);

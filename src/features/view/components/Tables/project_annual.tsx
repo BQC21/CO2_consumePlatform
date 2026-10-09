@@ -92,6 +92,25 @@ export function ProjectAnnualTable({ projects, months, total, onUpdate, onDelete
                       />
                     </td>
 
+      
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de creación para ${project.nombre}`}
+                        value={formatDate(project.created_at)}
+                        onCommit={(value) => commit(project, { created_at: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de actualización para ${project.nombre}`}
+                        value={formatDate(project.updated_at)}
+                        onCommit={(value) => commit(project, { updated_at: value })}
+                      />
+                    </td>
+
+
                     <td>
                       <ExcelCell
                         kind="editable"

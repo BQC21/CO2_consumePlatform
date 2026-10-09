@@ -51,6 +51,7 @@ export type Project = {
   insercion: ProjectOrigin;
   portal_proyecto_id: number | null;
   imagen_url: string;
+  created_at: string;
   updated_at: string;
 };
 
@@ -75,6 +76,8 @@ export type ProjectFormState = {
   descripcion: string;
   insercion: ProjectOrigin;
   portal_proyecto_id: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export type ProjectFormData = ProjectFormState;
