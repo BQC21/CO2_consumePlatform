@@ -236,6 +236,7 @@ export type DashboardMetrics = {
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
+    metrics: DashboardMetrics;
 };
 
 // operaciones masivas

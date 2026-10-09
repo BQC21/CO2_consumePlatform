@@ -61,8 +61,8 @@ export default function DashboardPage() {
             onSelect={setSelected} 
           />
           {/* Columna 3 */}
-          <div className="flex flex-col gap-4">
-            <DepartmentCard department={activeDepartment} projects={projects.items} />
+          <div className="mt-15 flex flex-col gap-4">
+            <DepartmentCard department={activeDepartment} projects={projects.items} metrics={metrics} />
             <Link href="/project" className="btn-primary">
               Ver lista de proyectos
             </Link>
