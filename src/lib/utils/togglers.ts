@@ -1,5 +1,4 @@
-import { ProjectStatus } from "../types/components/options";
-import { ProjectOrigin } from "../types/supabase/project-types";
+import { ProjectOrigin, ProjectStatus } from "../types/components/options";
 
 export function toStatus(value: string): ProjectStatus {
     return value === "completado" ? "completado" : "en_ejecucion";
