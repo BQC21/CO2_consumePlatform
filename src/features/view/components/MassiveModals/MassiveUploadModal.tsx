@@ -43,21 +43,30 @@ export function MassiveUploadModal({ title, description, expectedHeaders, onRows
     <ModalFrame title={title} onClose={onClose}>
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <p className="text-sm text-[var(--color-text-secondary)]">{description}</p>
-        <label className="field-label">
-          Archivo Excel
-          <input
-            className="field-input input-focus mt-2"
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                void handleFile(file);
-              }
-            }}
-          />
-        </label>
-        {fileName && rows ? <p className="text-sm">{rows.length} filas listas en {fileName}.</p> : null}
+        <div>
+          <p className="field-label">Archivo Excel</p>
+          <label className={`btn-secondary w-full cursor-pointer ${busy ? "pointer-events-none opacity-45" : ""}`}>
+            Seleccionar archivo
+            <input
+              className="sr-only"
+              type="file"
+              accept=".xlsx,.xls"
+              disabled={busy}
+              onChange={(event) => {
+                const input = event.currentTarget;
+                const file = input.files?.[0];
+                input.value = "";
+                if (file) {
+                  void handleFile(file);
+                }
+              }}
+            />
+          </label>
+          <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
+            {fileName || "Ningún archivo seleccionado"}
+          </p>
+          {fileName && rows ? <p className="text-sm">{rows.length} filas listas.</p> : null}
+        </div>
         {error ? <p className="field-error">{error}</p> : null}
         <button className="btn-primary" type="submit" disabled={busy || !rows}>
           {busy ? "Importando…" : "Importar"}
