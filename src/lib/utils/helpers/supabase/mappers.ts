@@ -5,7 +5,7 @@
 import { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import { DEPARTMENT_OPTIONS } from "../../options";
 import { toNullableNumber, toText } from "../normalization";
-import { PortalEquipmentRow, PortalJoinRow, PortalProjectRow, PortalZoneRow } from "@/lib/types/supabase/portal-project";
+import { PortalEquipmentRow, PortalJoinRow, PortalProjectRow, PortalQuotationRow, PortalZoneRow } from "@/lib/types/supabase/portal-project";
 
 // Normalización de texto (Hola -> h o l a)
 export function fold(value: string): string {
@@ -89,6 +89,7 @@ export function mapPortalCatalog(
 
         return {
             id: project.id,
+            proyectoId: project.id,
             nombre: toText(project.nombre),
             version: toText(project.version),
             departamento: matchDepartment(toText(zone?.departamento)),
@@ -102,4 +103,93 @@ export function mapPortalCatalog(
     })
     .filter((project) => project.nombre)
     .sort((left, right) => left.nombre.localeCompare(right.nombre, "es"));
+}
+
+// Número de la versión de la cotización
+function versionNumber(version: string | null): number {
+    return toNullableNumber(version) ?? -1;
+}
+
+// Extraer el nombre de cotización para cotizaciones asociada a proyectos
+function quotationGroupKey(quote: PortalQuotationRow): string {
+    if (quote.proyecto_id !== null) {
+        return `proyecto:${quote.proyecto_id}`;
+    }
+    const name = fold(toText(quote.nombre_cotizacion));
+    return name ? `nombre:${name}` : `cotizacion:${quote.id}`;
+}
+
+// Verifica si la versión siguiente es mayor a la actual
+function quoteOutranks(next: PortalQuotationRow, current: PortalQuotationRow): boolean {
+    const nextVersion = versionNumber(next.version);
+    const currentVersion = versionNumber(current.version);
+    if (nextVersion !== currentVersion) {
+        return nextVersion > currentVersion;
+    }
+    return toText(next.updated_at) > toText(current.updated_at);
+}
+
+// Cálculo del número de paneles a partir de Costos manuales 
+function panelsFromManualCosts(costos: unknown): number {
+    if (!costos || typeof costos !== "object") {
+        return 0;
+    }
+    const equipos = (costos as { Recursos?: { equipos_seleccionados?: unknown } }).Recursos?.equipos_seleccionados;
+    if (!Array.isArray(equipos)) {
+        return 0;
+    }
+    let total = 0;
+    for (const entry of equipos) {
+        if (!entry || typeof entry !== "object") {
+            continue;
+        }
+        const row = entry as { cantidad?: unknown; equipo_info?: PortalEquipmentRow | null };
+        const item = row.equipo_info;
+        if (!item || fold(toText(item.tipo_de_producto)) !== "modulo fv") {
+            continue;
+        }
+        total += installedPanels(item, toNullableNumber(row.cantidad) ?? 0);
+    }
+    return Math.round(total);
+}
+
+/** Una fila por proyecto: si hay varias versiones de cotización, se conserva la más reciente. */
+export function mapPortalQuotations(
+    quotes: PortalQuotationRow[],
+    projects: PortalProjectRow[],
+    zones: PortalZoneRow[],
+    joins: PortalJoinRow[],
+    equipment: PortalEquipmentRow[],
+): PortalProjectOption[] {
+    const projectById = new Map(mapPortalCatalog(projects, zones, joins, equipment).map((item) => [item.id, item]));
+    const chosen = new Map<string, PortalQuotationRow>();
+
+    for (const quote of quotes) {
+        const current = chosen.get(quotationGroupKey(quote));
+        if (!current || quoteOutranks(quote, current)) {
+            chosen.set(quotationGroupKey(quote), quote);
+        }
+    }
+
+    return [...chosen.values()].flatMap((quote) => {
+        const quoteName = toText(quote.nombre_cotizacion);
+        const project = quote.proyecto_id === null ? undefined : projectById.get(quote.proyecto_id);
+        const nombre = quoteName || project?.nombre || "";
+        if (!nombre) {
+            return [];
+        }
+        return [{
+            id: quote.id,
+            proyectoId: quote.proyecto_id,
+            nombre,
+            version: toText(quote.version),
+            departamento: project?.departamento ?? "",
+            distrito: project?.distrito ?? "",
+            tipo_de_sistema: project?.tipo_de_sistema ?? "",
+            marca_inversor: project?.marca_inversor ?? "",
+            pot_nominal_kw: project?.pot_nominal_kw ?? null,
+            cap_instalada_kwp: project?.cap_instalada_kwp ?? null,
+            paneles_instalados: panelsFromManualCosts(quote.costos_manuales),
+        }];
+    }).sort((left, right) => left.nombre.localeCompare(right.nombre, "es"));
 }
