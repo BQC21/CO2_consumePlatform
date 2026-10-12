@@ -205,13 +205,12 @@ export function ImpactCard({
   unit: string;
   icon: string;
 }) {
-  const annualText = annual === null ? "—" : `${formatNumber(annual, 2)} ${unit}`;
   const accumulatedText = accumulated === null ? "—" : `${formatNumber(accumulated, 2)} ${unit}`;
   return (
     <article className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-black/35 px-3 py-3">
       <div>
         <p className="text-xs font-semibold tracking-wide text-white/80">{title}</p>
-        <p className="mt-1 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Acumulado</p>
+        {/* <p className="mt-1 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Acumulado</p> */}
         <p className="numeric text-sm font-semibold">{accumulatedText}</p>
       </div>
       <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#12345c] text-2xl" aria-hidden="true">
