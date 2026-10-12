@@ -32,9 +32,20 @@ export type PortalEquipmentRow = {
   paneles_palet?: number | string | null;
 };
 
+// Tipado -- tabla Cotizacion
+export type PortalQuotationRow = {
+  id: number;
+  proyecto_id: number | null;
+  nombre_cotizacion: string | null;
+  version: string | null;
+  updated_at?: string | null;
+  costos_manuales: unknown;
+};
+
 // Tipado -- lo que se mostrará en la plataforma
 export type PortalProjectOption = {
   id: number;
+  proyectoId: number | null;
   nombre: string;
   version: string;
   departamento: string;
