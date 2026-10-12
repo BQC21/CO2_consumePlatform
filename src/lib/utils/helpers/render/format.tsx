@@ -86,3 +86,9 @@ export function Metric({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+/**  Texto por defecto en la tarjeta de paneles meta */ 
+
+export function panelTargetKey(year: number) {
+  return `paneles-meta-anual:${year}`;
+}

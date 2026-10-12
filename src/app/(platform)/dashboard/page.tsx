@@ -51,7 +51,7 @@ export default function DashboardPage() {
         
         <div className="grid gap-4 xl:grid-cols-[280px_1fr_320px]">
           {/* Columna 1 */}
-          <div className="mt-30 grid content-start gap-4">
+          <div className="grid content-start gap-4">
             <EnvironmentalCards metrics={metrics} />
           </div>
           {/* Columna 2 */}
