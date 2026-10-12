@@ -11,10 +11,11 @@ import {
 } from "@/features/view/components/Form_fields/fields";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
-import type { ProjectFormState, ProjectOrigin } from "@/lib/types/supabase/project-types";
+import type { ProjectFormState } from "@/lib/types/supabase/project-types";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectFormModalProps } from "@/lib/types/components/components";
 import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
+import { ProjectOrigin } from "@/lib/types/components/options";
 
 export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSubmit, onClose }: ProjectFormModalProps) {
   
@@ -29,11 +30,15 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
   const [busy, setBusy] = useState(false);
   
   // Si viene del Supabase de Portal TEC
-  const [catalog, setCatalog] = useState<PortalProjectOption[]>([]);
+  const [catalog, setCatalog] = useState<PortalProjectOption[]>([]); // información de Portal TEC que se plasmará en la plataforma
+  const [selectedQuoteId, setSelectedQuoteId] = useState(""); // id de cotización
   const [catalogLoading, setCatalogLoading] = useState(initial.insercion === "existente");
   const [catalogError, setCatalogError] = useState("");
   
   const locked = form.insercion === "existente"; // bloquear campos si la información viene del Portal TEC
+  const selectedQuote = catalog.find((row) => String(row.id) === selectedQuoteId); // cotización seleccionado
+  const independentQuote = locked && selectedQuote?.proyectoId === null; // cotización independiente ?
+  const portalLocked = locked && !independentQuote; // campos que no se llenaron de portal TEC
   
   // Permitir seguimiento con el Portal TEC
   const [trackedOrigin, setTrackedOrigin] = useState(form.insercion);
@@ -87,6 +92,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
   // Poder cambiar aquello que siempre puede editarse a pesar del estado de inserción
   function changeOrigin(origin: ProjectOrigin) {
     setError("");
+    setSelectedQuoteId(""); 
     setForm((current) => ({
       ...initial,
       insercion: origin,
@@ -98,13 +104,14 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
   // Mencionar que atributos se extrae de Portal TEC en caso inserción == "existente"
   function selectPortal(id: string) {
     const item = catalog.find((row) => String(row.id) === id);
+    setSelectedQuoteId(item ? id : "");
     if (!item) {
       update("portal_proyecto_id", "");
       return;
     }
     setForm((current) => ({
       ...current,
-      portal_proyecto_id: id,
+      portal_proyecto_id: item.proyectoId === null ? "" : String(item.proyectoId),
       nombre: item.nombre,
       ubicacion: item.departamento,
       distrito: item.distrito,
@@ -122,12 +129,12 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
     
     // Condición de llenar campos obligatorios
     if (!form.nombre.trim() || !form.ubicacion.trim() || !form.marca_inversor.trim() || !form.estado) {
-      setError(locked ? "El proyecto del portal no trae departamento, nombre o inversor." : "Completa los campos obligatorios.");
+      setError(portalLocked ? "El proyecto del portal no trae departamento, nombre o inversor." : "Completa los campos obligatorios.");
       return;
     }
 
     // Condición de seleccionar un proyecto de Portal TEC cuando insercion == "existente"
-    if (locked && !form.portal_proyecto_id) {
+    if (locked && !selectedQuoteId) {
       setError("Selecciona un proyecto del portal TEC.");
       return;
     }
@@ -182,10 +189,10 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
           <AddSelectField
             label="Nombre del proyecto"
             required
-            value={form.portal_proyecto_id}
+            value={selectedQuoteId}
             options={catalog.map((item) => ({
               value: String(item.id),
-              label: item.version ? `${item.nombre} -- ${item.version}` : item.nombre,
+              label: item.nombre,
             }))}
             disabled={catalogLoading || catalog.length === 0}
             onChange={selectPortal}
@@ -201,7 +208,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
 
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {locked ? (
+          {portalLocked ? (
             <AddTextField label="Departamento" required value={form.ubicacion} disabled 
                   onChange={(value) => update("ubicacion", value)} />
           ) : (
@@ -214,10 +221,10 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             />
           )}
 
-          <AddTextField label="Distrito o referencia" value={form.distrito} disabled={locked} 
+          <AddTextField label="Distrito o referencia" value={form.distrito} disabled={portalLocked} 
                         onChange={(value) => update("distrito", value)} />
 
-          {locked ? (
+          {portalLocked ? (
             <AddTextField label="Tipo de sistema" value={form.tipo_de_sistema} disabled 
                         onChange={(value) => update("tipo_de_sistema", value)} />
           ) : (
@@ -229,7 +236,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             />
           )}
 
-          {locked ? (
+          {portalLocked ? (
             <AddTextField label="Marca del inversor" required value={form.marca_inversor} disabled 
                           onChange={(value) => update("marca_inversor", value)} />
           ) : (
@@ -245,7 +252,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
           <AddNumberField
             label="Cap. instalada (kWp)"
             value={form.cap_instalada_kwp}
-            disabled={locked}
+            disabled={portalLocked}
             onChange={(value) => update("cap_instalada_kwp", value)}
           />
 
