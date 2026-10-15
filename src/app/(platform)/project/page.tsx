@@ -15,7 +15,6 @@ import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/ho
 import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
 import { transformAnnualRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
 import { formatDate } from "@/lib/utils/helpers/render/format";
-import { platformProjectImageName } from "@/lib/utils/helpers/render/projectImage";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
@@ -68,6 +67,8 @@ export default function ProjectPage() {
         cap_instalada_kwp: valueByHeader(row, "CAP. INSTALADA (kWp)"),
         fecha_instalacion: valueByHeader(row, "FECHA INSTALACIÓN"),
         marca_inversor: valueByHeader(row, "MARCA DEL INVERSOR") || valueByHeader(row, "Marca del inversor"),
+        marca_panel: valueByHeader(row, "MARCA DEL PANEL"),
+        marca_bateria: valueByHeader(row, "MARCA DE BATERÍA"),
         paneles_instalados: valueByHeader(row, "Paneles instalados"),
         rendimiento_fv_total: valueByHeader(row, "RENDIMIENTO FV TOTAL"),
         rendimiento_grid_total: valueByHeader(row, "RENDIMIENTO GRID TOTAL"),
@@ -153,8 +154,12 @@ export default function ProjectPage() {
                       project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp),
                       formatDate(project.fecha_instalacion),
                       project.marca_inversor,
+                      project.marca_panel,
+                      project.marca_bateria,
+                      project.paneles_instalados === null ? "" : String(project.paneles_instalados),
+                      formatDate(project.created_at),
+                      formatDate(project.updated_at),
                       project.estado === "completado" ? "Completado" : "En ejecución",
-                      platformProjectImageName(project.imagen_url),
                     ];
                   })}
                   onClose={close}
