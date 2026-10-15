@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/features/view/components/Images/Logo";
 import { createClient, hasSupabaseEnv } from "@/features/model/supabase/client";
-import { initialsFromName } from "@/lib/utils/helpers/render/format";
 import { PortalShellProps } from "@/lib/types/components/components";
 import { NAVIGATION } from "@/lib/utils/consts/navigation";
+import { initialsFromName } from "@/lib/utils/helpers/normalization";
 
 export function PortalShell({ title, subtitle, activePath, children, 
   tone = "light", actions, headerExtra, backgroundImage }: PortalShellProps) 

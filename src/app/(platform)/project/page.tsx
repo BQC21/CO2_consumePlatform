@@ -14,12 +14,12 @@ import { ProjectAnnualTable } from "@/features/view/components/Tables/project_an
 import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
 import { transformAnnualRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
-import { formatDate } from "@/lib/utils/helpers/render/format";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
 import { Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/button2Massive";
 import { ProjectFormState } from "@/lib/types/supabase/project-types";
+import { formatDate } from "@/lib/utils/helpers/normalization";
 
 export default function ProjectPage() {
 

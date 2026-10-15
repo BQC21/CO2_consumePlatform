@@ -2,8 +2,7 @@ import { EditIcon } from "@/features/view/components/Icons/icons";
 import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
-import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
-import { formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatNumber, normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
 import { platformProjectImageName, platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
 import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 

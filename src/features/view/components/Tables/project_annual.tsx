@@ -6,10 +6,11 @@ import { ExcelCell } from "@/features/view/components/Shells/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
-import { formatDate, isOlderThanDays } from "@/lib/utils/helpers/render/format";
+import { isOlderThanDays } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
+import { formatDate } from "@/lib/utils/helpers/normalization";
 
 export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: ProjectAnnualTableProps) {
 

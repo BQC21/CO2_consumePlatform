@@ -1,8 +1,9 @@
 import { DashboardMetrics } from "@/lib/types/components/components";
 import { ImpactCard } from "../Form_fields/fields";
-import { formatNumber, formatPercent, panelTargetKey } from "@/lib/utils/helpers/render/format";
+import { panelTargetKey } from "@/lib/utils/helpers/render/format";
 import { useEffect, useState } from "react";
 import { ExcelCell } from "../Shells/ExcelCell";
+import { formatNumber, formatPercent } from "@/lib/utils/helpers/normalization";
 
 export function EnvironmentalCards({ metrics }: { metrics: DashboardMetrics }) {
 
