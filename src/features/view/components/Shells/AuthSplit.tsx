@@ -11,7 +11,7 @@ export function AuthSplit({ title, subtitle, children }: { title: string; subtit
       <section className="relative hidden min-h-72 overflow-hidden text-white lg:block">
         <div className="absolute inset-0"/>
           <AuthImage/>
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/10" />
       </section>
 
 
