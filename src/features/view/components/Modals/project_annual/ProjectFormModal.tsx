@@ -117,6 +117,8 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
       distrito: item.distrito,
       tipo_de_sistema: item.tipo_de_sistema || current.tipo_de_sistema,
       marca_inversor: item.marca_inversor,
+      marca_panel: item.marca_panel,
+      marca_bateria: item.marca_bateria,
       pot_nominal_kw: item.pot_nominal_kw === null ? "" : String(item.pot_nominal_kw),
       cap_instalada_kwp: item.cap_instalada_kwp === null ? "" : String(item.cap_instalada_kwp),
       paneles_instalados: String(item.paneles_instalados),
@@ -248,6 +250,19 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
               onChange={(value) => update("marca_inversor", value)}
             />
           )}
+
+          <AddTextField
+            label="Marca del panel"
+            value={form.marca_panel}
+            disabled={portalLocked}
+            onChange={(value) => update("marca_panel", value)}
+          />
+          <AddTextField
+            label="Marca de la batería"
+            value={form.marca_bateria}
+            disabled={portalLocked}
+            onChange={(value) => update("marca_bateria", value)}
+          />
 
           <AddNumberField
             label="Cap. instalada (kWp)"
