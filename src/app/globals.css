@@ -247,6 +247,17 @@ button {
   background: color-mix(in srgb, var(--color-background) 70%, white);
 }
 
+.excel-table tr.row-stale td,
+.excel-table tr.row-stale:hover td,
+.excel-table tr.row-stale .excel-cell,
+.excel-table tr.row-stale .excel-editable,
+.excel-table tr.row-stale .excel-select,
+.excel-table tr.row-stale .excel-locked,
+.excel-table tr.row-stale .excel-calculated {
+  background: #f6e2c4;
+  color: var(--color-text-primary);
+}
+
 .excel-cell {
   width: 100%;
   min-width: 5.5rem;
