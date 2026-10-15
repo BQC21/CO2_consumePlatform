@@ -27,6 +27,9 @@ export function mapSystem(value: string): string {
     if (text.includes("hibrid")) {
         return "Híbrido";
 }
+    if (text.includes("bess")) {
+        return "BESS";
+    }
     if (text.includes("on")) {
         return "On-grid";
 }
@@ -60,6 +63,8 @@ export function mapPortalCatalog(
         let hasInverter = false;
         let hasModule = false;
         let marca = "";
+        let marcaPanel = "";
+        let marcaBateria = "";
 
         // Para cada relación Proyect - EP
         for (const join of joins) {
@@ -84,6 +89,12 @@ export function mapPortalCatalog(
                 hasModule = true;
                 capInstalada += power;
                 panelesInstalados += installedPanels(item, quantity);
+                if (!marcaPanel) {
+                    marcaPanel = toText(item.marca);
+                }
+            }
+            if (tipo === "bateria" && !marcaBateria) {
+                marcaBateria = toText(item.marca);
             }
         }
 
@@ -96,6 +107,8 @@ export function mapPortalCatalog(
             distrito: toText(zone?.zona),
             tipo_de_sistema: mapSystem(toText(project.tipo_instalacion)),
             marca_inversor: marca,
+            marca_panel: marcaPanel,
+            marca_bateria: marcaBateria,
             pot_nominal_kw: hasInverter ? potNominal : null,
             cap_instalada_kwp: hasModule ? Number(capInstalada.toFixed(2)) : null,
             paneles_instalados: Math.round(panelesInstalados),
@@ -153,6 +166,37 @@ function panelsFromManualCosts(costos: unknown): number {
     return Math.round(total);
 }
 
+function brandsFromSelectedEquipment(costos: unknown): { marca_panel: string; marca_bateria: string } {
+    const empty = { marca_panel: "", marca_bateria: "" };
+    if (!costos || typeof costos !== "object") {
+        return empty;
+    }
+    const equipos = (costos as { Recursos?: { equipos_seleccionados?: unknown } }).Recursos?.equipos_seleccionados;
+    if (!Array.isArray(equipos)) {
+        return empty;
+    }
+    let marca_panel = "";
+    let marca_bateria = "";
+    for (const entry of equipos) {
+        if (!entry || typeof entry !== "object") {
+            continue;
+        }
+        const item = (entry as { equipo_info?: PortalEquipmentRow | null }).equipo_info;
+        if (!item) {
+            continue;
+        }
+        const tipo = fold(toText(item.tipo_de_producto));
+        const marca = toText(item.marca);
+        if (tipo === "modulo fv" && !marca_panel) {
+            marca_panel = marca;
+        }
+        if (tipo === "bateria" && !marca_bateria) {
+            marca_bateria = marca;
+        }
+    }
+    return { marca_panel, marca_bateria };
+}
+
 /** Una fila por proyecto: si hay varias versiones de cotización, se conserva la más reciente. */
 export function mapPortalQuotations(
     quotes: PortalQuotationRow[],
@@ -174,6 +218,7 @@ export function mapPortalQuotations(
     return [...chosen.values()].flatMap((quote) => {
         const quoteName = toText(quote.nombre_cotizacion);
         const project = quote.proyecto_id === null ? undefined : projectById.get(quote.proyecto_id);
+        const selectedBrands = brandsFromSelectedEquipment(quote.costos_manuales);
         const nombre = quoteName || project?.nombre || "";
         if (!nombre) {
             return [];
@@ -187,6 +232,8 @@ export function mapPortalQuotations(
             distrito: project?.distrito ?? "",
             tipo_de_sistema: project?.tipo_de_sistema ?? "",
             marca_inversor: project?.marca_inversor ?? "",
+            marca_panel: selectedBrands.marca_panel || project?.marca_panel || "",
+            marca_bateria: selectedBrands.marca_bateria || project?.marca_bateria || "",
             pot_nominal_kw: project?.pot_nominal_kw ?? null,
             cap_instalada_kwp: project?.cap_instalada_kwp ?? null,
             paneles_instalados: panelsFromManualCosts(quote.costos_manuales),

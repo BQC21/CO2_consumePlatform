@@ -15,6 +15,24 @@ export function formatPercent(value: number): string {
   return `${Math.round(value)}%`;
 }
 
+/** Verdadero cuando la fecha queda a más de `days` días de la fecha local de hoy. */
+export function isOlderThanDays(isoDate: string, days: number, today = new Date()): boolean {
+  const text = isoDate.trim();
+  if (!text) {
+    return false;
+  }
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  const parsed = dateOnly
+    ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]))
+    : new Date(text);
+  if (Number.isNaN(parsed.getTime())) {
+    return false;
+  }
+  const updated = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+  const current = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return (current.getTime() - updated.getTime()) / 86_400_000 > days;
+}
+
 export function formatDate(isoDate: string): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate);
   if (!match) {
