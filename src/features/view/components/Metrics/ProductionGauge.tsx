@@ -1,4 +1,4 @@
-import { formatNumber } from "@/lib/utils/helpers/render/format";
+import { formatNumber } from "@/lib/utils/helpers/normalization";
 
 export function ProductionGauge({ label, value, color }: { label: string; value: number; color: string }) {
     return (
