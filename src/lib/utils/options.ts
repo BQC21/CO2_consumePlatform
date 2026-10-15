@@ -1,10 +1,25 @@
 import { Impact } from "../types/components/options";
 
 // Opciones del tipo de sistema
-export const SYSTEM_TYPE_OPTIONS = ["On-grid", "Híbrido", "Off-grid"] as const;
+export const SYSTEM_TYPE_OPTIONS = ["On-grid", "Híbrido", "Off-grid", "BESS"] as const;
 
 // Opciones para la marca del inversor
 export const INVERTER_BRAND_OPTIONS = ["LIVOLTEK", "GOODWE", "SOLIS", "FELICITY"] as const;
+
+const INVERTER_PORTALS: Record<(typeof INVERTER_BRAND_OPTIONS)[number], string> = {
+  SOLIS: "https://v4.soliscloud.com/login",
+  GOODWE: "https://us-semsplus.goodwe.com/#/login",
+  LIVOLTEK: "https://www.livoltek-portal.com/#/",
+  FELICITY: "https://shine.felicitysolar.com/login",
+};
+
+export function inverterPortalUrl(brand: string): string | null {
+  const key = brand.trim().toUpperCase();
+  if (key in INVERTER_PORTALS) {
+    return INVERTER_PORTALS[key as keyof typeof INVERTER_PORTALS];
+  }
+  return null;
+}
 
 // Opciones del estado del proyecto
 export const PROJECT_STATUS_OPTIONS = [
