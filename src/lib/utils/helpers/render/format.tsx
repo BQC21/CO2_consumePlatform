@@ -1,19 +1,6 @@
 import { MapStatus } from "@/lib/types/components/options";
 import { Project } from "@/lib/types/supabase/project-types";
 
-export function formatNumber(value: number | null | undefined, digits = 1): string {
-  if (value === null || value === undefined || Number.isNaN(value)) {
-    return "—";
-  }
-  const fixed = value.toFixed(digits);
-  const [whole, fraction] = fixed.split(".");
-  const withThousands = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return fraction ? `${withThousands}.${fraction}` : withThousands;
-}
-
-export function formatPercent(value: number): string {
-  return `${Math.round(value)}%`;
-}
 
 /** Verdadero cuando la fecha queda a más de `days` días de la fecha local de hoy. */
 export function isOlderThanDays(isoDate: string, days: number, today = new Date()): boolean {
@@ -31,33 +18,6 @@ export function isOlderThanDays(isoDate: string, days: number, today = new Date(
   const updated = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
   const current = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   return (current.getTime() - updated.getTime()) / 86_400_000 > days;
-}
-
-export function formatDate(isoDate: string): string {
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate);
-  if (!match) {
-    return "—";
-  }
-  return `${match[3]}/${match[2]}/${match[1]}`;
-}
-
-export function formatMonthLabel(mes: string): string {
-  const match = /^(\d{4})-(\d{2})$/.exec(mes);
-  if (!match) {
-    return mes || "—";
-  }
-  return `${match[2]}.${match[1]}`;
-}
-
-export function initialsFromName(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return "TE";
-  }
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
 }
 
 /** Meses que tienen registros o instalaciones en el año. Si no hay ninguno, ofrece los doce. */
