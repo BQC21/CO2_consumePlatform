@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function AuthImage() {
     return <Image 
-        src="/instalacion-puno.jpg" 
+        src="/instalacion-lagunaSeca52-edit.jpg" 
         alt="Imagen para decorar la vista de autenticación" 
         fill 
         priority 
