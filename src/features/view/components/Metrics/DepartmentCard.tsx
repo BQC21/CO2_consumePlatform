@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { DepartmentCardProps } from "@/lib/types/components/components";
 import { AddReadOnlyField } from "@/features/view/components/Form_fields/fields";
-import { formatDate, formatNumber, Metric, panelTargetKey } from "@/lib/utils/helpers/render/format";
 import { platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
 import { inverterPortalUrl } from "@/lib/utils/options";
+import { Metric, panelTargetKey } from "@/lib/utils/helpers/render/format";
+import { formatDate, formatNumber } from "@/lib/utils/helpers/normalization";
 
 export function DepartmentCard({ department, projects, metrics }: DepartmentCardProps) {
 
