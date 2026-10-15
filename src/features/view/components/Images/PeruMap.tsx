@@ -36,12 +36,13 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
         {DEPARTMENT_SHAPES.map((shape) => {
           const isSelected = shape.nombre === selected;
           const count = projects.filter((project) => project.ubicacion === shape.nombre).length;
+          const hasProject = count > 0;
           const label = count === 0 ? shape.nombre : `${shape.nombre}: ${count} proyecto${count === 1 ? "" : "s"}`;
           return (
             <path
               key={shape.id}
               d={shape.d}
-              fill={isSelected ? "#b7daf2" : "#c5e3f6"}
+              fill={hasProject ? "#d7efd4" : isSelected ? "#b7daf2" : "#c5e3f6"}
               stroke="#ffffff"
               strokeWidth={1}
               className="cursor-pointer"
