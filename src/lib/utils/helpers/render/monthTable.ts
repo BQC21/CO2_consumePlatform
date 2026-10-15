@@ -53,8 +53,5 @@ export function monthlyTotals(records: MonthlyRecordDraft[]): MonthlyTotals {
 }
 
 export function monthValue(record: MonthlyRecordDraft, key: MetricKey): string {
-    if (key === "carga") {
-        return addMetricValues(record.rendimiento_fv, record.rendimiento_grid);
-    }
     return record[key];
 }
