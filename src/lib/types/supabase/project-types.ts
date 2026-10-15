@@ -11,6 +11,8 @@ export type SupabaseProjectRow = {
   cap_instalada_kwp: number | string | null;
   fecha_instalacion: string | null;
   marca_inversor: string | null;
+  marca_panel: string | null;
+  marca_bateria: string | null;
   paneles_instalados: number | string | null;
   rendimiento_fv_total: number | string | null;
   rendimiento_grid_total: number | string | null;
@@ -37,6 +39,8 @@ export type Project = {
   cap_instalada_kwp: number | null;
   fecha_instalacion: string;
   marca_inversor: string;
+  marca_panel: string;
+  marca_bateria: string;
   paneles_instalados: number | null;
   rendimiento_fv_total: number | null;
   rendimiento_grid_total: number | null;
@@ -63,6 +67,8 @@ export type ProjectFormState = {
   cap_instalada_kwp: string;
   fecha_instalacion: string;
   marca_inversor: string;
+  marca_panel: string;
+  marca_bateria: string;
   paneles_instalados: string;
   rendimiento_fv_total: string;
   rendimiento_grid_total: string;

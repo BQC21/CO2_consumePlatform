@@ -52,6 +52,8 @@ export type PortalProjectOption = {
   distrito: string;
   tipo_de_sistema: string;
   marca_inversor: string;
+  marca_panel: string;
+  marca_bateria: string;
   pot_nominal_kw: number | null;
   cap_instalada_kwp: number | null;
   paneles_instalados: number;
