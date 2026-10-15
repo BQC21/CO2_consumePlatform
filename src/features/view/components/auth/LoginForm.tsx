@@ -72,6 +72,7 @@ export function LoginForm() {
           </button>
         </span>
       </label>
+
       {error ? <p className="field-error">{error}</p> : null}
 
       <button className="btn-primary w-full" 
@@ -79,19 +80,6 @@ export function LoginForm() {
         {busy ? "Ingresando…" : "Ingresar"}
       </button>
       
-      <Link href="/update_password" 
-            className="text-center text-sm font-medium" 
-            style={{ color: "var(--color-secondary)" }}>
-        ¿Olvidaste tu contraseña?
-      </Link>
-      
-      <p className="border-t pt-3 text-center text-xs text-[var(--color-text-secondary)]" 
-          style={{ borderColor: "var(--border-color)" }}>
-          Se enviará un enlace de recuperación al correo corporativo.{" "}
-          <Link href="/register" style={{ color: "var(--color-secondary)" }}>
-            Crear cuenta
-          </Link>
-      </p>
     </form>
   );
 }
