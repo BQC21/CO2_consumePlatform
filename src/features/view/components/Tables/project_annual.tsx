@@ -6,7 +6,7 @@ import { ExcelCell } from "@/features/view/components/Shells/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
-import { formatDate } from "@/lib/utils/helpers/render/format";
+import { formatDate, isOlderThanDays } from "@/lib/utils/helpers/render/format";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
@@ -33,8 +33,13 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
             {projects.length > 0 ? (
               projects.map((project) => {
                 const locked = project.insercion === "existente";
+                const stale = isOlderThanDays(project.updated_at, 30);
                 return (
-                  <tr key={project.id}>
+                  <tr
+                    key={project.id}
+                    className={stale ? "row-stale" : undefined}
+                    title={stale ? "La fecha de actualización supera 30 días" : undefined}
+                  >
                     <td className="whitespace-nowrap font-medium">
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
@@ -85,6 +90,22 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                         value={project.marca_inversor}
                         options={INVERTER_BRAND_OPTIONS}
                         onCommit={locked ? undefined : (value) => commit(project, { marca_inversor: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Panel de ${project.nombre}`}
+                        value={project.marca_panel}
+                        onCommit={locked ? undefined : (value) => commit(project, { marca_panel: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind={locked ? "locked" : "editable"}
+                        ariaLabel={`Batería de ${project.nombre}`}
+                        value={project.marca_bateria}
+                        onCommit={locked ? undefined : (value) => commit(project, { marca_bateria: value })}
                       />
                     </td>
                     <td>
@@ -163,6 +184,8 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
           Celda con selector
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
           Celda fija
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#f6e2c4" }} />
+          Actualización con más de 30 días
         </span>
         <span>
           {projects.length} de {total} proyectos
