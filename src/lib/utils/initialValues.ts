@@ -10,6 +10,8 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   cap_instalada_kwp: "",
   fecha_instalacion: "",
   marca_inversor: "",
+  marca_panel: "",
+  marca_bateria: "",
   paneles_instalados: "",
   rendimiento_fv_total: "",
   rendimiento_grid_total: "",

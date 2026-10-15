@@ -15,6 +15,8 @@ export const PROJECT_COLUMN_CANDIDATES = {
   cap_instalada_kwp: ["cap. instalada (kwp)", "capacidad instalada", "cap instalada"],
   fecha_instalacion: ["fecha instalación", "fecha instalacion", "fecha de instalación"],
   marca_inversor: ["marca del inversor", "marca inversor", "inversor"],
+  marca_panel: ["marca del panel", "marca panel", "panel solar"],
+  marca_bateria: ["marca de batería", "marca de bateria", "marca batería", "marca bateria", "batería", "bateria"],
   paneles_instalados: ["paneles instalados", "paneles"],
   estado: ["estado"],
   descripcion: ["descripción", "descripcion"],
