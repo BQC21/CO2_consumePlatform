@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { DepartmentCardProps } from "@/lib/types/components/components";
+import { AddReadOnlyField } from "@/features/view/components/Form_fields/fields";
 import { formatDate, formatNumber, Metric, panelTargetKey } from "@/lib/utils/helpers/render/format";
 import { platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
+import { inverterPortalUrl } from "@/lib/utils/options";
 
 export function DepartmentCard({ department, projects, metrics }: DepartmentCardProps) {
 
@@ -19,7 +21,6 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
     const installed = metrics.paneles ?? 0; // paneles instalados
     const target = Number(panelesMetaAnual); // Paneles objetivo
     const hasTarget = panelesMetaAnual !== "" && Number.isFinite(target) && target > 0; // 
-    const progress = hasTarget ? (installed / target) * 100 : 0;
 
     const [projectId, setProjectId] = useState<string | null>(null);
     const [trackedDepartment, setTrackedDepartment] = useState(department);
@@ -39,6 +40,7 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
       local[0];
   
     const imageUrl = platformProjectImageUrl(project?.imagen_url ?? "");
+    const portalUrl = project ? inverterPortalUrl(project.marca_inversor) : null;
 
     // --------------------------
     // --- Sincronización -------
@@ -92,6 +94,19 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
               <Metric label="Tipo de sistema" value={project.tipo_de_sistema || "—"} />
               <Metric label="Paneles instalados" value={project.paneles_instalados === null ? "—" : `${formatNumber(project.paneles_instalados, 0)}`} />
             </dl>
+            <div className="mt-4">
+              <AddReadOnlyField label="Marca del inversor" value={project.marca_inversor || "—"} />
+              {portalUrl ? (
+                <a
+                  className="mt-2 inline-block text-sm font-medium text-[var(--color-primary)] underline"
+                  href={portalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Portal del inversor
+                </a>
+              ) : null}
+            </div>
           </article>
         </>
       )}
