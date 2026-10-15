@@ -12,7 +12,7 @@ import { inverterPortalUrl } from "@/lib/utils/options";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
 import { displayMetric, formatMonthLabel } from "@/lib/utils/helpers/normalization";
-import { emptyMonth, monthlyTotals, monthValue } from "@/lib/utils/helpers/render/monthTable";
+import { emptyMonth, monthlyTotals } from "@/lib/utils/helpers/render/monthTable";
 
 export function ProjectMetricsModal({
   project,
@@ -101,7 +101,7 @@ export function ProjectMetricsModal({
 
   // Almacenar totales
   function totalFor(key: MetricKey): string {
-    if (key === "carga") {
+    if (key === "rendimiento_carga") {
       return totals.carga_consumida_total;
     }
     if (key === "rendimiento_fv") {
@@ -202,21 +202,20 @@ export function ProjectMetricsModal({
                 {METRIC_ROWS.map((row) => (
                   <tr key={row.key}>
                     <td className="whitespace-nowrap font-medium">{row.label}</td>
-                    {records.map((record) => (
-                      <td key={`${record.mes}-${row.key}`}>
-                        {row.key === "carga" ? (
-                          <span className="excel-cell excel-calculated">{displayMetric(monthValue(record, row.key))}</span>
-                        ) : (
+                    {records.map((record) => {
+                      const key = row.key;
+                      return (
+                        <td key={`${record.mes}-${key}`}>
                           <input
                             className="field-input input-focus w-28"
                             inputMode="decimal"
                             aria-label={`${row.label} de ${formatMonthLabel(record.mes)}`}
-                            value={record[row.key]}
-                            onChange={(event) => updateCell(record.mes, row.key, event.target.value)}
+                            value={record[key]}
+                            onChange={(event) => updateCell(record.mes, key, event.target.value)}
                           />
-                        )}
-                      </td>
-                    ))}
+                        </td>
+                      );
+                    })}
                     <td>
                       <span className="excel-cell excel-calculated">{displayMetric(totalFor(row.key))}</span>
                     </td>

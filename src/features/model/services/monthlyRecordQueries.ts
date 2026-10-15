@@ -9,7 +9,7 @@ export async function getMonthlyRecords(proyectoId: string): Promise<MonthlyReco
   const supabase = createClient();
   const { data, error } = await supabase
     .from(MONTH_TABLE)
-    .select("mes, rendimiento_fv, rendimiento_grid, reduccion_co2, reduccion_carbon, arboles")
+    .select("mes, rendimiento_fv, rendimiento_grid, rendimiento_carga, reduccion_co2, reduccion_carbon, arboles")
     .eq("proyecto_id", proyectoId)
     .order("mes", { ascending: true });
   if (error) {
@@ -28,6 +28,7 @@ export async function replaceMonthlyRecords(proyectoId: string, records: Monthly
       mes: `${record.mes}-01`,
       rendimiento_fv: toNullableNumber(record.rendimiento_fv),
       rendimiento_grid: toNullableNumber(record.rendimiento_grid),
+      rendimiento_carga: toNullableNumber(record.rendimiento_carga),
       reduccion_co2: toNullableNumber(record.reduccion_co2),
       reduccion_carbon: toNullableNumber(record.reduccion_carbon),
       arboles: toNullableNumber(record.arboles),

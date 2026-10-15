@@ -215,6 +215,7 @@ export type MonthlyRecordDraft = {
     mes: string;
     rendimiento_fv: string;
     rendimiento_grid: string;
+    rendimiento_carga: string;
     reduccion_co2: string;
     reduccion_carbon: string;
     arboles: string;
@@ -224,6 +225,7 @@ export type MonthlyRow = {
     mes: string;
     rendimiento_fv: number | string | null;
     rendimiento_grid: number | string | null;
+    rendimiento_carga: number | string | null;
     reduccion_co2: number | string | null;
     reduccion_carbon: number | string | null;
     arboles: number | string | null;
