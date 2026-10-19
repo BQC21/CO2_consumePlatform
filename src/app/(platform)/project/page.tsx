@@ -11,15 +11,17 @@ import { AddProjectModal } from "@/features/view/components/Modals/project_annua
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { ProjectSorter } from "@/features/view/components/Sorter/ProjectSorter";
 import { ProjectAnnualTable } from "@/features/view/components/Tables/project_annual";
+import { replaceMonthlyRecords } from "@/features/model/services/monthlyRecordQueries";
 import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
-import { transformAnnualRow, valueByHeader } from "@/lib/utils/helpers/massive/parseWorkbook";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
+import { ImportedProjectBlock } from "@/lib/types/components/components";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
 import { Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/button2Massive";
 import { ProjectFormState } from "@/lib/types/supabase/project-types";
 import { formatDate } from "@/lib/utils/helpers/normalization";
+import { monthlyTotals } from "@/lib/utils/helpers/render/monthTable";
 
 export default function ProjectPage() {
 
@@ -54,37 +56,44 @@ export default function ProjectPage() {
   // --- Template para subida masiva ------------
   // --------------------------------------------
 
-  async function importAnnual(rows: Record<string, string>[]) {
-    const forms: ProjectFormState[] = rows.map((row, index) => {
-      transformAnnualRow(row, index);
-      const estado = valueByHeader(row, "Estado").toLowerCase();
-      return {
-        nombre: valueByHeader(row, "PROYECTO / MES"),
-        ubicacion: valueByHeader(row, "UBICACIÓN"),
-        distrito: valueByHeader(row, "Distrito"),
-        tipo_de_sistema: valueByHeader(row, "TIPO DE SISTEMA") || "Híbrido",
-        pot_nominal_kw: valueByHeader(row, "POT. NOMINAL (kW)"),
-        cap_instalada_kwp: valueByHeader(row, "CAP. INSTALADA (kWp)"),
-        fecha_instalacion: valueByHeader(row, "FECHA INSTALACIÓN"),
-        marca_inversor: valueByHeader(row, "MARCA DEL INVERSOR") || valueByHeader(row, "Marca del inversor"),
-        marca_panel: valueByHeader(row, "MARCA DEL PANEL"),
-        marca_bateria: valueByHeader(row, "MARCA DE BATERÍA"),
-        paneles_instalados: valueByHeader(row, "Paneles instalados"),
-        rendimiento_fv_total: valueByHeader(row, "RENDIMIENTO FV TOTAL"),
-        rendimiento_grid_total: valueByHeader(row, "RENDIMIENTO GRID TOTAL"),
-        carga_consumida_total: valueByHeader(row, "CONSUMO CARGA TOTAL"),
-        reduccion_co2: valueByHeader(row, "REDUCCIÓN CO2 TOTAL"),
-        reduccion_carbon: valueByHeader(row, "REDUCCIÓN CARBON TOTAL"),
-        arboles: valueByHeader(row, "ÁRBOLES TOTALES"),
-        estado: estado.includes("complet") ? "completado" : "en_ejecucion",
-        descripcion: valueByHeader(row, "Descripción"),
-        insercion: "independiente",
-        portal_proyecto_id: "",
-        created_at: valueByHeader(row, "FECHA CREACIÓN"),
-        updated_at: valueByHeader(row, "FECHA ACTUALIZACIÓN"),
-      };
-    });
-    await projectMutations.createMany(forms);
+  // Separación de bloques
+  function formFromBlock(block: ImportedProjectBlock): ProjectFormState {
+    const totals = monthlyTotals(block.months);
+    return {
+      nombre: block.nombre,
+      ubicacion: "",
+      distrito: "",
+      tipo_de_sistema: block.tipo_de_sistema,
+      pot_nominal_kw: block.pot_nominal_kw,
+      cap_instalada_kwp: block.cap_instalada_kwp,
+      fecha_instalacion: block.fecha_instalacion,
+      marca_inversor: "",
+      marca_panel: "",
+      marca_bateria: "",
+      paneles_instalados: "",
+      rendimiento_fv_total: totals.rendimiento_fv_total,
+      rendimiento_grid_total: totals.rendimiento_grid_total,
+      carga_consumida_total: totals.carga_consumida_total,
+      reduccion_co2: block.reduccion_co2,
+      reduccion_carbon: block.reduccion_carbon,
+      arboles: block.arboles,
+      estado: "en_ejecucion",
+      descripcion: "",
+      insercion: "independiente",
+      portal_proyecto_id: "",
+      created_at: "",
+      updated_at: "",
+    };
+  }
+
+  // Importación per se
+  async function importAnnual(blocks: ImportedProjectBlock[]) {
+    for (const block of blocks) {
+      const created = await projectMutations.create(formFromBlock(block));
+      if (block.months.length > 0) {
+        await replaceMonthlyRecords(created.id, block.months);
+      }
+    }
     await refresh();
   }
 
@@ -130,10 +139,9 @@ export default function ProjectPage() {
               {(close) => (
                 <MassiveUploadModal
                   title="Importar proyectos"
-                  description="La primera fila debe traer las columnas de la plantilla. Los proyectos importados quedan como independientes."
-                  expectedHeaders={PROJECT_ANNUAL_HEADERS}
-                  onRows={async (rows) => {
-                    await importAnnual(rows);
+                  description="Cada proyecto es un bloque: el nombre, sus meses y una fila Total. La fecha de creación y la de actualización se asignan al importar."
+                  onBlocks={async (blocks) => {
+                    await importAnnual(blocks);
                     close();
                   }}
                   onClose={close}
