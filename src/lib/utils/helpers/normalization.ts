@@ -1,4 +1,4 @@
-import { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
+import type { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
 
 // ----------------
 // -- Números ------
