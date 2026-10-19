@@ -1,5 +1,5 @@
 import { MonthlyRecordDraft, MonthlyRow, MonthlyTotals } from "@/lib/types/components/components";
-import { numberToInput, sumOrNull, toNullableNumber, toYearMonth } from "../normalization";
+import { numberToInput, splitYearMonth, sumOrNull, toNullableNumber, toYearMonth } from "../normalization";
 import { MetricKey } from "../../consts/metricRows";
 
 export function toDraft(row: MonthlyRow): MonthlyRecordDraft {
@@ -8,9 +8,6 @@ export function toDraft(row: MonthlyRow): MonthlyRecordDraft {
         rendimiento_fv: numberToInput(toNullableNumber(row.rendimiento_fv)),
         rendimiento_grid: numberToInput(toNullableNumber(row.rendimiento_grid)),
         rendimiento_carga: numberToInput(toNullableNumber(row.rendimiento_carga)),
-        reduccion_co2: numberToInput(toNullableNumber(row.reduccion_co2)),
-        reduccion_carbon: numberToInput(toNullableNumber(row.reduccion_carbon)),
-        arboles: numberToInput(toNullableNumber(row.arboles)),
     };
 }
 
@@ -20,10 +17,35 @@ export function emptyMonth(mes: string): MonthlyRecordDraft {
         rendimiento_fv: "",
         rendimiento_grid: "",
         rendimiento_carga: "",
-        reduccion_co2: "",
-        reduccion_carbon: "",
-        arboles: "",
     };
+}
+
+export function compareMonths(left: string, right: string): number {
+    const first = splitYearMonth(toYearMonth(left) || left);
+    const second = splitYearMonth(toYearMonth(right) || right);
+    if (!first || !second) {
+        return left.localeCompare(right);
+    }
+    if (first.year !== second.year) {
+        return first.year - second.year;
+    }
+    return first.month - second.month;
+}
+
+export function sortMonthRecords(records: MonthlyRecordDraft[]): MonthlyRecordDraft[] {
+    return [...records].sort((left, right) => compareMonths(left.mes, right.mes));
+}
+
+/** Inserta el mes en orden cronológico: antes del primero, entre medias, o después del último. */
+export function insertMonthRecord(records: MonthlyRecordDraft[], mes: string): MonthlyRecordDraft[] {
+    const normalized = toYearMonth(mes) || mes.trim();
+    const ordered = sortMonthRecords(records);
+    const index = ordered.findIndex((record) => compareMonths(record.mes, normalized) > 0);
+    const next = emptyMonth(normalized);
+    if (index < 0) {
+        return [...ordered, next];
+    }
+    return [...ordered.slice(0, index), next, ...ordered.slice(index)];
 }
 
 export function sumField(records: MonthlyRecordDraft[], field: keyof Omit<MonthlyRecordDraft, "mes">): string {
@@ -40,15 +62,10 @@ export function addMetricValues(left: string, right: string): string {
 }
 
 export function monthlyTotals(records: MonthlyRecordDraft[]): MonthlyTotals {
-    const rendimiento_fv_total = sumField(records, "rendimiento_fv");
-    const rendimiento_grid_total = sumField(records, "rendimiento_grid");
     return {
-        rendimiento_fv_total,
-        rendimiento_grid_total,
-        carga_consumida_total: addMetricValues(rendimiento_fv_total, rendimiento_grid_total),
-        reduccion_co2: sumField(records, "reduccion_co2"),
-        reduccion_carbon: sumField(records, "reduccion_carbon"),
-        arboles: sumField(records, "arboles"),
+        rendimiento_fv_total: sumField(records, "rendimiento_fv"),
+        rendimiento_grid_total: sumField(records, "rendimiento_grid"),
+        carga_consumida_total: sumField(records, "rendimiento_carga"),
     };
 }
 
