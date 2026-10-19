@@ -145,12 +145,25 @@ export type MassiveDownloadModalProps = {
     onClose: () => void;
 };
 
+export type ImportedProjectBlock = {
+    nombre: string;
+    months: MonthlyRecordDraft[];
+    tipo_de_sistema: string;
+    pot_nominal_kw: string;
+    cap_instalada_kwp: string;
+    fecha_instalacion: string;
+    reduccion_co2: string;
+    reduccion_carbon: string;
+    arboles: string;
+};
+
 export type MassiveUploadModalProps = {
     title: string;
     description: string;
-    expectedHeaders: readonly string[];
-    onRows: (rows: Record<string, string>[]) => Promise<void>;
     onClose: () => void;
+    expectedHeaders?: readonly string[];
+    onRows?: (rows: Record<string, string>[]) => Promise<void>;
+    onBlocks?: (blocks: ImportedProjectBlock[]) => Promise<void>;
 };
 
 // GENERAL
