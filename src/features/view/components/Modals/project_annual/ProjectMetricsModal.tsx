@@ -10,9 +10,9 @@ import {
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { inverterPortalUrl } from "@/lib/utils/options";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
-import { METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
-import { displayMetric, formatMonthLabel } from "@/lib/utils/helpers/normalization";
-import { emptyMonth, monthlyTotals } from "@/lib/utils/helpers/render/monthTable";
+import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
+import { displayMetric, formatMonthLabel, numberToInput } from "@/lib/utils/helpers/normalization";
+import { insertMonthRecord, monthlyTotals, sortMonthRecords } from "@/lib/utils/helpers/render/monthTable";
 
 export function ProjectMetricsModal({
   project,
@@ -31,6 +31,12 @@ export function ProjectMetricsModal({
   const [records, setRecords] = useState<MonthlyRecordDraft[]>([]); // grabaciones de columna mensual
   const [monthDraft, setMonthDraft] = useState(""); // columna mensual
   
+  const [impact, setImpact] = useState({
+    reduccion_co2: numberToInput(project.reduccion_co2),
+    reduccion_carbon: numberToInput(project.reduccion_carbon),
+    arboles: numberToInput(project.arboles),
+  });
+
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
@@ -48,7 +54,7 @@ export function ProjectMetricsModal({
     getMonthlyRecords(project.id)
       .then((rows) => {
         if (active) {
-          setRecords(rows);
+          setRecords(sortMonthRecords(rows));
           setLoadError("");
         }
       })
@@ -83,7 +89,7 @@ export function ProjectMetricsModal({
       return;
     }
     setError("");
-    setRecords((current) => [...current, emptyMonth(mes)].sort((left, right) => left.mes.localeCompare(right.mes)));
+    setRecords((current) => insertMonthRecord(current, mes));
     setMonthDraft("");
   }
 
@@ -92,11 +98,16 @@ export function ProjectMetricsModal({
     setRecords((current) => current.filter((record) => record.mes !== mes));
   }
 
-  // Actualizar celda
-  function updateCell(mes: string, key: Exclude<MetricKey, "carga">, value: string) {
+  // Actualizar celda RENDIMIENTO
+  function updateCell(mes: string, key: MetricKey, value: string) {
     setRecords((current) =>
       current.map((record) => (record.mes === mes ? { ...record, [key]: value } : record)),
     );
+  }
+
+  // Actualizar celda IMPACTO
+  function updateImpact(key: ImpactKey, value: string){
+    setImpact((current) => ({ ...current, [key]: value }));
   }
 
   // Almacenar totales
@@ -107,10 +118,7 @@ export function ProjectMetricsModal({
     if (key === "rendimiento_fv") {
       return totals.rendimiento_fv_total;
     }
-    if (key === "rendimiento_grid") {
-      return totals.rendimiento_grid_total;
-    }
-    return totals[key];
+    return totals.rendimiento_grid_total;
   }
 
   // Handlers
@@ -121,7 +129,13 @@ export function ProjectMetricsModal({
     try {
       await replaceMonthlyRecords(project.id, records);
       const nextTotals = monthlyTotals(records);
-      await onUpdate(project.id, { ...createProjectFormStateFromProject(project), ...nextTotals });
+      await onUpdate(project.id, { 
+        ...createProjectFormStateFromProject(project), 
+        ...nextTotals,
+        reduccion_co2: impact.reduccion_co2,
+        reduccion_carbon: impact.reduccion_carbon,
+        arboles: impact.arboles,
+      });
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudieron guardar las métricas.");
@@ -219,6 +233,24 @@ export function ProjectMetricsModal({
                     <td>
                       <span className="excel-cell excel-calculated">{displayMetric(totalFor(row.key))}</span>
                     </td>
+                  </tr>
+                ))}
+
+                {IMPACT_ROWS.map((row) => (
+                  <tr key={row.key}>
+                    <td className="whitespace-nowrap font-medium">{row.label}</td>
+                    {/* Para las filas de reducción de CO2, reducción de Carbón y árboles plantados
+                    dejar columnas vacías según la cantidad de meses considerados */}
+                    <td colSpan={records.length}></td>
+                      <td>
+                        <input
+                          className="field-input input-focus w-28"
+                          inputMode="decimal"
+                          aria-label={`${row.label}`}
+                          value={impact[row.key]}
+                          onChange={(event) => updateImpact(row.key, event.target.value)}
+                        />
+                      </td>
                   </tr>
                 ))}
               </tbody>
