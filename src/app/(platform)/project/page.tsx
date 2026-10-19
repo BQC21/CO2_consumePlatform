@@ -11,6 +11,7 @@ import { AddProjectModal } from "@/features/view/components/Modals/project_annua
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { ProjectSorter } from "@/features/view/components/Sorter/ProjectSorter";
 import { ProjectAnnualTable } from "@/features/view/components/Tables/project_annual";
+import { createProject } from "@/features/model/services/projectQueries";
 import { replaceMonthlyRecords } from "@/features/model/services/monthlyRecordQueries";
 import { useProjectMutations, useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { filterProjects } from "@/lib/utils/helpers/filters/filterProjects";
@@ -58,7 +59,13 @@ export default function ProjectPage() {
 
   // Separación de bloques
   function formFromBlock(block: ImportedProjectBlock): ProjectFormState {
-    const totals = monthlyTotals(block.months);
+    const totals = block.months.length > 0
+      ? monthlyTotals(block.months)
+      : {
+          rendimiento_fv_total: block.rendimiento_fv_total,
+          rendimiento_grid_total: block.rendimiento_grid_total,
+          carga_consumida_total: block.carga_consumida_total,
+        };
     return {
       nombre: block.nombre,
       ubicacion: "",
@@ -86,13 +93,14 @@ export default function ProjectPage() {
     };
   }
 
-  // Importación per se
+  // Importación per se. Los meses y el impacto quedan en la tabla del modal de métricas.
   async function importAnnual(blocks: ImportedProjectBlock[]) {
     for (const block of blocks) {
-      const created = await projectMutations.create(formFromBlock(block));
-      if (block.months.length > 0) {
-        await replaceMonthlyRecords(created.id, block.months);
+      const created = await createProject(formFromBlock(block));
+      if (!created.id) {
+        throw new Error(`No se pudo crear el proyecto ${block.nombre}.`);
       }
+      await replaceMonthlyRecords(created.id, block.months);
     }
     await refresh();
   }
@@ -139,7 +147,7 @@ export default function ProjectPage() {
               {(close) => (
                 <MassiveUploadModal
                   title="Importar proyectos"
-                  description="Cada proyecto es un bloque: el nombre, sus meses y una fila Total. La fecha de creación y la de actualización se asignan al importar."
+                  description="Cada proyecto es un bloque: el nombre, sus meses y una fila Total. Los meses y el impacto quedan en la tabla de métricas. La fecha de creación y la de actualización se asignan al importar."
                   onBlocks={async (blocks) => {
                     await importAnnual(blocks);
                     close();

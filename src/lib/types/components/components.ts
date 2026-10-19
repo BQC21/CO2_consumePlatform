@@ -152,6 +152,9 @@ export type ImportedProjectBlock = {
     pot_nominal_kw: string;
     cap_instalada_kwp: string;
     fecha_instalacion: string;
+    rendimiento_fv_total: string;
+    rendimiento_grid_total: string;
+    carga_consumida_total: string;
     reduccion_co2: string;
     reduccion_carbon: string;
     arboles: string;

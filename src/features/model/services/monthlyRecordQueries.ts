@@ -46,9 +46,9 @@ export async function replaceMonthlyRecords(proyectoId: string, records: Monthly
     }
   }
 
-  const keep = new Set(rows.map((row) => row.mes));
+  const keep = new Set(rows.map((row) => row.mes.slice(0, 7)));
   const removeIds = ((existing ?? []) as { id: string; mes: string }[])
-    .filter((row) => !keep.has(String(row.mes).slice(0, 10)))
+    .filter((row) => !keep.has(String(row.mes).slice(0, 7)))
     .map((row) => row.id);
   if (removeIds.length === 0) {
     return;

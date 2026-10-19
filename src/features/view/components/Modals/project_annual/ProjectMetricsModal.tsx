@@ -112,6 +112,15 @@ export function ProjectMetricsModal({
 
   // Almacenar totales
   function totalFor(key: MetricKey): string {
+    if (records.length === 0) {
+      if (key === "rendimiento_carga") {
+        return numberToInput(project.carga_consumida_total);
+      }
+      if (key === "rendimiento_fv") {
+        return numberToInput(project.rendimiento_fv_total);
+      }
+      return numberToInput(project.rendimiento_grid_total);
+    }
     if (key === "rendimiento_carga") {
       return totals.carga_consumida_total;
     }
@@ -128,7 +137,13 @@ export function ProjectMetricsModal({
     setError("");
     try {
       await replaceMonthlyRecords(project.id, records);
-      const nextTotals = monthlyTotals(records);
+      const nextTotals = records.length > 0
+        ? monthlyTotals(records)
+        : {
+            rendimiento_fv_total: numberToInput(project.rendimiento_fv_total),
+            rendimiento_grid_total: numberToInput(project.rendimiento_grid_total),
+            carga_consumida_total: numberToInput(project.carga_consumida_total),
+          };
       await onUpdate(project.id, { 
         ...createProjectFormStateFromProject(project), 
         ...nextTotals,
