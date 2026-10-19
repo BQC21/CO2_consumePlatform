@@ -149,7 +149,7 @@ export function ProjectMetricsModal({
         {/* Campo para agregar el mes */}
         <div className="flex flex-wrap items-end gap-2">
           <label className="block">
-            <span className="field-label">Mes</span>
+            <span className="field-label">Ingresar el mes y año bajo este formato: MM.YYYY</span>
             <input
               className="field-input input-focus"
               type="month"
@@ -159,7 +159,7 @@ export function ProjectMetricsModal({
             />
           </label>
           <button type="button" className="btn-secondary" onClick={addMonth} disabled={loading || Boolean(loadError)}>
-            Agregar mes
+            Agregar mes - año
           </button>
         </div>
 
