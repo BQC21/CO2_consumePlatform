@@ -216,9 +216,6 @@ export type MonthlyRecordDraft = {
     rendimiento_fv: string;
     rendimiento_grid: string;
     rendimiento_carga: string;
-    reduccion_co2: string;
-    reduccion_carbon: string;
-    arboles: string;
 };
 
 export type MonthlyRow = {
@@ -226,18 +223,12 @@ export type MonthlyRow = {
     rendimiento_fv: number | string | null;
     rendimiento_grid: number | string | null;
     rendimiento_carga: number | string | null;
-    reduccion_co2: number | string | null;
-    reduccion_carbon: number | string | null;
-    arboles: number | string | null;
 };
 
 export type MonthlyTotals = {
     rendimiento_fv_total: string;
     rendimiento_grid_total: string;
     carga_consumida_total: string;
-    reduccion_co2: string;
-    reduccion_carbon: string;
-    arboles: string;
 };
 
 //-------------
