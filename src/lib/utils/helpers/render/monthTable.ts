@@ -1,6 +1,6 @@
-import { MonthlyRecordDraft, MonthlyRow, MonthlyTotals } from "@/lib/types/components/components";
+import type { MonthlyRecordDraft, MonthlyRow, MonthlyTotals } from "@/lib/types/components/components";
 import { numberToInput, splitYearMonth, sumOrNull, toNullableNumber, toYearMonth } from "../normalization";
-import { MetricKey } from "../../consts/metricRows";
+import type { MetricKey } from "../../consts/metricRows";
 
 export function toDraft(row: MonthlyRow): MonthlyRecordDraft {
     return {
