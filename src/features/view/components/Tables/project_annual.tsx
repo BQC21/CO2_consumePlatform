@@ -7,7 +7,7 @@ import { createProjectFormStateFromProject } from "@/features/model/mapping/mapp
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { isOlderThanDays } from "@/lib/utils/helpers/render/format";
-import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
+import { BATTERY_BRAND_OPTIONS, brandOrUnbranded, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { MetricsButton } from "../Buttons/MetricsButton";
 import { formatDate } from "@/lib/utils/helpers/normalization";
@@ -52,7 +52,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                     
                     <td>
                       <ExcelCell
-                        kind="editable"
+                        kind="date"
                         ariaLabel={`Fecha de creación para ${project.nombre}`}
                         value={formatDate(project.created_at)}
                         onCommit={(value) => commit(project, { created_at: value })}
@@ -60,7 +60,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                     </td>
                     <td>
                       <ExcelCell
-                        kind="editable"
+                        kind="date"
                         ariaLabel={`Fecha de actualización para ${project.nombre}`}
                         value={formatDate(project.updated_at)}
                         onCommit={(value) => commit(project, { updated_at: value })}
@@ -68,7 +68,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                     </td>
                     <td>
                       <ExcelCell
-                        kind="editable"
+                        kind="date"
                         ariaLabel={`Fecha de ${project.nombre}`}
                         value={formatDate(project.fecha_instalacion)}
                         onCommit={(value) => commit(project, { fecha_instalacion: value })}
@@ -114,7 +114,8 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
                         ariaLabel={`Panel de ${project.nombre}`}
-                        value={project.marca_panel}
+                        value={brandOrUnbranded(project.marca_panel)}
+                        options={locked ? undefined : PANEL_BRAND_OPTIONS}
                         onCommit={locked ? undefined : (value) => commit(project, { marca_panel: value })}
                       />
                     </td>
@@ -122,18 +123,19 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
                         ariaLabel={`Batería de ${project.nombre}`}
-                        value={project.marca_bateria}
+                        value={brandOrUnbranded(project.marca_bateria)}
+                        options={locked ? undefined : BATTERY_BRAND_OPTIONS}
                         onCommit={locked ? undefined : (value) => commit(project, { marca_bateria: value })}
                       />
                     </td>
-                    <td>
+                    {/* <td>
                       <ExcelCell
                         kind={locked ? "locked" : "editable"}
                         ariaLabel={`Número de paneles para ${project.nombre}`}
                         value={String(project.paneles_instalados)}
                         onCommit={locked ? undefined : (value) => commit(project, { paneles_instalados: value })}
                       />
-                    </td>
+                    </td> */}
 
 
                     <td>
@@ -180,6 +182,8 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
         <span className="inline-flex flex-wrap items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-editable)" }} />
           Celda editable
+          <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "color-mix(in srgb, var(--color-info) 18%, white)" }} />
+          Fecha
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--color-cell-select)" }} />
           Celda con selector
           <span className="ml-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#d7ebf8" }} />
