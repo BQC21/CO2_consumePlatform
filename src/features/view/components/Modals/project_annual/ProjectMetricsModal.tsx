@@ -174,6 +174,9 @@ export function ProjectMetricsModal({
             </>
           ) : null}
         </p>
+        {/* Tipo de instalación */}
+        <p className="text-sm text-[var(--color-text-secondary)]">
+        Tipo de instalación: {project.tipo_de_sistema || "—"} </p>
 
         {/* Campo para agregar el mes */}
         <div className="flex flex-wrap items-end gap-2">
