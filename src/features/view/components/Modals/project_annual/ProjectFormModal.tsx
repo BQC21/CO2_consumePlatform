@@ -12,7 +12,7 @@ import {
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import type { ProjectFormState } from "@/lib/types/supabase/project-types";
-import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
+import { BATTERY_BRAND_OPTIONS, brandOrUnbranded, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, optionsIncludingValue, PANEL_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { ProjectFormModalProps } from "@/lib/types/components/components";
 import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
 import { ProjectOrigin } from "@/lib/types/components/options";
@@ -117,8 +117,8 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
       distrito: item.distrito,
       tipo_de_sistema: item.tipo_de_sistema || current.tipo_de_sistema,
       marca_inversor: item.marca_inversor,
-      marca_panel: item.marca_panel,
-      marca_bateria: item.marca_bateria,
+      marca_panel: brandOrUnbranded(item.marca_panel),
+      marca_bateria: brandOrUnbranded(item.marca_bateria),
       pot_nominal_kw: item.pot_nominal_kw === null ? "" : String(item.pot_nominal_kw),
       cap_instalada_kwp: item.cap_instalada_kwp === null ? "" : String(item.cap_instalada_kwp),
       paneles_instalados: String(item.paneles_instalados),
@@ -251,16 +251,18 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             />
           )}
 
-          <AddTextField
+          <AddSelectField
             label="Marca del panel"
-            value={form.marca_panel}
+            value={brandOrUnbranded(form.marca_panel)}
             disabled={portalLocked}
+            options={optionsIncludingValue(PANEL_BRAND_OPTIONS, brandOrUnbranded(form.marca_panel))}
             onChange={(value) => update("marca_panel", value)}
           />
-          <AddTextField
+          <AddSelectField
             label="Marca de la batería"
-            value={form.marca_bateria}
+            value={brandOrUnbranded(form.marca_bateria)}
             disabled={portalLocked}
+            options={optionsIncludingValue(BATTERY_BRAND_OPTIONS, brandOrUnbranded(form.marca_bateria))}
             onChange={(value) => update("marca_bateria", value)}
           />
 
