@@ -69,6 +69,14 @@ export function sumOrNull(values: Array<number | null>): number | null {
   return present.reduce((total, value) => total + value, 0);
 }
 
+/** kg se muestran como toneladas solo cuando el valor supera 1000. */
+export function massFromKg(kg: number | null): { amount: number | null; unit: "kg" | "t" } {
+  if (kg !== null && kg > 1000) {
+    return { amount: kg / 1000, unit: "t" };
+  }
+  return { amount: kg, unit: "kg" };
+}
+
 export function formatNumber(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined || Number.isNaN(value)) {
     return "—";
@@ -109,6 +117,11 @@ export function toIsoDate(value: unknown): string {
     return `${slash[3]}-${month}-${day}`;
   }
   return "";
+}
+
+/** Formato pedido en el modal de métricas: 10.2026. */
+export function isSuggestedMonth(value: string): boolean {
+  return /^(0[1-9]|1[0-2])\.\d{4}$/.test(value.trim());
 }
 
 /** Acepta 2026-01 y 09.2026. Devuelve yyyy-mm. */
