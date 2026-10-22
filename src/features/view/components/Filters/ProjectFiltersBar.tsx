@@ -28,7 +28,7 @@ export function ProjectFiltersBar({ ubicacion, marcaInversor, onUbicacion, onMar
         {/* MARCA DEL INVERSOR */}
         <select className="field-select input-focus max-w-48" aria-label="Marca del inversor" 
                 value={marcaInversor} onChange={(event) => onMarca(event.target.value)}>
-          <option value="">Todas las marcas</option>
+          <option value="">Todos los inversores</option>
           {INVERTER_BRAND_OPTIONS.map((option) => (
             <option key={option} value={option}>
               {option}
