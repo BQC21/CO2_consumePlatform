@@ -4,7 +4,20 @@ import { toNullableNumber } from "@/lib/utils/helpers/normalization";
 import { toDraft } from "@/lib/utils/helpers/render/monthTable";
 import { MONTH_TABLE } from "@/lib/utils/namingTolerance";
 
-// ---- Obtener registros mensuales
+// ---- Obtener el rendimiento por mes para todos los proyectos
+export async function getAllMonthlyRecords(): Promise<MonthlyRecordDraft[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from(MONTH_TABLE)
+    .select("mes, rendimiento_fv, rendimiento_grid, rendimiento_carga")
+    .order("mes", { ascending: true });
+  if (error) {
+    throw new Error(`Error al leer los registros mensuales: ${error.message}`);
+  }
+  return (data as MonthlyRow[]).map(toDraft).filter((record) => record.mes);
+}
+
+// ---- Obtener el rendimiento por mes de cada proyecto
 export async function getMonthlyRecords(proyectoId: string): Promise<MonthlyRecordDraft[]> {
   const supabase = createClient();
   const { data, error } = await supabase
