@@ -1,11 +1,9 @@
 import { DashboardMetrics, MonthlyRecordDraft } from "@/lib/types/components/components";
 import { ImpactCard } from "../Form_fields/fields";
-import { panelTargetKey } from "@/lib/utils/helpers/render/format";
 import { useMemo, useState } from "react";
-import { ExcelCell } from "../Shells/ExcelCell";
-import { formatNumber, formatPercent, massFromKg } from "@/lib/utils/helpers/normalization";
-import { MONTH_NAMES } from "@/lib/utils/consts/monthNames";
-import { energyMwhForPeriod, yearsInMonthlyRecords } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { massFromKg } from "@/lib/utils/helpers/normalization";
+import { energyMwhForPeriod, monthlyEnergyMwh, yearsFromOldestPeriod } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { MonthlyYieldChart } from "./MonthlyYieldChart";
 
 export function EnvironmentalCards({
   metrics,
@@ -26,11 +24,9 @@ export function EnvironmentalCards({
     const year = new Date().getFullYear();
     // const [panelesMetaAnual, setPanelesMetaAnual] = useState("");
     // const [loadedTargetYear, setLoadedTargetYear] = useState<number | null>(null);
-    const [periodMode, setPeriodMode] = useState<"anio" | "mes">("anio");
     const [selectedYear, setSelectedYear] = useState<number | null>(null);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-    const years = useMemo(() => yearsInMonthlyRecords(monthlyRecords), [monthlyRecords]);
-    const activeYear = selectedYear !== null && years.includes(selectedYear) ? selectedYear : (years[0] ?? null);
+    const years = useMemo(() => yearsFromOldestPeriod(monthlyRecords, year), [monthlyRecords, year]);
+    const activeYear = selectedYear !== null && years.includes(selectedYear) ? selectedYear : year;
 
     // if (typeof window !== "undefined" && loadedTargetYear !== year) {
     //   setLoadedTargetYear(year);
@@ -49,18 +45,16 @@ export function EnvironmentalCards({
     // --------------------------
 
     const periodEnergy = useMemo(() => {
-      // condicionar para aquellas propiedades que solo son acumulativas
       if (monthlyRecords.length === 0) {
         return metrics.produccionAnualMwh;
       }
-      // Si es por año
-      if (periodMode === "anio") {
-        return activeYear === null
-          ? metrics.produccionAnualMwh
-          : energyMwhForPeriod(monthlyRecords, { mode: "anio", year: activeYear });
-      }
-      return energyMwhForPeriod(monthlyRecords, { mode: "mes", month: selectedMonth });
-    }, [activeYear, metrics.produccionAnualMwh, monthlyRecords, periodMode, selectedMonth]);
+      return energyMwhForPeriod(monthlyRecords, { mode: "anio", year: activeYear });
+    }, [activeYear, metrics.produccionAnualMwh, monthlyRecords]);
+
+    const monthlyYield = useMemo(
+      () => monthlyEnergyMwh(monthlyRecords, activeYear),
+      [activeYear, monthlyRecords],
+    );
 
     // cambio de unidades
     const co2 = massFromKg(metrics.co2Kg);
@@ -131,49 +125,25 @@ export function EnvironmentalCards({
         <ImpactCard title="Carbón reducido" accumulated={carbon.amount} unit={carbon.unit} icon="🏭" />
         <ImpactCard title="Árboles" accumulated={metrics.arboles} unit="" icon="🌳" />
 
-        <div className="flex flex-wrap items-center gap-2">
-            <select
-              className="field-select input-focus w-28!"
-              aria-label="Ver impacto por año o por mes"
-              value={periodMode}
-              onChange={(event) => setPeriodMode(event.target.value === "mes" ? "mes" : "anio")}
-            >
-              <option value="anio">Año</option>
-              <option value="mes">Mes</option>
-            </select>
-            {periodMode === "anio" ? (
-              <select
-                className="field-select input-focus w-28!"
-                aria-label="Año"
-                value={activeYear ?? ""}
-                disabled={monthlyLoading || years.length === 0}
-                onChange={(event) => setSelectedYear(Number(event.target.value))}
-              >
-                {years.length === 0 ? <option value="">Sin años</option> : null}
-                {years.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <select
-                className="field-select input-focus w-36!"
-                aria-label="Mes"
-                value={selectedMonth}
-                onChange={(event) => setSelectedMonth(Number(event.target.value))}
-              >
-                {MONTH_NAMES.map((name, index) => (
-                  <option key={name} value={index + 1}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            )}
+        <div className="flex w-full items-center gap-2">
+          <span className="text-sm">Seleccione el año</span>
+          <select
+            className="field-select input-focus w-28!"
+            aria-label="Seleccione el año"
+            value={activeYear}
+            onChange={(event) => setSelectedYear(Number(event.target.value))}
+          >
+            {years.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
 
           <ImpactCard title="Energía Generada (MWh)" accumulated={periodEnergy} unit="MWh" icon="⚡" />
         </div>
+        {monthlyLoading ? null : <MonthlyYieldChart year={activeYear} values={monthlyYield} />}
     </div>
   );
 }
