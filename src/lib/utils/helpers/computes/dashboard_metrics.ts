@@ -35,6 +35,39 @@ export function yearsInMonthlyRecords(records: Pick<MonthlyRecordDraft, "mes">[]
   return [...years].sort((left, right) => right - left);
 }
 
+/** Del año del periodo mensual más antiguo hasta el año en curso, del más reciente al más antiguo. */
+export function yearsFromOldestPeriod(records: Pick<MonthlyRecordDraft, "mes">[], currentYear: number): number[] {
+  let oldest = currentYear;
+  for (const record of records) {
+    const parts = splitYearMonth(record.mes);
+    if (parts && parts.year < oldest) {
+      oldest = parts.year;
+    }
+  }
+  const years: number[] = [];
+  for (let year = currentYear; year >= oldest; year -= 1) {
+    years.push(year);
+  }
+  return years;
+}
+
+/** Rendimiento fotovoltaico de cada mes del año, en MWh. El índice 0 es enero. */
+export function monthlyEnergyMwh(records: MonthlyRecordDraft[], year: number): number[] {
+  const totals = Array.from({ length: 12 }, () => 0);
+  for (const record of records) {
+    const parts = splitYearMonth(record.mes);
+    if (!parts || parts.year !== year || parts.month < 1 || parts.month > 12) {
+      continue;
+    }
+    const kwh = toNullableNumber(record.rendimiento_fv);
+    if (kwh === null) {
+      continue;
+    }
+    totals[parts.month - 1] += kwh / 1000;
+  }
+  return totals;
+}
+
 /** Suma el rendimiento fotovoltaico del año o del mes (en todos los años) y lo pasa a MWh. */
 export function energyMwhForPeriod(records: MonthlyRecordDraft[], period: EnergyPeriod): number | null {
   const values = records.flatMap((record) => {
