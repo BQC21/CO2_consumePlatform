@@ -8,10 +8,11 @@ import {
   replaceMonthlyRecords,
 } from "@/features/model/services/monthlyRecordQueries";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
-import { inverterPortalUrl } from "@/lib/utils/options";
+import { inverterPortalUrl, isOffGrid } from "@/lib/utils/options";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
+import { SUGGESTED_MONTH_MESSAGE } from "@/lib/utils/consts/messages";
 import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
-import { displayMetric, formatMonthLabel, numberToInput } from "@/lib/utils/helpers/normalization";
+import { displayMetric, formatMonthLabel, isSuggestedMonth, numberToInput, toYearMonth } from "@/lib/utils/helpers/normalization";
 import { insertMonthRecord, monthlyTotals, sortMonthRecords } from "@/lib/utils/helpers/render/monthTable";
 
 export function ProjectMetricsModal({
@@ -44,6 +45,14 @@ export function ProjectMetricsModal({
 
   const portalUrl = inverterPortalUrl(project.marca_inversor); // enlace url del portal del inversor
   const totals = monthlyTotals(records); // Total de valores sumados por cada mes
+
+  // Filas de rendimiento energético a considerarse según el tipo de sistema
+  const metricRows = isOffGrid(project.tipo_de_sistema)
+    ? METRIC_ROWS.filter((row) => row.key !== "rendimiento_grid")
+    : METRIC_ROWS;
+
+  // Formatos de periodo no admisibles
+  const monthFormatError = monthDraft.trim() !== "" && !isSuggestedMonth(monthDraft);
 
   // -------------------------
   // --- Sincronización ------
@@ -80,16 +89,29 @@ export function ProjectMetricsModal({
   // Añadir mes
   function addMonth() {
     const mes = monthDraft.trim();
+
+    // No hay un mes escrito
     if (!mes) {
       setError("Elige un mes.");
       return;
     }
-    if (records.some((record) => record.mes === mes)) {
+
+    // No se sube con el formato sugerido
+    if (!isSuggestedMonth(mes)) {
+      setError(SUGGESTED_MONTH_MESSAGE);
+      return;
+    }
+
+    // Normalizar a MM.YYYY
+    const normalized = toYearMonth(mes);
+
+    // En caso el periodo ya exista en la tabla
+    if (records.some((record) => record.mes === normalized)) {
       setError("Ese mes ya está en la tabla.");
       return;
     }
     setError("");
-    setRecords((current) => insertMonthRecord(current, mes));
+    setRecords((current) => insertMonthRecord(current, normalized));
     setMonthDraft("");
   }
 
@@ -184,11 +206,18 @@ export function ProjectMetricsModal({
             <span className="field-label">Ingresar el mes y año bajo este formato: MM.YYYY</span>
             <input
               className="field-input input-focus"
-              type="month"
+              type="text"
+              inputMode="numeric"
+              placeholder="MM.YYYY"
               value={monthDraft}
               aria-label="Mes a agregar"
-              onChange={(event) => setMonthDraft(event.target.value)}
+              aria-invalid={monthFormatError}
+              onChange={(event) => {
+                setMonthDraft(event.target.value);
+                setError("");
+              }}
             />
+            {monthFormatError ? <span className="field-error block">{SUGGESTED_MONTH_MESSAGE}</span> : null}
           </label>
           <button type="button" className="btn-secondary" onClick={addMonth} disabled={loading || Boolean(loadError)}>
             Agregar mes - año
@@ -231,7 +260,7 @@ export function ProjectMetricsModal({
                 </tr>
               </thead>
               <tbody>
-                {METRIC_ROWS.map((row) => (
+                {metricRows.map((row) => (
                   <tr key={row.key}>
                     <td className="whitespace-nowrap font-medium">{row.label}</td>
                     {records.map((record) => {
