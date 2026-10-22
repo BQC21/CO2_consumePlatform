@@ -95,13 +95,19 @@ export type ProjectFilters = {
     search: string;
     ubicacion: string;
     marcaInversor: string;
+    marcaPanel: string;
+    marcaBateria: string;
 };
 
 export type ProjectFiltersBarProps = {
     ubicacion: string;
     marcaInversor: string;
+    marcaPanel: string;
+    marcaBateria: string;
     onUbicacion: (value: string) => void;
     onMarca: (value: string) => void;
+    onMarcaPanel: (value: string) => void;
+    onMarcaBateria: (value: string) => void;
 };
 
 //--------
