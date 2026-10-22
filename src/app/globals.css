@@ -253,7 +253,8 @@ button {
 .excel-table tr.row-stale .excel-editable,
 .excel-table tr.row-stale .excel-select,
 .excel-table tr.row-stale .excel-locked,
-.excel-table tr.row-stale .excel-calculated {
+.excel-table tr.row-stale .excel-calculated,
+.excel-table tr.row-stale .excel-date {
   background: #f6e2c4;
   color: var(--color-text-primary);
 }
@@ -271,6 +272,11 @@ button {
 
 .excel-editable {
   background: var(--color-cell-editable);
+}
+
+.excel-date {
+  background: color-mix(in srgb, var(--color-info) 18%, white);
+  color: var(--color-text-primary);
 }
 
 .excel-select {
