@@ -55,7 +55,7 @@ export default function DashboardPage() {
 
       <section className="rounded-[var(--radius-lg)] border p-6">
         
-        <div className="grid gap-4 xl:grid-cols-[280px_1fr_320px]">
+        <div className="grid gap-4 xl:grid-cols-[320px_1fr_320px]">
           {/* Columna 1 */}
           <div className="grid content-start gap-4">
             <EnvironmentalCards
