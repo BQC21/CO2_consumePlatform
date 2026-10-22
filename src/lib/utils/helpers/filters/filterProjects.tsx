@@ -1,5 +1,6 @@
 import { ProjectFilters } from "@/lib/types/components/components";
 import type { Project } from "@/lib/types/supabase/project-types";
+import { brandOrUnbranded } from "../options";
 
 export function filterProjects(projects: Project[], filters: ProjectFilters): Project[] {
   const search = filters.search.trim().toLowerCase();
@@ -11,7 +12,9 @@ export function filterProjects(projects: Project[], filters: ProjectFilters): Pr
       project.distrito.toLowerCase().includes(search);
     const matchesDepartment = !filters.ubicacion || project.ubicacion === filters.ubicacion;
     const matchesBrand = !filters.marcaInversor || project.marca_inversor === filters.marcaInversor;
-    return matchesSearch && matchesDepartment && matchesBrand;
+    const matchesPanel = !filters.marcaPanel || brandOrUnbranded(project.marca_panel) === filters.marcaPanel;
+    const matchesBattery = !filters.marcaBateria || brandOrUnbranded(project.marca_bateria) === filters.marcaBateria;
+    return matchesSearch && matchesDepartment && matchesBrand && matchesPanel && matchesBattery;
   });
 }
 
