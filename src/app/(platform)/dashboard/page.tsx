@@ -6,13 +6,19 @@ import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCar
 import { EnvironmentalCards } from "@/features/view/components/Metrics/EnvironmentalCards";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
+import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 
 export default function DashboardPage() {
 
+  // ------------------------
+  // Lectura a partir del DB
+  // ------------------------
+  
   const projects = useRealtimeProject();
+  const monthlyRecords = useMonthlyRecords();
   const loading = projects.loading;
 
   // ------------------
@@ -52,7 +58,12 @@ export default function DashboardPage() {
         <div className="grid gap-4 xl:grid-cols-[280px_1fr_320px]">
           {/* Columna 1 */}
           <div className="grid content-start gap-4">
-            <EnvironmentalCards metrics={metrics} />
+            <EnvironmentalCards
+              metrics={metrics}
+              monthlyRecords={monthlyRecords.items}
+              monthlyLoading={monthlyRecords.loading}
+              monthlyError={monthlyRecords.error}
+            />
           </div>
           {/* Columna 2 */}
           <PeruMap 
