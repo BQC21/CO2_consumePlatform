@@ -6,6 +6,12 @@ export const SYSTEM_TYPE_OPTIONS = ["On-grid", "Híbrido", "Off-grid", "BESS"] a
 // Opciones para la marca del inversor
 export const INVERTER_BRAND_OPTIONS = ["LIVOLTEK", "GOODWE", "SOLIS", "FELICITY"] as const;
 
+export const UNBRANDED = "sin marca";
+
+export const PANEL_BRAND_OPTIONS = [UNBRANDED, "TRINA", "JINKO", "CANADIAN", "RESUN", "JA SOLAR"] as const;
+
+export const BATTERY_BRAND_OPTIONS = [UNBRANDED, "LIVOLTEK", "SOLUNA", "FELICITY", "PYLONTECH"] as const;
+
 const INVERTER_PORTALS: Record<(typeof INVERTER_BRAND_OPTIONS)[number], string> = {
   SOLIS: "https://v4.soliscloud.com/login",
   GOODWE: "https://us-semsplus.goodwe.com/#/login",
