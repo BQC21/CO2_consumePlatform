@@ -8,7 +8,8 @@ import {
   replaceMonthlyRecords,
 } from "@/features/model/services/monthlyRecordQueries";
 import type { Project, ProjectFormState } from "@/lib/types/supabase/project-types";
-import { inverterPortalUrl, isOffGrid } from "@/lib/utils/options";
+import { inverterPortalUrl } from "@/lib/utils/options";
+import { isOffGrid } from "@/lib/utils/helpers/options";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { SUGGESTED_MONTH_MESSAGE } from "@/lib/utils/consts/messages";
 import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";

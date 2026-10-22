@@ -12,7 +12,8 @@ import {
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import type { PortalProjectOption } from "@/lib/types/supabase/portal-project";
 import type { ProjectFormState } from "@/lib/types/supabase/project-types";
-import { BATTERY_BRAND_OPTIONS, brandOrUnbranded, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, optionsIncludingValue, PANEL_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
+import { BATTERY_BRAND_OPTIONS, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
+import { brandOrUnbranded, optionsIncludingValue } from "@/lib/utils/helpers/options";
 import { ProjectFormModalProps } from "@/lib/types/components/components";
 import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
 import { ProjectOrigin } from "@/lib/types/components/options";
