@@ -42,7 +42,8 @@ export function energyMwhForPeriod(records: MonthlyRecordDraft[], period: Energy
     if (!parts) {
       return [];
     }
-    const matches = period.mode === "anio" ? parts.year === period.year : parts.month === period.month;
+    const matches = period.mode === "anio" ? 
+          parts.year === period.year : parts.month === period.month;
     if (!matches) {
       return [];
     }
