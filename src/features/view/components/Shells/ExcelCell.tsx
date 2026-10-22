@@ -4,7 +4,7 @@ import { useState } from "react";
 
 type ExcelCellProps = {
   value: string;
-  kind: "editable" | "calculated" | "locked" | "text";
+  kind: "editable" | "calculated" | "locked" | "text" | "date";
   ariaLabel: string;
   onChange?: (value: string) => void;
   onCommit?: (value: string) => void;
@@ -19,17 +19,19 @@ export function ExcelCell({ value, kind, ariaLabel, onChange, onCommit, options 
       ? "excel-cell excel-calculated numeric"
       : kind === "locked"
         ? "excel-cell excel-locked"
-        : kind === "editable" && options
-          ? "excel-cell excel-select"
-          : kind === "editable"
-            ? "excel-cell excel-editable"
-            : "excel-cell";
+        : kind === "date"
+          ? "excel-cell excel-date"
+          : kind === "editable" && options
+            ? "excel-cell excel-select"
+            : kind === "editable"
+              ? "excel-cell excel-editable"
+              : "excel-cell";
 
   if (!focused && draft !== value) {
     setDraft(value);
   }
 
-  if (kind !== "editable" || !onCommit) {
+  if ((kind !== "editable" && kind !== "date") || !onCommit) {
     return <span className={className}>{value || "—"}</span>;
   }
 
