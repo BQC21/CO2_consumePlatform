@@ -66,6 +66,14 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                         onCommit={(value) => commit(project, { updated_at: value })}
                       />
                     </td>
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de ${project.nombre}`}
+                        value={formatDate(project.fecha_instalacion)}
+                        onCommit={(value) => commit(project, { fecha_instalacion: value })}
+                      />
+                    </td>
 
                     <td>
                       <ExcelCell
@@ -91,14 +99,6 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                         ariaLabel={`Capacidad de ${project.nombre}`}
                         value={project.cap_instalada_kwp === null ? "" : String(project.cap_instalada_kwp)}
                         onCommit={locked ? undefined : (value) => commit(project, { cap_instalada_kwp: value })}
-                      />
-                    </td>
-                    <td>
-                      <ExcelCell
-                        kind="editable"
-                        ariaLabel={`Fecha de ${project.nombre}`}
-                        value={formatDate(project.fecha_instalacion)}
-                        onCommit={(value) => commit(project, { fecha_instalacion: value })}
                       />
                     </td>
                     <td>
