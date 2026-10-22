@@ -35,6 +35,8 @@ export default function ProjectPage() {
   const [search, setSearch] = useState("");
   const [ubicacion, setUbicacion] = useState("");
   const [marcaInversor, setMarcaInversor] = useState("");
+  const [marcaPanel, setMarcaPanel] = useState("");
+  const [marcaBateria, setMarcaBateria] = useState("");
   const [sorting, setSorting] = useState<ProjectSortingOrder>("fecha_desc");
 
   // -------------------------------
@@ -42,8 +44,8 @@ export default function ProjectPage() {
   // -------------------------------
 
   const filtered = useMemo(
-    () => sortProjects(filterProjects(projectsState.items, { search, ubicacion, marcaInversor }), sorting),
-    [projectsState.items, search, ubicacion, marcaInversor, sorting]);
+    () => sortProjects(filterProjects(projectsState.items, { search, ubicacion, marcaInversor, marcaPanel, marcaBateria }), sorting),
+    [projectsState.items, search, ubicacion, marcaInversor, marcaPanel, marcaBateria, sorting]);
 
   // ----------------------------------
   // --- Refrescar estados ------------
@@ -132,7 +134,16 @@ export default function ProjectPage() {
       {/* 1ra fila */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <SearchBar value={search} onChange={setSearch} placeholder="     Buscar por planta, distrito o descripción" />
-        <ProjectFiltersBar ubicacion={ubicacion} marcaInversor={marcaInversor} onUbicacion={setUbicacion} onMarca={setMarcaInversor} />
+        <ProjectFiltersBar
+          ubicacion={ubicacion}
+          marcaInversor={marcaInversor}
+          marcaPanel={marcaPanel}
+          marcaBateria={marcaBateria}
+          onUbicacion={setUbicacion}
+          onMarca={setMarcaInversor}
+          onMarcaPanel={setMarcaPanel}
+          onMarcaBateria={setMarcaBateria}
+        />
         <ProjectSorter value={sorting} onChange={setSorting} />
       </div>
 
