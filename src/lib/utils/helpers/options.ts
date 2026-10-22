@@ -1,10 +1,12 @@
 import { UNBRANDED } from "../options";
 
+// Determina si el producto (inversor, panel o batería) tiene marca o no
 export function brandOrUnbranded(value: string): string {
     const text = value.trim();
     return text || UNBRANDED;
 }
 
+// Es un sistema off-grid?
 export function isOffGrid(systemType: string): boolean {
     return systemType.trim().toLowerCase() === "off-grid";
 }

@@ -1,4 +1,5 @@
 import { ProjectFormState } from "../types/supabase/project-types";
+import { UNBRANDED } from "./options";
 
 // Proyectos anuales
 export const INITIAL_PROJECT_FORM: ProjectFormState = {
@@ -10,8 +11,8 @@ export const INITIAL_PROJECT_FORM: ProjectFormState = {
   cap_instalada_kwp: "",
   fecha_instalacion: "",
   marca_inversor: "",
-  marca_panel: "",
-  marca_bateria: "",
+  marca_panel: UNBRANDED,
+  marca_bateria: UNBRANDED,
   paneles_instalados: "",
   rendimiento_fv_total: "",
   rendimiento_grid_total: "",
