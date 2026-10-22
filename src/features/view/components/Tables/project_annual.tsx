@@ -52,6 +52,23 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                     
                     <td>
                       <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de creación para ${project.nombre}`}
+                        value={formatDate(project.created_at)}
+                        onCommit={(value) => commit(project, { created_at: value })}
+                      />
+                    </td>
+                    <td>
+                      <ExcelCell
+                        kind="editable"
+                        ariaLabel={`Fecha de actualización para ${project.nombre}`}
+                        value={formatDate(project.updated_at)}
+                        onCommit={(value) => commit(project, { updated_at: value })}
+                      />
+                    </td>
+
+                    <td>
+                      <ExcelCell
                         kind={locked ? "locked" : "editable"}
                         ariaLabel={`Ubicación de ${project.nombre}`}
                         value={project.ubicacion}
@@ -115,24 +132,6 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: Proj
                         ariaLabel={`Número de paneles para ${project.nombre}`}
                         value={String(project.paneles_instalados)}
                         onCommit={locked ? undefined : (value) => commit(project, { paneles_instalados: value })}
-                      />
-                    </td>
-
-      
-                    <td>
-                      <ExcelCell
-                        kind="editable"
-                        ariaLabel={`Fecha de creación para ${project.nombre}`}
-                        value={formatDate(project.created_at)}
-                        onCommit={(value) => commit(project, { created_at: value })}
-                      />
-                    </td>
-                    <td>
-                      <ExcelCell
-                        kind="editable"
-                        ariaLabel={`Fecha de actualización para ${project.nombre}`}
-                        value={formatDate(project.updated_at)}
-                        onCommit={(value) => commit(project, { updated_at: value })}
                       />
                     </td>
 

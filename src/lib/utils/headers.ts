@@ -3,6 +3,8 @@
 // Proyectos anuales
 export const PROJECT_ANNUAL_HEADERS = [
   "PROYECTO / MES",
+  "FECHA CREACIÓN",
+  "FECHA ACTUALIZACIÓN",
   // "IMAGEN ASOCIADA",
   "UBICACIÓN",
   "TIPO DE SISTEMA",
@@ -13,7 +15,5 @@ export const PROJECT_ANNUAL_HEADERS = [
   "MARCA DEL PANEL",
   "MARCA DE BATERÍA",
   "PANELES INSTALADOS",
-  "FECHA CREACIÓN",
-  "FECHA ACTUALIZACIÓN",
   "ESTADO",
 ] as const;
