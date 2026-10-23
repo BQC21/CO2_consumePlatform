@@ -93,7 +93,7 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
               <Metric label="Capacidad" value={project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`} />
               <Metric label="Fecha inst." value={formatDate(project.fecha_instalacion)} />
               <Metric label="Tipo de sistema" value={project.tipo_de_sistema || "—"} />
-              <Metric label="Paneles instalados" value={project.paneles_instalados === null ? "—" : `${formatNumber(project.paneles_instalados, 0)}`} />
+              {/* <Metric label="Paneles instalados" value={project.paneles_instalados === null ? "—" : `${formatNumber(project.paneles_instalados, 0)}`} /> */}
             </dl>
             <div className="mt-4">
               <AddReadOnlyField label="Marca del inversor" value={project.marca_inversor || "—"} />
