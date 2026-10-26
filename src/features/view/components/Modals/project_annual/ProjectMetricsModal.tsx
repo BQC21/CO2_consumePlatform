@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DownloadIcon } from "@/features/view/components/Icons/icons";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import {
@@ -13,8 +14,9 @@ import { isOffGrid } from "@/lib/utils/helpers/options";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { SUGGESTED_MONTH_MESSAGE } from "@/lib/utils/consts/messages";
 import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
-import { displayMetric, formatMonthLabel, isSuggestedMonth, numberToInput, toYearMonth } from "@/lib/utils/helpers/normalization";
-import { insertMonthRecord, monthlyTotals, sortMonthRecords } from "@/lib/utils/helpers/render/monthTable";
+import { downloadWorkbook } from "@/lib/utils/helpers/massive/buildWorkbook";
+import { displayMetric, formatMonthLabel, isSuggestedMonth, numberToInput, splitYearMonth, toYearMonth } from "@/lib/utils/helpers/normalization";
+import { insertMonthRecord, metricsFilename, monthlyTotals, sortMonthRecords, summedMetric } from "@/lib/utils/helpers/render/monthTable";
 
 export function ProjectMetricsModal({
   project,
@@ -32,6 +34,7 @@ export function ProjectMetricsModal({
 
   const [records, setRecords] = useState<MonthlyRecordDraft[]>([]); // grabaciones de columna mensual
   const [monthDraft, setMonthDraft] = useState(""); // columna mensual
+  const [selectedYear, setSelectedYear] = useState<number | null>(null); // año seleccionado
   
   const [impact, setImpact] = useState({
     reduccion_co2: numberToInput(project.reduccion_co2),
@@ -45,7 +48,20 @@ export function ProjectMetricsModal({
   const [busy, setBusy] = useState(false); 
 
   const portalUrl = inverterPortalUrl(project.marca_inversor); // enlace url del portal del inversor
-  const totals = monthlyTotals(records); // Total de valores sumados por cada mes
+  const years = Array.from(
+    new Set(
+      records.flatMap((record) => {
+        const year = splitYearMonth(record.mes)?.year;
+        return year ? [year] : [];
+      }),
+    ),
+  ).sort((left, right) => right - left); // orddenamiento de años a mostrarse en el selector
+
+  // Año activo + Grabaciones visibles
+  const activeYear = selectedYear !== null && years.includes(selectedYear) ? selectedYear : (years[0] ?? null);
+  const visibleRecords = activeYear === null
+    ? []
+    : records.filter((record) => splitYearMonth(record.mes)?.year === activeYear);
 
   // Filas de rendimiento energético a considerarse según el tipo de sistema
   const metricRows = isOffGrid(project.tipo_de_sistema)
@@ -114,6 +130,12 @@ export function ProjectMetricsModal({
     setError("");
     setRecords((current) => insertMonthRecord(current, normalized));
     setMonthDraft("");
+
+    // Selector de año
+    const year = splitYearMonth(normalized)?.year;
+    if (year) {
+      setSelectedYear(year);
+    }
   }
 
   // Remover mes
@@ -144,13 +166,43 @@ export function ProjectMetricsModal({
       }
       return numberToInput(project.rendimiento_grid_total);
     }
-    if (key === "rendimiento_carga") {
-      return totals.carga_consumida_total;
+    return summedMetric(visibleRecords, key);
+  }
+
+  // Exportar métricas
+  function exportMetrics() {
+    const headers = ["Mes", ...metricRows.map((row) => row.label), ...IMPACT_ROWS.map((row) => row.label)];
+    const impactValues = IMPACT_ROWS.map((row) => impact[row.key]);
+    const rows = records.length === 0
+      ? [["", ...metricRows.map(() => ""), ...impactValues]]
+      : [
+          ...sortMonthRecords(records).map((record) => [
+            formatMonthLabel(record.mes),
+            ...metricRows.map((row) => record[row.key]),
+            ...IMPACT_ROWS.map(() => ""),
+          ]),
+          ["Total", ...metricRows.map((row) => summedMetric(records, row.key)), ...impactValues],
+        ];
+    downloadWorkbook(metricsFilename(project.nombre), headers, rows);
+  }
+
+  // Controlar la manipulación por teclado
+  function handleFormKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
+    if (event.key !== "Enter") {
+      return;
     }
-    if (key === "rendimiento_fv") {
-      return totals.rendimiento_fv_total;
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.getAttribute("aria-label") === "Mes a agregar") {
+      event.preventDefault();
+      addMonth();
+      return;
     }
-    return totals.rendimiento_grid_total;
+    if (target instanceof HTMLButtonElement && target.type === "submit") {
+      return;
+    }
+    if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement) {
+      event.preventDefault();
+    }
   }
 
   // Handlers
@@ -181,9 +233,13 @@ export function ProjectMetricsModal({
     }
   }
 
+  // ---------------------------
+  // ---- RENDERIZADO ----------
+  // ---------------------------
+
   return (
     <ModalFrame title={`Métricas · ${project.nombre}`} onClose={onClose} wide>
-      <form className="grid gap-4" onSubmit={handleSubmit}>
+      <form className="grid gap-4" onSubmit={handleSubmit} onKeyDown={handleFormKeyDown}>
 
         {/* Información del inversor */}
         <p className="text-sm text-[var(--color-text-secondary)]">
@@ -223,6 +279,27 @@ export function ProjectMetricsModal({
           <button type="button" className="btn-secondary" onClick={addMonth} disabled={loading || Boolean(loadError)}>
             Agregar mes - año
           </button>
+          <button type="button" className="btn-secondary" onClick={exportMetrics} disabled={loading || Boolean(loadError)}>
+            <DownloadIcon />
+            <span>Exportar</span>
+          </button>
+          <label className="block">
+            <span className="field-label">Año</span>
+            <select
+              className="field-select input-focus w-32!"
+              aria-label="Año"
+              value={activeYear ?? ""}
+              disabled={years.length === 0 || loading || Boolean(loadError)}
+              onChange={(event) => setSelectedYear(Number(event.target.value))}
+            >
+              {years.length === 0 ? <option value="">—</option> : null}
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {loading ? <p className="text-sm text-[var(--color-text-secondary)]">Leyendo registros mensuales…</p> : null}
@@ -235,7 +312,7 @@ export function ProjectMetricsModal({
               <thead>
                 <tr>
                   <th>Métrica</th>
-                  {records.map((record) => (
+                  {visibleRecords.map((record) => (
                     <th key={record.mes}>
                       <span className="inline-flex items-center gap-2">
                         {formatMonthLabel(record.mes)}
@@ -264,7 +341,7 @@ export function ProjectMetricsModal({
                 {metricRows.map((row) => (
                   <tr key={row.key}>
                     <td className="whitespace-nowrap font-medium">{row.label}</td>
-                    {records.map((record) => {
+                    {visibleRecords.map((record) => {
                       const key = row.key;
                       return (
                         <td key={`${record.mes}-${key}`}>
@@ -289,7 +366,7 @@ export function ProjectMetricsModal({
                     <td className="whitespace-nowrap font-medium">{row.label}</td>
                     {/* Para las filas de reducción de CO2, reducción de Carbón y árboles plantados
                     dejar columnas vacías según la cantidad de meses considerados */}
-                    <td colSpan={records.length}></td>
+                    <td colSpan={visibleRecords.length}></td>
                       <td>
                         <input
                           className="field-input input-focus w-28"
