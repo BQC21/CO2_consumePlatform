@@ -68,6 +68,30 @@ export function monthlyTotals(records: MonthlyRecordDraft[]): MonthlyTotals {
         carga_consumida_total: sumField(records, "rendimiento_carga"),
     };
 }
+// Nombrar el archivo a exportarse
+function metricsFilename(nombre: string): string {
+    const slug = nombre
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    return `metricas-${slug || "proyecto"}.xlsx`;
+}
+
+  // Agrupar registros mensuales totales
+function summedMetric(records: MonthlyRecordDraft[], key: MetricKey): string {
+    const totals = monthlyTotals(records);
+    if (key === "rendimiento_carga") {
+        return totals.carga_consumida_total;
+    }
+    if (key === "rendimiento_fv") {
+        return totals.rendimiento_fv_total;
+    }
+    return totals.rendimiento_grid_total;
+}
+
 
 export function monthValue(record: MonthlyRecordDraft, key: MetricKey): string {
     return record[key];
