@@ -1,5 +1,16 @@
 import * as XLSX from "xlsx-js-style";
 
+/** Margen para que el encabezado en negrita no quede cortado. */
+const COLUMN_PADDING = 2;
+
+/** Ancho de cada columna según el texto más largo del encabezado o de sus celdas. */
+export function workbookColumnWidths(headers: string[], rows: string[][]): { wch: number }[] {
+  return headers.map((header, index) => {
+    const longest = rows.reduce((max, row) => Math.max(max, (row[index] ?? "").length), header.length);
+    return { wch: longest + COLUMN_PADDING };
+  });
+}
+
 export function downloadWorkbook(filename: string, headers: string[], rows: string[][]): void {
   const sheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
   headers.forEach((_, index) => {
@@ -11,6 +22,7 @@ export function downloadWorkbook(filename: string, headers: string[], rows: stri
       };
     }
   });
+  sheet["!cols"] = workbookColumnWidths(headers, rows);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, sheet, "Plantilla");
   XLSX.writeFile(workbook, filename);
