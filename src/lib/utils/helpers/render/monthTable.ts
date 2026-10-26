@@ -69,7 +69,7 @@ export function monthlyTotals(records: MonthlyRecordDraft[]): MonthlyTotals {
     };
 }
 // Nombrar el archivo a exportarse
-function metricsFilename(nombre: string): string {
+export function metricsFilename(nombre: string): string {
     const slug = nombre
         .trim()
         .toLowerCase()
@@ -80,8 +80,8 @@ function metricsFilename(nombre: string): string {
     return `metricas-${slug || "proyecto"}.xlsx`;
 }
 
-  // Agrupar registros mensuales totales
-function summedMetric(records: MonthlyRecordDraft[], key: MetricKey): string {
+// Agrupar registros mensuales totales
+export function summedMetric(records: MonthlyRecordDraft[], key: MetricKey): string {
     const totals = monthlyTotals(records);
     if (key === "rendimiento_carga") {
         return totals.carga_consumida_total;
