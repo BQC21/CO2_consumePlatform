@@ -123,8 +123,15 @@ export function EnvironmentalCards({
 
         <ImpactCard title="CO2 reducido" accumulated={co2.amount} unit={co2.unit} icon="🚛" />
         <ImpactCard title="Carbón reducido" accumulated={carbon.amount} unit={carbon.unit} icon="🏭" />
-        <ImpactCard title="Árboles" accumulated={metrics.arboles} unit="" icon="🌳" />
+        <ImpactCard
+          title="Árboles"
+          accumulated={metrics.arboles === null ? null : Math.ceil(metrics.arboles)}
+          unit=""
+          icon="🌳"
+          digits={0}
+        />
 
+        <div className="h-px w-full bg-white/50" role="separator" />
         <div className="flex w-full items-center gap-2">
           <span className="text-sm">Seleccione el año</span>
           <select

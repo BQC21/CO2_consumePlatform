@@ -197,14 +197,16 @@ export function ImpactCard({
   accumulated,
   unit,
   icon,
+  digits = 2,
 }: {
   title: string;
   annual?: number | null;
   accumulated: number | null;
   unit: string;
   icon: string;
+  digits?: number;
 }) {
-  const accumulatedText = accumulated === null ? "—" : `${formatNumber(accumulated, 2)} ${unit}`;
+  const accumulatedText = accumulated === null ? "—" : `${formatNumber(accumulated, digits)} ${unit}`;
   return (
     <article className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-black/35 px-3 py-3">
       <div>
