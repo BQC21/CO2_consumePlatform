@@ -1,6 +1,6 @@
 "use client";
 
-import { Button2Delete } from "@/features/view/components/Buttons/button2Delete";
+import { Button2Delete, MetricsButton } from "@/features/view/components/Buttons/buttons";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
 import { ExcelCell } from "@/features/view/components/Shells/ExcelCell";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
@@ -10,7 +10,6 @@ import { isOlderThanDays } from "@/lib/utils/helpers/render/format";
 import { BATTERY_BRAND_OPTIONS, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 import { brandOrUnbranded } from "@/lib/utils/helpers/options";
 import { ProjectAnnualTableProps } from "@/lib/types/components/components";
-import { MetricsButton } from "../Buttons/MetricsButton";
 import { formatDate } from "@/lib/utils/helpers/normalization";
 
 export function ProjectAnnualTable({ projects, total, onUpdate, onDelete }: ProjectAnnualTableProps) {

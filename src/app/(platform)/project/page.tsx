@@ -1,15 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button2Add } from "@/features/view/components/Buttons/button2Add";
-import { SearchBar } from "@/features/view/components/Filters/SearchBar";
-import { ProjectFiltersBar } from "@/features/view/components/Filters/ProjectFiltersBar";
+import { Button2Add, Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/buttons";
+import { ProjectFiltersBar, ProjectSorter, SearchBar } from "@/features/view/components/Filters/ProjectFiltersBar";
 import { MassiveCleanModal } from "@/features/view/components/MassiveModals/MassiveCleanModal";
 import { MassiveDownloadModal } from "@/features/view/components/MassiveModals/MassiveDownloadModal";
 import { MassiveUploadModal } from "@/features/view/components/MassiveModals/MassiveUploadModal";
 import { AddProjectModal } from "@/features/view/components/Modals/project_annual/AddProjectModal";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
-import { ProjectSorter } from "@/features/view/components/Sorter/ProjectSorter";
 import { ProjectAnnualTable } from "@/features/view/components/Tables/project_annual";
 import { createProject } from "@/features/model/services/projectQueries";
 import { replaceMonthlyRecords } from "@/features/model/services/monthlyRecordQueries";
@@ -19,7 +17,6 @@ import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { ImportedProjectBlock } from "@/lib/types/components/components";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
-import { Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/button2Massive";
 import { ProjectFormState } from "@/lib/types/supabase/project-types";
 import { formatDate } from "@/lib/utils/helpers/normalization";
 import { monthlyTotals } from "@/lib/utils/helpers/render/monthTable";

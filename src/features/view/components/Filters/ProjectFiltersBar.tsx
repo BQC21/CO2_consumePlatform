@@ -1,9 +1,31 @@
 "use client";
 
-import { FilterIcon } from "@/features/view/components/Icons/icons";
-import { ProjectFiltersBarProps } from "@/lib/types/components/components";
-import { BATTERY_BRAND_OPTIONS, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS } from "@/lib/utils/options";
+import { FilterIcon, SearchIcon, SortIcon } from "@/features/view/components/Icons/icons";
+import { ProjectFiltersBarProps, ProjectSorterProps } from "@/lib/types/components/components";
+import { ProjectSortingOrder } from "@/lib/types/components/options";
+import { BATTERY_BRAND_OPTIONS, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS, SORTING_OPTIONS } from "@/lib/utils/options";
 
+type SearchBarProps = {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+};
+
+// Barra de búsqueda
+export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
+  return (
+    <label className="relative block w-200! max-w-full shrink-0">
+      <span className="sr-only">Buscar</span>
+      <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[var(--color-text-secondary)]">
+        <SearchIcon />
+      </span>
+      <input className="field-input input-focus pl-9" value={value} placeholder={placeholder}
+              onChange={(event) => onChange(event.target.value)} />
+    </label>
+  );
+}
+
+// Barras de filtado
 export function ProjectFiltersBar({
   ubicacion,
   marcaInversor,
@@ -69,5 +91,27 @@ export function ProjectFiltersBar({
       </div>
 
     </div>
+  );
+}
+
+// Barras de ordenamiento
+export function ProjectSorter({ value, onChange }: ProjectSorterProps) {
+  return (
+    <label className="inline-flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+      <SortIcon />
+      <span className="sr-only">Orden</span>
+      <select
+        className="field-select input-focus max-w-64"
+        aria-label="Ordenar proyectos"
+        value={value}
+        onChange={(event) => onChange(event.target.value as ProjectSortingOrder)}
+      >
+        {SORTING_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
