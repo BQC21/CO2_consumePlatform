@@ -1,15 +1,9 @@
 "use client";
 
 import { FilterIcon, SearchIcon, SortIcon } from "@/features/view/components/Icons/icons";
-import { ProjectFiltersBarProps, ProjectSorterProps } from "@/lib/types/components/components";
+import { ProjectFiltersBarProps, ProjectSorterProps, SearchBarProps } from "@/lib/types/components/components";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
 import { BATTERY_BRAND_OPTIONS, DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PANEL_BRAND_OPTIONS, SORTING_OPTIONS } from "@/lib/utils/options";
-
-type SearchBarProps = {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-};
 
 // Barra de búsqueda
 export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {

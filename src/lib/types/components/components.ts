@@ -110,6 +110,12 @@ export type ProjectFiltersBarProps = {
     onMarcaBateria: (value: string) => void;
 };
 
+export type SearchBarProps = {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+};
+
 //--------
 // Sorters
 //--------
