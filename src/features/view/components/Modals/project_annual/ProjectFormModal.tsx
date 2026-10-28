@@ -224,8 +224,8 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
             />
           )}
 
-          <AddTextField label="Distrito o referencia" value={form.distrito} disabled={portalLocked} 
-                        onChange={(value) => update("distrito", value)} />
+          {/* <AddTextField label="Distrito o referencia" value={form.distrito} disabled={portalLocked} 
+                        onChange={(value) => update("distrito", value)} /> */}
 
           {portalLocked ? (
             <AddTextField label="Tipo de sistema" value={form.tipo_de_sistema} disabled 

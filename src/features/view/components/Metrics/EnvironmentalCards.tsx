@@ -3,7 +3,7 @@ import { ImpactCard } from "../Form_fields/fields";
 import { useMemo, useState } from "react";
 import { massFromKg } from "@/lib/utils/helpers/normalization";
 import { energyMwhForPeriod, monthlyEnergyMwh, yearsFromOldestPeriod } from "@/lib/utils/helpers/computes/dashboard_metrics";
-import { MonthlyYieldChart } from "./MonthlyYieldChart";
+import { MonthlyYieldChart } from "../Charts/MonthlyYieldChart";
 
 export function EnvironmentalCards({
   metrics,
