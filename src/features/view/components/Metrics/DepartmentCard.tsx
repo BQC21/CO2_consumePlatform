@@ -16,12 +16,6 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
     // -----------------------
 
     const year = new Date().getFullYear();
-    const [panelesMetaAnual, setPanelesMetaAnual] = useState("");
-
-    // Propieades para trackear progreso en paneles instalados
-    const installed = metrics.paneles ?? 0; // paneles instalados
-    const target = Number(panelesMetaAnual); // Paneles objetivo
-    const hasTarget = panelesMetaAnual !== "" && Number.isFinite(target) && target > 0; // 
 
     const [projectId, setProjectId] = useState<string | null>(null);
     const [trackedDepartment, setTrackedDepartment] = useState(department);
@@ -42,15 +36,6 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
   
     const imageUrl = platformProjectImageUrl(project?.imagen_url ?? "");
     const portalUrl = project ? inverterPortalUrl(project.marca_inversor) : null;
-
-    // --------------------------
-    // --- Sincronización -------
-    // --------------------------
-
-    // Persistir la meta anual de paneles solares
-    useEffect(() => {
-        setPanelesMetaAnual(window.localStorage.getItem(panelTargetKey(year)) ?? "");
-    }, [year]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -111,20 +96,6 @@ export function DepartmentCard({ department, projects, metrics }: DepartmentCard
           </article>
         </>
       )}
-
-      {/* {project ? (
-        <section className="overflow-hidden rounded-[var(--radius-xl)] bg-[#d7ebf8] text-[var(--color-text-primary)]">
-          {imageUrl ? (
-            <div className="relative h-48">
-              <Image src={imageUrl} alt={`Instalación de ${project.nombre}`} fill className="object-cover" sizes="320px" />
-            </div>
-          ) : (
-            <p className="grid h-48 place-items-center px-6 text-center text-sm text-[#24507a]">
-              Este proyecto no tiene una imagen registrada.
-            </p>
-          )}
-        </section>
-      ) : null} */}
     </div>
   );
 }
