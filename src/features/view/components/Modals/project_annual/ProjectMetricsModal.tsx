@@ -36,6 +36,7 @@ export function ProjectMetricsModal({
   const [records, setRecords] = useState<MonthlyRecordDraft[]>([]); // grabaciones de columna mensual
   const [monthDraft, setMonthDraft] = useState(""); // columna mensual
   const [selectedYear, setSelectedYear] = useState<number | null>(null); // año seleccionado
+  const [monthToRemove, setMonthToRemove] = useState<string | null>(null);
   
   const [impact, setImpact] = useState({
     reduccion_co2: numberToInput(project.reduccion_co2),
@@ -167,12 +168,23 @@ export function ProjectMetricsModal({
 
   // Remover mes
   function removeMonth(mes: string) {
-    const label = formatMonthLabel(mes);
-    if (!window.confirm(`¿Quitar ${label}?`)) {
+    setRecords((current) => current.filter((record) => record.mes !== mes));
+    setMonthToRemove(null);
+  }
+
+  useEffect(() => {
+    if (!monthToRemove) {
       return;
     }
-    setRecords((current) => current.filter((record) => record.mes !== mes));
-  }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.stopImmediatePropagation();
+        setMonthToRemove(null);
+      }
+    }
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [monthToRemove]);
 
   // Actualizar celda RENDIMIENTO
   function updateCell(mes: string, key: MetricKey, value: string) {
@@ -269,6 +281,7 @@ export function ProjectMetricsModal({
   // ---------------------------
 
   return (
+    <>
     <ModalFrame
       title={`Métricas · ${project.nombre}${project.ubicacion ? ` – ${project.ubicacion}` : ""}`}
       onClose={onClose}
@@ -309,9 +322,9 @@ export function ProjectMetricsModal({
         {loadError ? <p className="field-error">{loadError}</p> : null}
 
         {!loading && !loadError ? (
-          <div className="grid items-start gap-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
+          <div className="grid items-start gap-5 lg:grid-cols-5">
             {/* Aside de métricas */}
-            <aside className="grid gap-4">
+            <aside className="grid gap-4 lg:col-span-3">
               {/* Selector de año */}
               <div>
                 <p className="mb-2 text-xs font-semibold tracking-wide text-[var(--color-text-secondary)]">Año</p>
@@ -408,7 +421,7 @@ export function ProjectMetricsModal({
             </aside>
 
             {/* Tabla de datos ingresados */}
-            <div className="min-w-0">
+            <div className="min-w-0 lg:col-span-2">
               <p className="mb-2 text-xs font-semibold tracking-wide text-[var(--color-text-secondary)]">
                 Datos ingresados · rendimientos {activeYear ?? ""} (kWh)
               </p>
@@ -452,7 +465,7 @@ export function ProjectMetricsModal({
                               </td>
                             ))}
                             <td>
-                              <button type="button" className="icon-button text-[var(--color-text-secondary)]" aria-label={`Quitar ${formatMonthLabel(record.mes)}`} onClick={() => removeMonth(record.mes)}>
+                              <button type="button" className="icon-button text-[var(--color-text-secondary)]" aria-label={`Quitar ${formatMonthLabel(record.mes)}`} onClick={() => setMonthToRemove(record.mes)}>
                                 <TrashIcon />
                               </button>
                             </td>
@@ -495,5 +508,39 @@ export function ProjectMetricsModal({
         </div>
       </form>
     </ModalFrame>
+    {monthToRemove ? (
+      <div className="modal-backdrop" onMouseDown={() => setMonthToRemove(null)}>
+        <div
+          className="modal-card"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="remove-month-title"
+          onMouseDown={(event) => event.stopPropagation()}
+        >
+          <h2 id="remove-month-title" className="mb-4 text-xl font-semibold text-[var(--color-text-primary)]">Quitar mes</h2>
+          <form
+            className="grid gap-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              removeMonth(monthToRemove);
+            }}
+          >
+            <p>
+              Se quitará <strong>{formatMonthLabel(monthToRemove)}</strong> de las métricas de este proyecto.
+            </p>
+            <p className="text-sm text-[var(--color-text-secondary)]">El cambio queda en esta tabla hasta que guardes las métricas.</p>
+            <div className="flex justify-end gap-2">
+              <button type="button" className="btn-secondary" onClick={() => setMonthToRemove(null)}>
+                Cancelar
+              </button>
+              <button type="submit" className="btn-danger">
+                Quitar mes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }
