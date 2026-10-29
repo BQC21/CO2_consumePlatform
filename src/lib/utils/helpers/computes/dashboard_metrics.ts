@@ -57,3 +57,21 @@ export function energyMwhForPeriod(records: MonthlyRecordDraft[], period: Energy
   }
   return values.reduce((total, value) => total + value, 0);
 }
+
+// año de instalación del proyecto
+export function installationYear(project: Project): number | null {
+  const match = /^(\d{4})/.exec(project.fecha_instalacion);
+  return match ? Number(match[1]) : null;
+}
+
+// suma de la energía generada en MWh
+export function sumEnergyMwh(records: MonthlyRecordDraft[]): number | null {
+  const values = records.flatMap((record) => {
+    const kwh = toNullableNumber(record.rendimiento_fv);
+    return kwh === null ? [] : [kwh / 1000];
+  });
+  if (values.length === 0) {
+    return null;
+  }
+  return values.reduce((total, value) => total + value, 0);
+}
