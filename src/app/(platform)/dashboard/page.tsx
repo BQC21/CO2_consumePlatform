@@ -71,7 +71,7 @@ export default function DashboardPage() {
           // Skeleton de las métricas
           <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5" aria-hidden="true">
             <div className="skeleton-dark h-7 w-72 rounded-full" />
-            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-4 grid grid-cols-2 gap-3">
               {Array.from({ length: 4 }, (_, index) => (
                 <div key={index} className="skeleton-dark h-16 rounded-2xl" />
               ))}
