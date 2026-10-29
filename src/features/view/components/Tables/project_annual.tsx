@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button2Delete, MetricsButton } from "@/features/view/components/Buttons/buttons";
 import { EditIcon } from "@/features/view/components/Icons/icons";
 import { DeleteProjectModal } from "@/features/view/components/Modals/project_annual/DeleteProjectModal";
@@ -12,26 +12,31 @@ import { ProjectAnnualTableProps } from "@/lib/types/components/components";
 import { formatDayMonthYear, formatNumber } from "@/lib/utils/helpers/normalization";
 import { DetailField } from "@/features/view/components/Form_fields/fields";
 import { displayBrand, StatusPill, Chevron } from "@/lib/utils/helpers/render/Table";
-import { lockedClass, editClass } from "@/lib/utils/consts/design";
+import { editClass } from "@/lib/utils/consts/design";
 
 export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEditingChange }: ProjectAnnualTableProps) {
   
   // Estados
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [draft, setDraft] = useState<ProjectFormState | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [rowError, setRowError] = useState("");
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const [drafts, setDrafts] = useState<Record<string, ProjectFormState>>({});
+  const [savingIds, setSavingIds] = useState<Record<string, boolean>>({});
+  const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
 
   // Efecto para cambiar el estado de edición
   useEffect(() => {
-    onEditingChange?.(editingId !== null);
-  }, [editingId, onEditingChange]);
+    onEditingChange?.(Object.keys(drafts).length);
+  }, [drafts, onEditingChange]);
 
   // Función para actualizar el estado del formulario
-  function updateDraft<K extends keyof ProjectFormState>(field: K, value: ProjectFormState[K]) {
-    setDraft((current) => (current ? { ...current, [field]: value } : current));
-    setRowError("");
+  function updateDraft<K extends keyof ProjectFormState>(id: string, field: K, value: ProjectFormState[K]) {
+    setDrafts((current) => {
+      const draft = current[id];
+      if (!draft) {
+        return current;
+      }
+      return { ...current, [id]: { ...draft, [field]: value } };
+    });
+    setRowErrors((current) => ({ ...current, [id]: "" }));
   }
 
   // Función para iniciar la edición
@@ -39,38 +44,44 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
     const next = createProjectFormStateFromProject(project);
     next.marca_panel = brandOrUnbranded(next.marca_panel);
     next.marca_bateria = brandOrUnbranded(next.marca_bateria);
-    setDraft(next);
-    setEditingId(project.id);
-    setExpandedId(project.id);
-    setRowError("");
+    setDrafts((current) => ({ ...current, [project.id]: next }));
+    setExpandedIds((current) => (current.includes(project.id) ? current : [...current, project.id]));
+    setRowErrors((current) => ({ ...current, [project.id]: "" }));
   }
 
   // Función para cancelar la edición
-  function cancelEdit() {
-    setEditingId(null);
-    setDraft(null);
-    setRowError("");
+  function cancelEdit(id: string) {
+    setDrafts((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+    setRowErrors((current) => ({ ...current, [id]: "" }));
   }
 
-  // Función para guardar la edición  
+  // Función para guardar la edición. Solo escribe en la base de esta plataforma.
   async function saveEdit(project: Project) {
+    const draft = drafts[project.id];
     if (!draft) {
       return;
     }
     if (!draft.nombre.trim()) {
-      setRowError("El nombre del proyecto es obligatorio.");
+      setRowErrors((current) => ({ ...current, [project.id]: "El nombre del proyecto es obligatorio." }));
       return;
     }
-    setSaving(true);
-    setRowError("");
+    setSavingIds((current) => ({ ...current, [project.id]: true }));
+    setRowErrors((current) => ({ ...current, [project.id]: "" }));
     try {
-      await onUpdate(project.id, draft);
-      setEditingId(null);
-      setDraft(null);
+      await onUpdate(project.id, { ...draft, insercion: project.insercion, portal_proyecto_id: project.portal_proyecto_id === null ? "" : String(project.portal_proyecto_id) });
+      setDrafts((current) => {
+        const next = { ...current };
+        delete next[project.id];
+        return next;
+      });
     } catch (err) {
-      setRowError(err instanceof Error ? err.message : "No se pudo guardar el proyecto.");
+      setRowErrors((current) => ({ ...current, [project.id]: err instanceof Error ? err.message : "No se pudo guardar el proyecto." }));
     } finally {
-      setSaving(false);
+      setSavingIds((current) => ({ ...current, [project.id]: false }));
     }
   }
 
@@ -96,14 +107,17 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
             {/* Si hay proyectos, mostrarlos */}
             {projects.length > 0 ? (
               projects.map((project) => {
-                const locked = project.insercion === "existente";
-                const editing = editingId === project.id && draft !== null;
-                const expanded = expandedId === project.id;
-                const form = editing ? draft : null;
+                const existing = project.insercion === "existente";
+                const form = drafts[project.id] ?? null;
+                const editing = form !== null;
+                const expanded = expandedIds.includes(project.id);
+                const saving = savingIds[project.id] === true;
+                const rowError = rowErrors[project.id] ?? "";
+                const rowClass = [existing ? "row-existing" : "", editing ? "row-editing" : ""].filter(Boolean).join(" ");
                 return (
                   <Fragment key={project.id}>
                     {/* Fila de la tabla */}
-                    <tr className={editing ? "row-editing" : undefined}>
+                    <tr className={rowClass || undefined}>
                       {/* Columna de la tabla */}
                       <td>
                         {/* Contenedor de la columna */}
@@ -115,10 +129,9 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             aria-expanded={expanded}
                             aria-label={expanded ? `Ocultar detalle de ${project.nombre}` : `Ver detalle de ${project.nombre}`}
                             onClick={() => {
-                              if (editing) {
-                                return;
-                              }
-                              setExpandedId(expanded ? null : project.id);
+                              setExpandedIds((current) => (
+                                current.includes(project.id) ? current.filter((id) => id !== project.id) : [...current, project.id]
+                              ));
                             }}
                           >
                             <Chevron open={expanded} />
@@ -129,11 +142,10 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             {form ? (
                               // Input editable
                               <input
-                                className={locked ? lockedClass : editClass}
+                                className={editClass}
                                 aria-label={`Nombre de ${project.nombre}`}
                                 value={form.nombre}
-                                disabled={locked}
-                                onChange={(event) => updateDraft("nombre", event.target.value)}
+                                onChange={(event) => updateDraft(project.id, "nombre", event.target.value)}
                               />
                             ) : (
                               <p className="font-semibold">{project.nombre}</p>
@@ -144,20 +156,12 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                       <td>
                         {/* Contenedor de la columna */}
                         {form ? (
-                          // Si hay formulario, mostrar el input
-                          // Si el proyecto está bloqueado, mostrar el input bloqueado
-                          locked ? (
-                            // Input bloqueado
-                            <input className={lockedClass} value={form.ubicacion} disabled aria-label={`Ubicación de ${project.nombre}`} />
-                          ) : (
-                            // Select editable
-                            <select className={editClass} aria-label={`Ubicación de ${project.nombre}`} value={form.ubicacion} onChange={(event) => updateDraft("ubicacion", event.target.value)}>
-                              <option value="">Selecciona</option>
-                              {DEPARTMENT_OPTIONS.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                              ))}
-                            </select>
-                          )
+                          <select className={editClass} aria-label={`Ubicación de ${project.nombre}`} value={form.ubicacion} onChange={(event) => updateDraft(project.id, "ubicacion", event.target.value)}>
+                            <option value="">Selecciona</option>
+                            {optionsIncludingValue(DEPARTMENT_OPTIONS, form.ubicacion).map((option) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
                         ) : (
                           project.ubicacion || "—"
                         )}
@@ -165,17 +169,11 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                       <td>
                         {/* Contenedor de la columna */}
                         {form ? (
-                          // Si hay formulario, mostrar el input
-                          // Si el proyecto está bloqueado, mostrar el input bloqueado
-                          locked ? (
-                            <input className={lockedClass} value={form.tipo_de_sistema} disabled aria-label={`Tipo de ${project.nombre}`} />
-                          ) : (
-                            <select className={editClass} aria-label={`Tipo de ${project.nombre}`} value={form.tipo_de_sistema} onChange={(event) => updateDraft("tipo_de_sistema", event.target.value)}>
-                              {SYSTEM_TYPE_OPTIONS.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                              ))}
-                            </select>
-                          )
+                          <select className={editClass} aria-label={`Tipo de ${project.nombre}`} value={form.tipo_de_sistema} onChange={(event) => updateDraft(project.id, "tipo_de_sistema", event.target.value)}>
+                            {optionsIncludingValue(SYSTEM_TYPE_OPTIONS, form.tipo_de_sistema).map((option) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
                         ) : (
                           project.tipo_de_sistema || "—"
                         )}
@@ -186,12 +184,11 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                           // Si hay formulario, mostrar el input
                           // Si el proyecto está bloqueado, mostrar el input bloqueado
                           <input
-                            className={locked ? lockedClass : editClass}
+                            className={editClass}
                             inputMode="decimal"
                             aria-label={`Capacidad de ${project.nombre}`}
                             value={form.cap_instalada_kwp}
-                            disabled={locked}
-                            onChange={(event) => updateDraft("cap_instalada_kwp", event.target.value)}
+                            onChange={(event) => updateDraft(project.id, "cap_instalada_kwp", event.target.value)}
                           />
                         ) : (
                           project.cap_instalada_kwp === null ? "—" : formatNumber(project.cap_instalada_kwp, 2)
@@ -200,20 +197,12 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                       <td>
                         {/* Contenedor de la columna */}
                         {form ? (
-                          // Si hay formulario, mostrar el input
-                          // Si el proyecto está bloqueado, mostrar el input bloqueado
-                          locked ? (
-                            // Input bloqueado
-                            <input className={lockedClass} value={form.marca_inversor} disabled aria-label={`Inversor de ${project.nombre}`} />
-                          ) : (
-                            // Select editable
-                            <select className={editClass} aria-label={`Inversor de ${project.nombre}`} value={catalogOption(INVERTER_BRAND_OPTIONS, form.marca_inversor)} onChange={(event) => updateDraft("marca_inversor", event.target.value)}>
-                              <option value="">Selecciona</option>
-                              {optionsIncludingValue(INVERTER_BRAND_OPTIONS, form.marca_inversor).map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                              ))}
-                            </select>
-                          )
+                          <select className={editClass} aria-label={`Inversor de ${project.nombre}`} value={catalogOption(INVERTER_BRAND_OPTIONS, form.marca_inversor)} onChange={(event) => updateDraft(project.id, "marca_inversor", event.target.value)}>
+                            <option value="">Selecciona</option>
+                            {optionsIncludingValue(INVERTER_BRAND_OPTIONS, form.marca_inversor).map((option) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
                         ) : (
                           project.marca_inversor || "—"
                         )}
@@ -226,7 +215,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             type="date"
                             aria-label={`Fecha de instalación de ${project.nombre}`}
                             value={form.fecha_instalacion}
-                            onChange={(event) => updateDraft("fecha_instalacion", event.target.value)}
+                            onChange={(event) => updateDraft(project.id, "fecha_instalacion", event.target.value)}
                           />
                         ) : (
                           formatDayMonthYear(project.fecha_instalacion)
@@ -239,7 +228,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             className={editClass}
                             aria-label={`Estado de ${project.nombre}`}
                             value={form.estado}
-                            onChange={(event) => updateDraft("estado", event.target.value === "completado" ? "completado" : "en_ejecucion")}
+                            onChange={(event) => updateDraft(project.id, "estado", event.target.value === "completado" ? "completado" : "en_ejecucion")}
                           >
                             <option value="en_ejecucion">En ejecución</option>
                             <option value="completado">Completado</option>
@@ -256,7 +245,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                               <button type="button" className="btn-primary btn-compact" disabled={saving} onClick={() => void saveEdit(project)}>
                                 {saving ? "Guardando…" : "Guardar"}
                               </button>
-                              <button type="button" className="btn-secondary btn-compact" disabled={saving} onClick={cancelEdit}>
+                              <button type="button" className="btn-secondary btn-compact" disabled={saving} onClick={() => cancelEdit(project.id)}>
                                 Cancelar
                               </button>
                             </>
@@ -265,8 +254,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
 
                               <button
                                 type="button"
-                                className="inline-flex h-8 items-center gap-1 rounded-full bg-[#f3f6fa] px-3 text-xs font-medium disabled:opacity-45"
-                                disabled={editingId !== null}
+                                className="inline-flex h-8 items-center gap-1 rounded-full bg-[#f3f6fa] px-3 text-xs font-medium"
                                 onClick={() => startEdit(project)}
                               >
                                 <EditIcon />
@@ -295,13 +283,13 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                     {/* Si la fila está expandida, mostrar los detalles */} 
                     {expanded ? (
                       // Fila de detalles
-                      <tr className="row-detail">
+                      <tr className={existing ? "row-detail row-existing" : "row-detail"}>
                         <td colSpan={8}>
                           <dl className="grid gap-4 px-8 py-2 sm:grid-cols-2 lg:grid-cols-5">
                             {/* Detalle de la marca del panel */}
                             <DetailField label="Marca del panel">
                               {form ? (
-                                <select className={locked ? lockedClass : editClass} aria-label={`Panel de ${project.nombre}`} value={catalogOption(PANEL_BRAND_OPTIONS, form.marca_panel)} disabled={locked} onChange={(event) => updateDraft("marca_panel", event.target.value)}>
+                                <select className={editClass} aria-label={`Panel de ${project.nombre}`} value={catalogOption(PANEL_BRAND_OPTIONS, form.marca_panel)} onChange={(event) => updateDraft(project.id, "marca_panel", event.target.value)}>
                                   {optionsIncludingValue(PANEL_BRAND_OPTIONS, form.marca_panel).map((option) => (
                                     <option key={option} value={option}>{option}</option>
                                   ))}
@@ -313,7 +301,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             {/* Detalle de la marca de la batería */}
                             <DetailField label="Marca de batería">
                               {form ? (
-                                <select className={locked ? lockedClass : editClass} aria-label={`Batería de ${project.nombre}`} value={catalogOption(BATTERY_BRAND_OPTIONS, form.marca_bateria)} disabled={locked} onChange={(event) => updateDraft("marca_bateria", event.target.value)}>
+                                <select className={editClass} aria-label={`Batería de ${project.nombre}`} value={catalogOption(BATTERY_BRAND_OPTIONS, form.marca_bateria)} onChange={(event) => updateDraft(project.id, "marca_bateria", event.target.value)}>
                                   {optionsIncludingValue(BATTERY_BRAND_OPTIONS, form.marca_bateria).map((option) => (
                                     <option key={option} value={option}>{option}</option>
                                   ))}
@@ -325,7 +313,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
                             {/* Detalle de los paneles instalados */}
                             <DetailField label="Paneles instalados">
                               {form ? (
-                                <input className={locked ? lockedClass : editClass} inputMode="numeric" aria-label={`Paneles de ${project.nombre}`} value={form.paneles_instalados} disabled={locked} onChange={(event) => updateDraft("paneles_instalados", event.target.value)} />
+                                <input className={editClass} inputMode="numeric" aria-label={`Paneles de ${project.nombre}`} value={form.paneles_instalados} onChange={(event) => updateDraft(project.id, "paneles_instalados", event.target.value)} />
                               ) : (
                                 project.paneles_instalados === null ? "—" : formatNumber(project.paneles_instalados, 0)
                               )}
