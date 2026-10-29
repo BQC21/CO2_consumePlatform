@@ -626,6 +626,10 @@ input[type="radio"] {
 }
 
 /* Estilos para las filas de la tabla cuando están editando */
+.data-table tr.row-existing td {
+  background: #e7f1fb;
+}
+
 .data-table tr.row-editing td {
   background: #fff8f1;
 }
@@ -634,6 +638,10 @@ input[type="radio"] {
 .data-table tr.row-detail td {
   background: #f7f9fc;
   border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.data-table tr.row-existing.row-detail td {
+  background: #d7e8f8;
 }
 
 /* Estilos para las filas de la tabla cuando están actuales */
