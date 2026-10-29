@@ -124,7 +124,6 @@ export type ProjectAnnualTableProps = {
     total: number;
     onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
-    onReplaceImage: (id: string, file: File) => Promise<void>;
     onEditingChange?: (editing: boolean) => void;
 };
 
