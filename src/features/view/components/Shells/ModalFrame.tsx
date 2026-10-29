@@ -5,7 +5,7 @@ import { CloseIcon } from "@/features/view/components/Icons/icons";
 import { useModalLifecycle } from "@/features/ViewModel/hooks/modals/useModalLifecycle";
 import { ModalFrameProps } from "@/lib/types/components/components";
 
-export function ModalFrame({ title, onClose, children, wide = false }: ModalFrameProps) {
+export function ModalFrame({ title, onClose, children, wide = false, roomy = false, headerExtra }: ModalFrameProps) {
   
   const titleId = useId();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -45,19 +45,22 @@ export function ModalFrame({ title, onClose, children, wide = false }: ModalFram
     <div className="modal-backdrop" onMouseDown={onClose}>
       <div
         ref={cardRef}
-        className={wide ? "modal-card modal-card-wide" : "modal-card"}
+        className={wide ? "modal-card modal-card-wide" : roomy ? "modal-card modal-card-roomy" : "modal-card"}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 id={titleId} className="text-lg font-semibold text-black">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <h2 id={titleId} className="text-xl font-semibold text-[var(--color-text-primary)]">
             {title}
           </h2>
-          <button type="button" className="icon-button" aria-label="Cerrar" onClick={onClose}>
-            <CloseIcon />
-          </button>
+          <div className="flex items-center gap-2">
+            {headerExtra}
+            <button type="button" className="icon-button bg-[var(--color-surface-muted)]" aria-label="Cerrar" onClick={onClose}>
+              <CloseIcon />
+            </button>
+          </div>
         </div>
         {children}
       </div>
