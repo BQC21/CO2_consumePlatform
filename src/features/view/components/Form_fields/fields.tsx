@@ -164,9 +164,9 @@ export function ImpactTile({
         <ImpactIcon name={icon} />
       </span>
       <div className="min-w-0">
-        <p className="text-sm text-white/70 md:text-base">{title}</p>
-        <p className="numeric text-2xl font-bold leading-tight md:text-3xl">
-          {value} {unit ? <span className="text-base font-semibold text-white/80">{unit}</span> : null}
+        <p className="text-3xl font-semibold text-white/70">{title}</p>
+        <p className="numeric text-5xl font-bold leading-tight">
+          {value} {unit ? <span className="text-xl font-semibold text-white/80">{unit}</span> : null}
         </p>
       </div>
     </article>
