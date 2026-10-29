@@ -1,17 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "@/features/view/components/Images/Logo";
 import { createClient, hasSupabaseEnv } from "@/features/model/supabase/client";
 import { PortalShellProps } from "@/lib/types/components/components";
 import { NAVIGATION } from "@/lib/utils/consts/navigation";
 import { initialsFromName } from "@/lib/utils/helpers/normalization";
 
-export function PortalShell({ title, subtitle, activePath, children, 
-  tone = "light", actions, headerExtra, backgroundImage }: PortalShellProps) 
-{
+export function PortalShell({
+  title,
+  subtitle,
+  activePath,
+  children,
+  tone = "light",
+  actions,
+  headerExtra,
+  headerCenter,
+  titleBadge,
+  hideHeading = false,
+  backgroundImage,
+}: PortalShellProps) {
   const [name, setName] = useState("Usuario");
+  const [email, setEmail] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -23,6 +34,7 @@ export function PortalShell({ title, subtitle, activePath, children,
       const user = data.user;
       const fullName = typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
       setName(fullName || user?.email || "Usuario");
+      setEmail(user?.email ?? "");
     });
   }, []);
 
@@ -40,15 +52,22 @@ export function PortalShell({ title, subtitle, activePath, children,
         backgroundPosition: "center",
         backgroundAttachment: "fixed" as const,
       }
-    : { background: tone === "dark" ? "var(--color-background-dark)" : "var(--color-background)" };
+    : undefined;
+  const shellClass = backgroundImage || tone !== "dark" ? "min-h-screen" : "dashboard-canvas min-h-screen";
+  const showEmail = email !== "" && email !== name;
 
   return (
-    <div className="min-h-screen" style={shellStyle}>
+    <div className={shellClass} style={shellStyle}>
       <header className="sticky top-0 z-10 bg-white">
-        <div className="flex h-16 items-center gap-4 px-4 md:px-6">
-          <Link href="/dashboard" className="flex items-center gap-3 text-[var(--color-text-primary)] no-underline">
-            <Logo compact />
-            <span className="hidden text-sm font-medium sm:inline">TEC - Energy Solutions S.A.C</span>
+        <div className="flex min-h-16 flex-wrap items-center gap-3 px-4 py-2 md:px-6">
+          <Link href="/dashboard" className="flex shrink-0 items-center gap-2.5 text-[var(--color-text-primary)] no-underline">
+            <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden">
+              <Logo compact />
+            </span>
+            <span className="hidden leading-tight sm:block">
+              <span className="block text-sm font-semibold">TEC Energy Solutions</span>
+              <span className="block text-[11px] text-[var(--color-text-secondary)]">PlatformCO2</span>
+            </span>
           </Link>
           <nav className="flex flex-1 flex-wrap justify-center gap-2" aria-label="Principal">
             {NAVIGATION.map((item) => (
@@ -57,13 +76,18 @@ export function PortalShell({ title, subtitle, activePath, children,
               </Link>
             ))}
           </nav>
+          {headerCenter}
           <div className="relative flex items-center gap-2">
-            <span className="hidden text-sm font-medium md:inline">{name}</span>
+            <span className="hidden text-right leading-tight md:block">
+              <span className="block text-sm font-semibold">{name}</span>
+              {showEmail ? <span className="block text-[11px] text-[var(--color-text-secondary)]">{email}</span> : null}
+            </span>
             <button
               type="button"
               className="grid place-items-center rounded-full text-xs font-semibold text-white"
               style={{ width: "var(--avatar-size)", height: "var(--avatar-size)", background: "var(--color-primary)" }}
               aria-label={`Cuenta de ${name}`}
+              aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
             >
               {initialsFromName(name)}
@@ -82,18 +106,23 @@ export function PortalShell({ title, subtitle, activePath, children,
         </div>
       </header>
       <main className="px-4 py-6 lg:px-8" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-2xl">
-            <h1 className="mb-5 text-2xl font-semibold md:text-3xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
-              {title}
-            </h1>
-            <p className="mt-1 text-sm" style={{ color: tone === "dark" ? "var(--color-text-on-dark-muted)" : "var(--color-text-secondary)" }}>
-              {subtitle}
-            </p>
+        {hideHeading ? null : (
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-3xl">
+              <h1 className="text-2xl font-semibold md:text-3xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
+                {title}
+                {titleBadge}
+              </h1>
+              {subtitle ? (
+                <p className="mt-1 text-sm" style={{ color: tone === "dark" ? "var(--color-text-on-dark-muted)" : "var(--color-text-secondary)" }}>
+                  {subtitle}
+                </p>
+              ) : null}
+            </div>
+            {headerExtra ? <div className="min-w-[min(100%,32rem)] flex-1">{headerExtra}</div> : null}
+            {actions}
           </div>
-          {headerExtra ? <div className="min-w-[min(100%,32rem)] flex-1">{headerExtra}</div> : null}
-          {actions}
-        </div>
+        )}
         {children}
       </main>
     </div>
