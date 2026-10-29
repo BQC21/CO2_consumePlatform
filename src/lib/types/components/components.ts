@@ -13,6 +13,7 @@ export type FieldProps = {
     onChange: (value: string) => void;
     error?: string;
     placeholder?: string;
+    suffix?: string;
     step?: number | "";
     min?: number | "";
     max?: number | "";
@@ -44,24 +45,6 @@ export type IconProps = { className?: string };
 // Shells
 //--------
 
-export type ExcelWorkbookSheet = {
-    id: string;
-    label: string;
-    content: ReactNode;
-};
-
-export type CollapsibleTableSectionProps = {
-    title: string;
-    meta?: string;
-    children: ReactNode;
-};
-
-export type ExcelWorkbookProps = {
-    sheets: ExcelWorkbookSheet[];
-    defaultSheetId?: string;
-    layout?: "split" | "tabs";
-};
-
 export type PortalShellProps = {
     title: string;
     subtitle: string;
@@ -70,6 +53,9 @@ export type PortalShellProps = {
     tone?: "light" | "dark";
     actions?: ReactNode;
     headerExtra?: ReactNode;
+    headerCenter?: ReactNode;
+    titleBadge?: ReactNode;
+    hideHeading?: boolean;
     backgroundImage?: string;
 };
 
@@ -85,6 +71,8 @@ export type PeruMapProps = {
     projects: Project[];
     selected: string | null;
     onSelect: (nombre: string) => void;
+    onClear: () => void;
+    loading?: boolean;
 };
 
 //--------
@@ -97,17 +85,19 @@ export type ProjectFilters = {
     marcaInversor: string;
     marcaPanel: string;
     marcaBateria: string;
+    tipo?: string;
+    estado?: string;
 };
 
 export type ProjectFiltersBarProps = {
     ubicacion: string;
     marcaInversor: string;
-    marcaPanel: string;
-    marcaBateria: string;
+    tipo: string;
+    estado: string;
     onUbicacion: (value: string) => void;
     onMarca: (value: string) => void;
-    onMarcaPanel: (value: string) => void;
-    onMarcaBateria: (value: string) => void;
+    onTipo: (value: string) => void;
+    onEstado: (value: string) => void;
 };
 
 export type SearchBarProps = {
@@ -135,6 +125,7 @@ export type ProjectAnnualTableProps = {
     onUpdate: (id: string, form: ProjectFormState) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     onReplaceImage: (id: string, file: File) => Promise<void>;
+    onEditingChange?: (editing: boolean) => void;
 };
 
 //--------
@@ -187,6 +178,8 @@ export type ModalFrameProps = {
     onClose: () => void;
     children: ReactNode;
     wide?: boolean;
+    roomy?: boolean;
+    headerExtra?: ReactNode;
 };
 
 // Proyecto anual
@@ -222,11 +215,13 @@ export type ProjectFormModalProps = {
 
 export type Button2AddProps = {
     label: string;
+    compact?: boolean;
     children: (close: () => void) => ReactNode;
 };
 
 export type Button2DeleteProps = {
     label: string;
+    labeled?: boolean;
     children: (close: () => void) => ReactNode;
 };
 
@@ -288,7 +283,6 @@ export type DashboardMetrics = {
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
-    metrics: DashboardMetrics;
 };
 
 // operaciones masivas
@@ -297,4 +291,12 @@ export type MassiveColumn = {
     field: string;
     kind: "text" | "number" | "integer" | "date" | "month";
     required?: boolean;
+};
+
+// Etiquetas en el mapa del Dashboard
+export type LabelPoint = {
+    id: string;
+    nombre: string;
+    x: number;
+    y: number;
 };
