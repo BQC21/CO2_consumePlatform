@@ -1,90 +1,106 @@
-import { DashboardMetrics, MonthlyRecordDraft } from "@/lib/types/components/components";
-import { ImpactCard } from "../Form_fields/fields";
+"use client";
+
 import { useMemo, useState } from "react";
-import { massFromKg } from "@/lib/utils/helpers/normalization";
-import { energyMwhForPeriod, monthlyEnergyMwh, yearsFromOldestPeriod } from "@/lib/utils/helpers/computes/dashboard_metrics";
-import { MonthlyYieldChart } from "../Charts/MonthlyYieldChart";
+import { MonthlyYieldChart } from "@/features/view/components/Charts/MonthlyYieldChart";
+import { DashboardPeriod, PeriodSwitcher, YearSwitcher } from "@/features/view/components/Metrics/PeriodSwitcher";
+import { MonthlyRecordDraft } from "@/lib/types/components/components";
+import { Project } from "@/lib/types/supabase/project-types";
+import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
+import { computeDashboardMetrics, energyMwhForPeriod, installationYear, monthlyEnergyMwh, sumEnergyMwh } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { formatNumber, massFromKg, toNullableNumber } from "@/lib/utils/helpers/normalization";
+import { ImpactTile } from "../Form_fields/fields";
+import { ImpactIcon } from "../Icons/icons";
+import { monthSpan } from "@/lib/utils/helpers/render/charts";
 
 export function EnvironmentalCards({
-  metrics,
+  projects,
   monthlyRecords,
   monthlyLoading,
   monthlyError,
 }: {
-  metrics: DashboardMetrics;
+  projects: Project[];
   monthlyRecords: MonthlyRecordDraft[];
   monthlyLoading: boolean;
   monthlyError: string | null;
 }) {
-
-    // -----------------------
-    // --- Estados -----------
-    // -----------------------
-
-    const year = new Date().getFullYear();
-    const [selectedYear, setSelectedYear] = useState<number | null>(null);
-    const years = useMemo(() => yearsFromOldestPeriod(monthlyRecords, year), [monthlyRecords, year]);
-    const activeYear = selectedYear !== null && years.includes(selectedYear) ? selectedYear : year;
-
-    // --------------------------
-    // --- Sincronización -------
-    // --------------------------
-
-    const periodEnergy = useMemo(() => {
-      if (monthlyRecords.length === 0) {
-        return metrics.produccionAnualMwh;
-      }
-      return energyMwhForPeriod(monthlyRecords, { mode: "anio", year: activeYear });
-    }, [activeYear, metrics.produccionAnualMwh, monthlyRecords]);
-
-    const monthlyYield = useMemo(
-      () => monthlyEnergyMwh(monthlyRecords, activeYear),
-      [activeYear, monthlyRecords],
-    );
-
-    // cambio de unidades
-    const co2 = massFromKg(metrics.co2Kg);
-    const carbon = massFromKg(metrics.carbonKg);
+  const currentYear = new Date().getFullYear();
+  const [period, setPeriod] = useState<DashboardPeriod>(currentYear);
+  const [chartYear, setChartYear] = useState(currentYear);
+  const periodProjects = useMemo(() => {
+    if (period === "todos") {
+      return projects;
+    }
+    return projects.filter((project) => installationYear(project) === period);
+  }, [period, projects]);
+  const metrics = useMemo(() => computeDashboardMetrics(periodProjects), [periodProjects]);
+  const periodYear = period === "todos" ? currentYear : period;
+  const periodEnergy = useMemo(() => {
+    if (period === "todos") {
+      return sumEnergyMwh(monthlyRecords);
+    }
+    return energyMwhForPeriod(monthlyRecords, { mode: "anio", year: period });
+  }, [monthlyRecords, period]);
+  const periodYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, periodYear), [monthlyRecords, periodYear]);
+  const chartYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, chartYear), [chartYear, monthlyRecords]);
+  const co2 = massFromKg(metrics.co2Kg);
+  const carbon = massFromKg(metrics.carbonKg);
+  const range = monthSpan(periodYear, periodYield, period === "todos");
 
   return (
-    <div className="grid gap-3">
-
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold md:text-2xl">Impacto ambiental acumulado</h1>
-        
-        {monthlyLoading ? <p className="text-sm text-white/70">Leyendo registros mensuales…</p> : null}
-        {monthlyError ? <p className="field-error">{monthlyError}</p> : null}
-
-        <ImpactCard title="CO2 reducido" accumulated={co2.amount} unit={co2.unit} icon="🚛" />
-        <ImpactCard title="Carbón reducido" accumulated={carbon.amount} unit={carbon.unit} icon="🏭" />
-        <ImpactCard
-          title="Árboles"
-          accumulated={metrics.arboles === null ? null : Math.ceil(metrics.arboles)}
-          unit=""
-          icon="🌳"
-          digits={0}
+    <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5 md:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-2xl font-semibold md:text-4xl">Impacto ambiental acumulado</h2>
+          <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-semibold tracking-wide text-white/80">{range}</span>
+        </div>
+        <PeriodSwitcher value={period} onChange={setPeriod} />
+      </div>
+      {monthlyError ? <p className="field-error mt-3">{monthlyError}</p> : null}
+      <div className="mt-4 grid grid-cols-4 gap-3">
+        <ImpactTile
+          title="CO₂ reducido"
+          value={co2.amount === null ? "—" : formatNumber(co2.amount, 2)}
+          unit={co2.amount === null ? "" : `${co2.unit} CO₂`}
+          tone="#2f6fed"
+          icon="truck"
         />
-
-        <div className="h-px w-full bg-white/50" role="separator" />
-        <div className="flex w-full items-center gap-2">
-          <span className="text-sm">Seleccione el año</span>
-          <select
-            className="field-select input-focus w-28!"
-            aria-label="Seleccione el año"
-            value={activeYear}
-            onChange={(event) => setSelectedYear(Number(event.target.value))}
-          >
-            {years.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <ImpactTile
+          title="Carbón reducido"
+          value={carbon.amount === null ? "—" : formatNumber(carbon.amount, 2)}
+          unit={carbon.amount === null ? "" : carbon.unit}
+          tone="#7c5cff"
+          icon="factory"
+        />
+        <ImpactTile
+          title="Árboles equivalentes"
+          value={metrics.arboles === null ? "—" : formatNumber(Math.ceil(metrics.arboles), 0)}
+          unit={metrics.arboles === null ? "" : "árboles"}
+          tone="#3caf53"
+          icon="tree"
+        />
+        {monthlyLoading ? (
+          <article className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3" aria-hidden="true">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#f05a1a] text-white">
+              <ImpactIcon name="bolt" />
+            </span>
+            <div className="skeleton-dark h-8 w-24 rounded-full" />
+          </article>
+        ) : (
+          <ImpactTile
+            title="Energía generada"
+            value={periodEnergy === null ? "—" : formatNumber(periodEnergy, 2)}
+            unit={periodEnergy === null ? "" : period === "todos" ? "MWh · todos" : "MWh"}
+            tone="#f05a1a"
+            icon="bolt"
+          />
+        )}
+      </div>
+      <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 px-3 py-4 md:px-5">
+        <div className="mb-3 flex justify-end">
+          <YearSwitcher value={chartYear} onChange={setChartYear} />
         </div>
-
-          <ImpactCard title="Energía Generada (MWh)" accumulated={periodEnergy} unit="MWh" icon="⚡" />
-        </div>
-        {monthlyLoading ? null : <MonthlyYieldChart year={activeYear} values={monthlyYield} />}
-    </div>
+        {monthlyLoading ? <div className="skeleton-dark h-56 rounded-2xl" /> : <MonthlyYieldChart year={chartYear} values={chartYield} />}
+      </div>
+    </section>
   );
 }
