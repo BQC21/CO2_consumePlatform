@@ -2,6 +2,7 @@ import type { MonthlyRecordDraft, MonthlyRow, MonthlyTotals } from "@/lib/types/
 import { numberToInput, splitYearMonth, sumOrNull, toNullableNumber, toYearMonth } from "../normalization";
 import type { MetricKey } from "../../consts/metricRows";
 
+/** Convierte un objeto MonthlyRow en un objeto MonthlyRecordDraft. */
 export function toDraft(row: MonthlyRow): MonthlyRecordDraft {
     return {
         mes: toYearMonth(row.mes),
@@ -11,6 +12,7 @@ export function toDraft(row: MonthlyRow): MonthlyRecordDraft {
     };
 }
 
+/** Crea un objeto MonthlyRecordDraft vacío para un mes específico. */
 export function emptyMonth(mes: string): MonthlyRecordDraft {
     return {
         mes,
@@ -20,6 +22,7 @@ export function emptyMonth(mes: string): MonthlyRecordDraft {
     };
 }
 
+/** Compara dos meses en orden cronológico. */
 export function compareMonths(left: string, right: string): number {
     const first = splitYearMonth(toYearMonth(left) || left);
     const second = splitYearMonth(toYearMonth(right) || right);
@@ -32,6 +35,7 @@ export function compareMonths(left: string, right: string): number {
     return first.month - second.month;
 }
 
+/** Ordena un array de MonthlyRecordDraft por mes. */
 export function sortMonthRecords(records: MonthlyRecordDraft[]): MonthlyRecordDraft[] {
     return [...records].sort((left, right) => compareMonths(left.mes, right.mes));
 }
@@ -48,19 +52,12 @@ export function insertMonthRecord(records: MonthlyRecordDraft[], mes: string): M
     return [...ordered.slice(0, index), next, ...ordered.slice(index)];
 }
 
+/** Suma los valores de un campo específico en un array de MonthlyRecordDraft. */
 export function sumField(records: MonthlyRecordDraft[], field: keyof Omit<MonthlyRecordDraft, "mes">): string {
     return numberToInput(sumOrNull(records.map((record) => toNullableNumber(record[field]))));
 }
 
-export function addMetricValues(left: string, right: string): string {
-    const first = toNullableNumber(left);
-    const second = toNullableNumber(right);
-    if (first === null && second === null) {
-        return "";
-    }
-    return String((first ?? 0) + (second ?? 0));
-}
-
+/** Calcula los totales mensuales para un array de MonthlyRecordDraft. */
 export function monthlyTotals(records: MonthlyRecordDraft[]): MonthlyTotals {
     return {
         rendimiento_fv_total: sumField(records, "rendimiento_fv"),
@@ -90,9 +87,4 @@ export function summedMetric(records: MonthlyRecordDraft[], key: MetricKey): str
         return totals.rendimiento_fv_total;
     }
     return totals.rendimiento_grid_total;
-}
-
-
-export function monthValue(record: MonthlyRecordDraft, key: MetricKey): string {
-    return record[key];
 }

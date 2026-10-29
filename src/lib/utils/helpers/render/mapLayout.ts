@@ -1,12 +1,7 @@
-export type LabelPoint = {
-  id: string;
-  nombre: string;
-  x: number;
-  y: number;
-};
+import { LabelPoint } from "@/lib/types/components/components";
+import { LABEL_HEIGHT } from "../../consts/peru-map";
 
-const LABEL_HEIGHT = 9;
-
+// Ancho del texto
 function labelWidth(nombre: string): number {
   return Math.max(22, nombre.length * 3.35);
 }
@@ -44,17 +39,5 @@ export function separateLabels(points: LabelPoint[], iterations = 48): LabelPoin
     ...node,
     x: Math.min(400, Math.max(18, node.x)),
     y: Math.min(628, Math.max(14, node.y)),
-  }));
-}
-
-/** Coloca un punto por proyecto, en columna, alrededor del centro del departamento. */
-export function stackOffsets(count: number, spacing = 8): { dx: number; dy: number }[] {
-  if (count <= 0) {
-    return [];
-  }
-  const start = -((count - 1) * spacing) / 2;
-  return Array.from({ length: count }, (_, index) => ({
-    dx: 0,
-    dy: start + index * spacing,
   }));
 }

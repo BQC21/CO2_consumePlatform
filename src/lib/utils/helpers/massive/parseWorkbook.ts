@@ -62,31 +62,6 @@ export function assertHeaders(rows: Record<string, string>[], expectedHeaders: r
   }
 }
 
-export function valueByHeader(row: Record<string, string>, header: string): string {
-  const target = normalizeHeader(header);
-  const found = Object.entries(row).find(([key]) => normalizeHeader(key) === target);
-  return found?.[1] ?? "";
-}
-
-export function transformAnnualRow(row: Record<string, string>, index: number): Record<string, string> {
-  const nombre = valueByHeader(row, "PROYECTO / MES");
-  if (!nombre) {
-    throw new Error(`La fila ${index + 2} no tiene nombre de proyecto.`);
-  }
-  const fecha = valueByHeader(row, "FECHA INSTALACIÓN");
-  if (fecha && !toIsoDate(fecha)) {
-    throw new Error(`La fila ${index + 2} tiene una fecha que no se puede leer.`);
-  }
-  const numbers = ["POT. NOMINAL (kW)", "CAP. INSTALADA (kWp)", "Paneles instalados"];
-  for (const header of numbers) {
-    const raw = valueByHeader(row, header);
-    if (raw && toNullableNumber(raw) === null) {
-      throw new Error(`La fila ${index + 2} trae texto donde se espera un número (${header}).`);
-    }
-  }
-  return row;
-}
-
 // Obtener text de la celda
 function cellText(value: SheetCell | undefined): string {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -239,17 +214,4 @@ export function readProjectBlocks(fileBuffer: ArrayBuffer): ImportedProjectBlock
     }
   }
   throw new Error("No se encontró la hoja con los bloques de proyectos.");
-}
-
-export function transformMonthRow(row: Record<string, string>, index: number): Record<string, string> {
-  const proyecto = valueByHeader(row, "Proyecto") || valueByHeader(row, "PROYECTO / MES");
-  const mes = valueByHeader(row, "Mes");
-  if (!proyecto || !toYearMonth(mes)) {
-    throw new Error(`La fila ${index + 2} necesita el proyecto y un mes (2026-01 o 01.2026).`);
-  }
-  const tipico = valueByHeader(row, "TÍPICO DIARIO");
-  if (tipico && toNullableNumber(tipico) === null) {
-    throw new Error(`La fila ${index + 2} trae texto donde se espera el típico diario.`);
-  }
-  return row;
 }

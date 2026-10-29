@@ -11,6 +11,7 @@ export function workbookColumnWidths(headers: string[], rows: string[][]): { wch
   });
 }
 
+// descargar workbook
 export function downloadWorkbook(filename: string, headers: string[], rows: string[][]): void {
   const sheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
   headers.forEach((_, index) => {

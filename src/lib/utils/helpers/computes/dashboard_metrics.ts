@@ -1,10 +1,7 @@
 import { DashboardMetrics, MonthlyRecordDraft } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
 import { splitYearMonth, sumOrNull, toNullableNumber } from "../normalization";
-
-export type EnergyPeriod =
-  | { mode: "anio"; year: number }
-  | { mode: "mes"; month: number };
+import { EnergyPeriod } from "../../consts/metricRows";
 
 // Métricas a calcularse
 export function computeDashboardMetrics(
@@ -21,34 +18,6 @@ export function computeDashboardMetrics(
     carbonKg: sumOrNull(projects.map((project) => project.reduccion_carbon)),
     arboles: sumOrNull(projects.map((project) => project.arboles)),
   };
-}
-
-/** Años presentes en los registros mensuales, del más reciente al más antiguo. */
-export function yearsInMonthlyRecords(records: Pick<MonthlyRecordDraft, "mes">[]): number[] {
-  const years = new Set<number>();
-  for (const record of records) {
-    const parts = splitYearMonth(record.mes);
-    if (parts) {
-      years.add(parts.year);
-    }
-  }
-  return [...years].sort((left, right) => right - left);
-}
-
-/** Del año del periodo mensual más antiguo hasta el año en curso, del más reciente al más antiguo. */
-export function yearsFromOldestPeriod(records: Pick<MonthlyRecordDraft, "mes">[], currentYear: number): number[] {
-  let oldest = currentYear;
-  for (const record of records) {
-    const parts = splitYearMonth(record.mes);
-    if (parts && parts.year < oldest) {
-      oldest = parts.year;
-    }
-  }
-  const years: number[] = [];
-  for (let year = currentYear; year >= oldest; year -= 1) {
-    years.push(year);
-  }
-  return years;
 }
 
 /** Rendimiento fotovoltaico de cada mes del año, en MWh. El índice 0 es enero. */

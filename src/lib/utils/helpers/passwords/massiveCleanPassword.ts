@@ -2,6 +2,7 @@
 
 import { createHash, timingSafeEqual } from "node:crypto";
 
+/** Genera un hash SHA-256 de la contraseña. */
 function digest(value: string): Buffer {
   return createHash("sha256").update(value).digest();
 }
