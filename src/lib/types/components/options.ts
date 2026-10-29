@@ -16,5 +16,7 @@ export type ProjectSortingOrder = (typeof SORTING_OPTIONS)[number]["value"]; // 
 
 export type ProjectAnnualHeader = (typeof PROJECT_ANNUAL_HEADERS)[number]; // encabezado de la vista anual del proyecto
 
-export type Period = "diario" | "mes" | "anio";
-export type Impact = "co2" | "carbon" | "arboles";
+export type Period = "diario" | "mes" | "anio"; // periodo de la vista anual del proyecto
+export type Impact = "co2" | "carbon" | "arboles"; // impacto ambiental de la vista anual del proyecto
+
+export type DashboardPeriod = number | "todos"; // periodo de la vista dashboard
