@@ -4,9 +4,8 @@ import { useMemo, useState } from "react";
 import { MonthlyYieldChart } from "@/features/view/components/Charts/MonthlyYieldChart";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
-import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
-import { computeDashboardMetrics, energyMwhForPeriod, installationYear, monthlyEnergyMwh, sumEnergyMwh } from "@/lib/utils/helpers/computes/dashboard_metrics";
-import { formatNumber, massFromKg, toNullableNumber } from "@/lib/utils/helpers/normalization";
+import { computeDashboardMetrics, energyMwhForPeriod, monthlyEnergyMwh, sumEnergyMwh } from "@/lib/utils/helpers/computes/dashboard_metrics";
+import { formatNumber, massFromKg } from "@/lib/utils/helpers/normalization";
 import { ImpactTile, PeriodSwitcher, YearSwitcher } from "../Form_fields/fields";
 import { ImpactIcon } from "../Icons/icons";
 import { monthSpan } from "@/lib/utils/helpers/render/charts";
@@ -23,39 +22,45 @@ export function EnvironmentalCards({
   monthlyLoading: boolean;
   monthlyError: string | null;
 }) {
-  const currentYear = new Date().getFullYear();
-  const [period, setPeriod] = useState<DashboardPeriod>(currentYear);
-  const [chartYear, setChartYear] = useState(currentYear);
-  const periodProjects = useMemo(() => {
-    if (period === "todos") {
-      return projects;
-    }
-    return projects.filter((project) => installationYear(project) === period);
-  }, [period, projects]);
-  const metrics = useMemo(() => computeDashboardMetrics(periodProjects), [periodProjects]);
-  const periodYear = period === "todos" ? currentYear : period;
+
+  // ----------------------------
+  // --- ESTADO Y VARIABLES ---
+  // ----------------------------
+  const currentYear = new Date().getFullYear(); // año actual
+  const [period, setPeriod] = useState<DashboardPeriod>(currentYear); // periodo seleccionado
+  const [chartYear, setChartYear] = useState(currentYear); // año seleccionado en el gráfico
+  const metrics = useMemo(() => computeDashboardMetrics(projects), [projects]); // métricas del dashboard
+  const periodYear = period === "todos" ? currentYear : period; // año seleccionado en el gráfico
+
+  // ----------------------------
+  // --- CALCULOS ---
+  // ----------------------------
   const periodEnergy = useMemo(() => {
     if (period === "todos") {
       return sumEnergyMwh(monthlyRecords);
     }
     return energyMwhForPeriod(monthlyRecords, { mode: "anio", year: period });
   }, [monthlyRecords, period]);
-  const periodYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, periodYear), [monthlyRecords, periodYear]);
-  const chartYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, chartYear), [chartYear, monthlyRecords]);
-  const co2 = massFromKg(metrics.co2Kg);
-  const carbon = massFromKg(metrics.carbonKg);
-  const range = monthSpan(periodYear, periodYield, period === "todos");
+  
+  // ----------------------------
+  // --- PERIODOS Y VALORES ---
+  // ----------------------------
+  
+  const periodYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, periodYear), [monthlyRecords, periodYear]); // energía generada en el periodo seleccionado
+  const chartYield = useMemo(() => monthlyEnergyMwh(monthlyRecords, chartYear), [chartYear, monthlyRecords]); // energía generada en el año seleccionado en el gráfico
+  const co2 = massFromKg(metrics.co2Kg); // CO₂ reducido
+  const carbon = massFromKg(metrics.carbonKg); // Carbón reducido
+  const range = monthSpan(periodYear, periodYield, period === "todos"); // rango de meses en el periodo seleccionado
 
   return (
     <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5 md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-2xl font-semibold md:text-4xl">Impacto ambiental acumulado</h2>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-semibold tracking-wide text-white/80">{range}</span>
-        </div>
+        <h2 className="text-2xl font-semibold md:text-4xl">Impacto ambiental acumulado</h2>
         <PeriodSwitcher value={period} onChange={setPeriod} />
       </div>
       {monthlyError ? <p className="field-error mt-3">{monthlyError}</p> : null}
+      
+      {/* --- TILES DE IMPACTO --- */}
       <div className="mt-4 grid grid-cols-4 gap-3">
         <ImpactTile
           title="CO₂ reducido"
@@ -89,17 +94,21 @@ export function EnvironmentalCards({
           <ImpactTile
             title="Energía generada"
             value={periodEnergy === null ? "—" : formatNumber(periodEnergy, 2)}
-            unit={periodEnergy === null ? "" : period === "todos" ? "MWh · todos" : "MWh"}
+            unit={periodEnergy === null ? "" : `MWh · ${range}`}
             tone="#f05a1a"
             icon="bolt"
           />
         )}
       </div>
+
+      {/* --- GRÁFICO DE RENDIMIENTO MENSUAL --- */}
       <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 px-3 py-4 md:px-5">
         <div className="mb-3 flex justify-end">
           <YearSwitcher value={chartYear} onChange={setChartYear} />
         </div>
-        {monthlyLoading ? <div className="skeleton-dark h-56 rounded-2xl" /> : <MonthlyYieldChart year={chartYear} values={chartYield} />}
+        {monthlyLoading ? <div className="skeleton-dark h-56 rounded-2xl" /> : 
+              <MonthlyYieldChart year={chartYear} values={chartYield} />
+        }
       </div>
     </section>
   );
