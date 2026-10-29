@@ -6,9 +6,9 @@ import { getAllMonthlyRecords } from "@/features/model/services/monthlyRecordQue
 import type { MonthlyRecordDraft } from "@/lib/types/components/components";
 import type { UseListResult } from "@/lib/types/hooks/hooks";
 import { MONTH_TABLE } from "@/lib/utils/namingTolerance";
+import { MISSING_ENV_MONTHLY_RECORDS } from "@/lib/utils/consts/messages";
 
-const MISSING_ENV = "Configura Supabase para ver los registros mensuales.";
-
+// Hook para obtener los registros mensuales
 export function useMonthlyRecords(): UseListResult<MonthlyRecordDraft> {
   const [items, setItems] = useState<MonthlyRecordDraft[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ export function useMonthlyRecords(): UseListResult<MonthlyRecordDraft> {
   const refetch = useCallback(async () => {
     if (!hasSupabaseEnv()) {
       setItems([]);
-      setError(MISSING_ENV);
+      setError(MISSING_ENV_MONTHLY_RECORDS);
       setLoading(false);
       return;
     }

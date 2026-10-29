@@ -4,6 +4,7 @@ import type { Project, ProjectFormData, SupabaseProjectRow } from "@/lib/types/s
 import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
 import { PROJECT_IMAGE_BUCKET, PROJECT_TABLE } from "@/lib/utils/namingTolerance";
 
+/** Obtiene todos los proyectos ordenados por fecha de instalación de forma descendente. */
 export async function getProjects(): Promise<Project[]> {
   const supabase = createClient();
   const { data, error } = await supabase.from(PROJECT_TABLE).select("*").order("fecha_instalacion", { ascending: false });
@@ -13,15 +14,7 @@ export async function getProjects(): Promise<Project[]> {
   return (data as SupabaseProjectRow[]).map(mapSupabaseRowToProject);
 }
 
-export async function getProjectById(id: string): Promise<Project> {
-  const supabase = createClient();
-  const { data, error } = await supabase.from(PROJECT_TABLE).select("*").eq("id", id).single();
-  if (error) {
-    throw new Error(`Error al leer el proyecto: ${error.message}`);
-  }
-  return mapSupabaseRowToProject(data as SupabaseProjectRow);
-}
-
+/** Crea un nuevo proyecto en la base de datos. */
 export async function createProject(form: ProjectFormData): Promise<Project> {
   const supabase = createClient();
   const { data, error } = await supabase.from(PROJECT_TABLE).insert(mapProjectToSupabaseRow(form)).select().single();
@@ -31,6 +24,7 @@ export async function createProject(form: ProjectFormData): Promise<Project> {
   return mapSupabaseRowToProject(data as SupabaseProjectRow);
 }
 
+/** Crea varios proyectos en la base de datos. */
 export async function createProjects(forms: ProjectFormData[]): Promise<Project[]> {
   const supabase = createClient();
   const { data, error } = await supabase.from(PROJECT_TABLE).insert(forms.map(mapProjectToSupabaseRow)).select();
@@ -40,6 +34,7 @@ export async function createProjects(forms: ProjectFormData[]): Promise<Project[
   return (data as SupabaseProjectRow[]).map(mapSupabaseRowToProject);
 }
 
+/** Actualiza un proyecto existente en la base de datos. */
 export async function updateProject(id: string, form: ProjectFormData): Promise<Project> {
   const supabase = createClient();
   const { data, error } = await supabase.from(PROJECT_TABLE).update(mapProjectToSupabaseRow(form)).eq("id", id).select().single();
@@ -49,6 +44,7 @@ export async function updateProject(id: string, form: ProjectFormData): Promise<
   return mapSupabaseRowToProject(data as SupabaseProjectRow);
 }
 
+/** Elimina un proyecto existente de la base de datos. */
 export async function deleteProject(id: string): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.from(PROJECT_TABLE).delete().eq("id", id);
@@ -57,43 +53,7 @@ export async function deleteProject(id: string): Promise<void> {
   }
 }
 
-export async function updateProjectImage(id: string, imagenUrl: string): Promise<void> {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from(PROJECT_TABLE)
-    .update({ imagen_url: imagenUrl, updated_at: new Date().toISOString() })
-    .eq("id", id);
-  if (error) {
-    throw new Error(`Error al guardar la imagen del proyecto: ${error.message}`);
-  }
-}
-
-function storageObjectName(file: File): string {
-  const raw = file.name.split(/[/\\]/).pop()?.trim() || "imagen";
-  const cleaned = raw.replace(/[^\w.\-]+/g, "_");
-  return cleaned || "imagen";
-}
-
-export async function uploadProjectImage(projectId: string, file: File): Promise<string> {
-  if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-    throw new Error("Usa una imagen JPG, PNG o WebP.");
-  }
-  if (file.size > MAX_IMAGE_BYTES) {
-    throw new Error(`La imagen supera ${MAX_IMAGE_LABEL}.`);
-  }
-  const path = `${projectId}/${storageObjectName(file)}`;
-  const supabase = createClient();
-  const { error } = await supabase.storage.from(PROJECT_IMAGE_BUCKET).upload(path, file, {
-    upsert: true,
-    contentType: file.type || "image/jpeg",
-  });
-  if (error) {
-    throw new Error(`Error al subir la imagen: ${error.message}`);
-  }
-  const { data } = supabase.storage.from(PROJECT_IMAGE_BUCKET).getPublicUrl(path);
-  return data.publicUrl;
-}
-
+/** Elimina todos los proyectos de la base de datos. */
 export async function deleteAllProjects(): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.from(PROJECT_TABLE).delete().not("id", "is", null);

@@ -9,15 +9,13 @@ import {
   deleteProject,
   getProjects,
   updateProject,
-  updateProjectImage,
-  uploadProjectImage,
 } from "@/features/model/services/projectQueries";
 import type { Project, ProjectFormData } from "@/lib/types/supabase/project-types";
 import type { UseListResult, UseMutationsResult } from "@/lib/types/hooks/hooks";
 import { PROJECT_TABLE } from "@/lib/utils/namingTolerance";
+import { MISSING_ENV } from "@/lib/utils/consts/messages";
 
-const MISSING_ENV = "Configura Supabase para ver los proyectos instalados.";
-
+// Hook para obtener los proyectos en tiempo real
 export function useRealtimeProject(): UseListResult<Project> {
   const [items, setItems] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,10 +65,10 @@ export function useRealtimeProject(): UseListResult<Project> {
   return { items, loading, error, refetch };
 }
 
+// Hook para mutar los proyectos
 export function useProjectMutations(): UseMutationsResult<ProjectFormData, Project> & {
   removeAll: () => Promise<void>;
   createMany: (forms: ProjectFormData[]) => Promise<Project[]>;
-  saveImage: (id: string, file: File) => Promise<void>;
 } {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,14 +95,6 @@ export function useProjectMutations(): UseMutationsResult<ProjectFormData, Proje
   const remove = useCallback((id: string) => run(() => deleteProject(id), "Error al eliminar el proyecto"), [run]);
   const removeAll = useCallback(() => run(() => deleteAllProjects(), "Error al limpiar los proyectos"), [run]);
   const createMany = useCallback((forms: ProjectFormData[]) => run(() => createProjects(forms), "Error al importar los proyectos"), [run]);
-  const saveImage = useCallback(
-    (id: string, file: File) =>
-      run(async () => {
-        const url = await uploadProjectImage(id, file);
-        await updateProjectImage(id, url);
-      }, "Error al subir la imagen"),
-    [run],
-  );
 
-  return { loading, error, create, update, remove, removeAll, createMany, saveImage };
+  return { loading, error, create, update, remove, removeAll, createMany };
 }
