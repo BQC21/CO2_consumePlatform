@@ -8,6 +8,7 @@ export function DeleteProjectModal({ project, onDelete, onClose }: DeleteProject
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
+  // Función para eliminar el proyecto
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
