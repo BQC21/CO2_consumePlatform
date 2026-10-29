@@ -80,9 +80,14 @@ export function MassiveUploadModal({ title, description, expectedHeaders, onRows
           {fileName && rows ? <p className="text-sm">{rows.length} filas listas.</p> : null}
         </div>
         {error ? <p className="field-error">{error}</p> : null}
-        <button className="btn-primary" type="submit" disabled={busy || (onBlocks ? !blocks : !rows)}>
-          {busy ? "Importando…" : "Importar"}
-        </button>
+        <div className="flex justify-end gap-2">
+          <button type="button" className="btn-secondary" onClick={onClose} disabled={busy}>
+            Cancelar
+          </button>
+          <button className="btn-primary" type="submit" disabled={busy || (onBlocks ? !blocks : !rows)}>
+            {busy ? "Importando…" : "Importar"}
+          </button>
+        </div>
       </form>
     </ModalFrame>
   );

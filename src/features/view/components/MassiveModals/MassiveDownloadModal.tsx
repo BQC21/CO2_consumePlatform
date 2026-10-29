@@ -11,16 +11,21 @@ export function MassiveDownloadModal({ title, filename, headers, rows, onClose }
         <p className="text-sm text-[var(--color-text-secondary)]">
           Se descargará la plantilla con {rows.length} filas visibles. Las celdas calculadas no viajan: se reconstruyen al leer.
         </p>
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={() => {
-            downloadWorkbook(filename, headers, rows);
-            onClose();
-          }}
-        >
-          Descargar Excel
-        </button>
+        <div className="flex justify-end gap-2">
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => {
+              downloadWorkbook(filename, headers, rows);
+              onClose();
+            }}
+          >
+            Descargar Excel
+          </button>
+        </div>
       </div>
     </ModalFrame>
   );
