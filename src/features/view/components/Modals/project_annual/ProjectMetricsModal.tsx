@@ -17,7 +17,7 @@ import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/cons
 import { downloadWorkbook } from "@/lib/utils/helpers/massive/buildWorkbook";
 import { MONTH_NAMES } from "@/lib/utils/consts/monthNames";
 import { displayMetric, formatDayMonthYear, formatMonthLabel, isSuggestedMonth, numberToInput, splitYearMonth, toNullableNumber, toYearMonth } from "@/lib/utils/helpers/normalization";
-import { insertMonthRecord, metricsFilename, monthlyTotals, sortMonthRecords, summedMetric } from "@/lib/utils/helpers/render/monthTable";
+import { insertMonthRecord, metricsFilename, monthlyTotals, sortMonthRecords, summedMetric } from "@/lib/utils/helpers/render/DateRender";
 
 export function ProjectMetricsModal({
   project,

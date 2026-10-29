@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { DepartmentCard, DepartmentCardSkeleton } from "@/features/view/components/Metrics/DepartmentCard";
+import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCard";
 import { EnvironmentalCards } from "@/features/view/components/Metrics/EnvironmentalCards";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
-import { MetricCardsSkeleton } from "@/lib/utils/helpers/render/skeletons";
+import { DepartmentCardSkeleton, MetricCardsSkeleton } from "@/lib/utils/helpers/render/skeletons";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";

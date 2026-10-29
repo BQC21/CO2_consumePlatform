@@ -3,6 +3,8 @@ import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
 import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
 import { type FormEvent, type ReactNode } from "react";
 import { ImpactIcon } from "../Icons/icons";
+import { DashboardPeriod } from "@/lib/types/components/options";
+import { periodYears } from "@/lib/utils/helpers/render/DateRender";
 
 // ----------------------------------------------
 // ---- Condicionar el requerimiento del campo --
@@ -170,5 +172,74 @@ export function ImpactTile({
         </p>
       </div>
     </article>
+  );
+}
+
+// selector de años
+export function YearSwitcher({
+  value,
+  onChange,
+  years = periodYears(),
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  years?: number[];
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-[var(--color-text-secondary)]">Año</span>
+      <div className="flex rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Año de la gráfica">
+        {years.map((year) => {
+          const active = year === value;
+          return (
+            <button
+              key={year}
+              type="button"
+              className={`h-8 rounded-full px-3 text-sm font-semibold ${active ? "bg-[var(--color-secondary)] text-white" : "text-[var(--color-text-primary)]"}`}
+              aria-pressed={active}
+              onClick={() => onChange(year)}
+            >
+              {year}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// selector de periodo
+export function PeriodSwitcher({
+  value,
+  onChange,
+}: {
+  value: DashboardPeriod;
+  onChange: (value: DashboardPeriod) => void;
+}) {
+  const options: { label: string; value: DashboardPeriod }[] = [
+    ...periodYears().map((year) => ({ label: String(year), value: year })),
+    { label: "Todos", value: "todos" as const },
+  ];
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-[var(--color-text-secondary)]">Periodo</span>
+      <div className="flex rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Periodo">
+        {options.map((option) => {
+          const active = option.value === value;
+          return (
+            <button
+              key={option.label}
+              type="button"
+              className={`h-8 rounded-full px-3 text-sm font-semibold ${active ? "bg-[var(--color-secondary)] text-white" : "text-[var(--color-text-primary)]"}`}
+              aria-pressed={active}
+              onClick={() => onChange(option.value)}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

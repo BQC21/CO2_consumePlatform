@@ -2,15 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { MonthlyYieldChart } from "@/features/view/components/Charts/MonthlyYieldChart";
-import { DashboardPeriod, PeriodSwitcher, YearSwitcher } from "@/features/view/components/Metrics/PeriodSwitcher";
 import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
 import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
 import { computeDashboardMetrics, energyMwhForPeriod, installationYear, monthlyEnergyMwh, sumEnergyMwh } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { formatNumber, massFromKg, toNullableNumber } from "@/lib/utils/helpers/normalization";
-import { ImpactTile } from "../Form_fields/fields";
+import { ImpactTile, PeriodSwitcher, YearSwitcher } from "../Form_fields/fields";
 import { ImpactIcon } from "../Icons/icons";
 import { monthSpan } from "@/lib/utils/helpers/render/charts";
+import { DashboardPeriod } from "@/lib/types/components/options";
 
 export function EnvironmentalCards({
   projects,

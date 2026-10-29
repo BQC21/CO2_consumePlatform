@@ -1,7 +1,7 @@
 import { createClient } from "@/features/model/supabase/client";
 import { MonthlyRecordDraft, MonthlyRow } from "@/lib/types/components/components";
 import { toNullableNumber } from "@/lib/utils/helpers/normalization";
-import { toDraft } from "@/lib/utils/helpers/render/monthTable";
+import { toDraft } from "@/lib/utils/helpers/render/DateRender";
 import { MONTH_TABLE } from "@/lib/utils/namingTolerance";
 
 // ---- Obtener el rendimiento por mes para todos los proyectos

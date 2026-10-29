@@ -19,7 +19,7 @@ import { ImportedProjectBlock } from "@/lib/types/components/components";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
 import { ProjectFormState } from "@/lib/types/supabase/project-types";
 import { formatDate } from "@/lib/utils/helpers/normalization";
-import { monthlyTotals } from "@/lib/utils/helpers/render/monthTable";
+import { monthlyTotals } from "@/lib/utils/helpers/render/DateRender";
 
 export default function ProjectPage() {
 
