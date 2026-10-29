@@ -3,16 +3,17 @@
 import { useMemo } from "react";
 import { DEPARTMENT_SHAPES, PERU_MAP_VIEWBOX } from "@/lib/utils/consts/peru-map";
 import { PeruMapProps } from "@/lib/types/components/components";
-import { separateLabels, stackOffsets } from "@/lib/utils/helpers/render/mapLayout";
-import { DOT_COLOR } from "@/lib/utils/consts/map_color_state";
+import { separateLabels } from "@/lib/utils/helpers/render/mapLayout";
+import { departmentStatus } from "@/lib/utils/helpers/render/format";
 
-export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
+const REGION_FILL = {
+  sin_proyecto: "#d5dee7",
+  completado: "#7dce6a",
+  en_ejecucion: "#f05a1a",
+  selected: "#1b7a34",
+} as const;
 
-  // --------------------------
-  // -- Almacenamiento --------
-  // --------------------------
-
-  // Etiquetas a mostrarse en el mapa del Perú
+export function PeruMap({ projects, selected, onSelect, onClear, loading = false }: PeruMapProps) {
   const labels = useMemo(
     () =>
       separateLabels(
@@ -26,68 +27,52 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
     [],
   );
   const labelById = new Map(labels.map((label) => [label.id, label]));
-  const selectedShape = DEPARTMENT_SHAPES.find((shape) => shape.nombre === selected);
 
   return (
-    <div className="relative mx-auto h-[28rem] w-full max-w-5xl rounded-2xl bg-white p-7 md:h-[46rem]">
-      <svg viewBox={PERU_MAP_VIEWBOX} className="h-full w-full" role="img" aria-label="Mapa del Perú por departamentos">
-        <rect width="420*1.5" height="640*1.5" fill="#eef6fb" rx="16" />
-        {/* Dibuja cada departamento; el borde del seleccionado se pinta después */}
+    <article className="relative rounded-3xl bg-white p-5 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] md:p-6">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-2xl font-semibold md:text-3xl">
+          Proyectos por departamento
+        </h2>
+        {loading ? (
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#b7e0c2] px-3 py-1 text-sm font-medium text-[#1f7a32]">
+            <span className="h-2 w-2 rounded-full bg-[#1f7a32]" />
+            Cargando datos…
+          </span>
+        ) : selected ? (
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-full border border-[#b7e0c2] px-3 py-1 text-sm font-medium text-[#1f7a32]"
+            onClick={onClear}
+          >
+            <span className="h-2 w-2 rounded-full bg-[#1f7a32]" />
+            Mostrando: {selected}
+            <span aria-hidden="true">×</span>
+            <span className="sr-only">Quitar selección</span>
+          </button>
+        ) : null}
+      </div>
+      <svg viewBox={PERU_MAP_VIEWBOX} className="mx-auto h-[42rem] w-full md:h-[58rem] xl:h-[68rem]" role="img" aria-label="Mapa del Perú por departamentos">
         {DEPARTMENT_SHAPES.map((shape) => {
-          const isSelected = shape.nombre === selected;
-          const count = projects.filter((project) => project.ubicacion === shape.nombre).length;
-          const hasProject = count > 0;
+          const status = loading ? "sin_proyecto" : departmentStatus(shape.nombre, projects);
+          const isSelected = !loading && shape.nombre === selected;
+          const count = loading ? 0 : projects.filter((project) => project.ubicacion === shape.nombre).length;
           const label = count === 0 ? shape.nombre : `${shape.nombre}: ${count} proyecto${count === 1 ? "" : "s"}`;
           return (
             <path
               key={shape.id}
               d={shape.d}
-              fill={hasProject ? "#d7efd4" : isSelected ? "#b7daf2" : "#c5e3f6"}
+              fill={isSelected ? REGION_FILL.selected : REGION_FILL[status]}
               stroke="#ffffff"
-              strokeWidth={1}
-              className="cursor-pointer"
+              strokeWidth={1.1}
+              className={loading ? undefined : "cursor-pointer"}
               aria-label={label}
-              onClick={() => onSelect(shape.nombre)}
+              onClick={loading ? undefined : () => onSelect(shape.nombre)}
             >
               <title>{label}</title>
             </path>
           );
         })}
-        {selectedShape ? (
-          <path
-            d={selectedShape.d}
-            fill="none"
-            stroke="#f05a1a"
-            strokeWidth={2.2}
-            strokeLinejoin="round"
-            style={{ pointerEvents: "none" }}
-          />
-        ) : null}
-        {/* Colorea los puntos por proyectos según el estado de este */}
-        {DEPARTMENT_SHAPES.map((shape) => {
-          const local = projects.filter((project) => project.ubicacion === shape.nombre);
-          const offsets = stackOffsets(local.length);
-          return offsets.map((offset, index) => {
-            const project = local[index];
-            return (
-              <circle
-                key={`${shape.id}-dot-${project.id}`}
-                cx={shape.labelX + offset.dx}
-                cy={shape.labelY + offset.dy}
-                r={3.4}
-                fill={DOT_COLOR[project.estado]}
-                stroke="#ffffff"
-                strokeWidth={0.6}
-                className="cursor-pointer"
-                aria-label={`${project.nombre}, ${project.estado === "completado" ? "completado" : "en ejecución"}`}
-                onClick={() => onSelect(shape.nombre)}
-              >
-                <title>{project.nombre}</title>
-              </circle>
-            );
-          });
-        })}
-        {/* Escribe las etiquetas de los departamentos */}
         {DEPARTMENT_SHAPES.map((shape) => {
           const label = labelById.get(shape.id);
           if (!label) {
@@ -109,15 +94,13 @@ export function PeruMap({ projects, selected, onSelect }: PeruMapProps) {
           );
         })}
       </svg>
-      {/* Leyenda de estado de proyecto */}
-      <ul className="absolute top-4 left-4 flex flex-col gap-1 rounded-xl bg-black/55 px-3 py-2 text-xs text-white">
-        <li className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: DOT_COLOR.en_ejecucion }} /> En ejecución
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: DOT_COLOR.completado }} /> Completado
-        </li>
+      <ul className="absolute bottom-6 left-6 rounded-2xl border border-[var(--border-color)] bg-white px-4 py-3 text-sm shadow-[var(--shadow-sm)]">
+        <li className="mb-1 font-semibold">Estado</li>
+        <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.completado }} /> Completado</li>
+        <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.en_ejecucion }} /> En ejecución</li>
+        <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.sin_proyecto }} /> Sin proyectos</li>
+        <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.selected }} /> Seleccionado</li>
       </ul>
-    </div>
+    </article>
   );
 }
