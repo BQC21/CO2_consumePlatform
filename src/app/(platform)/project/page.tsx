@@ -35,7 +35,7 @@ export default function ProjectPage() {
   const [tipo, setTipo] = useState("");
   const [estado, setEstado] = useState("");
   const [sorting, setSorting] = useState<ProjectSortingOrder>("fecha_desc");
-  const [editing, setEditing] = useState(false);
+  const [unsavedRows, setUnsavedRows] = useState(0);
 
   // -------------------------------
   // --- Almacenamiento ------------
@@ -131,10 +131,10 @@ export default function ProjectPage() {
       activePath="/project"
       actions={
         <div className="flex flex-wrap items-center gap-2">
-          {editing ? (
+          {unsavedRows > 0 ? (
             <span className="unsaved-chip">
               <span className="h-2 w-2 rounded-full bg-[#f05a1a]" />
-              Cambios sin guardar (1 fila)
+              Cambios sin guardar ({unsavedRows} {unsavedRows === 1 ? "fila" : "filas"})
             </span>
           ) : null}
           <Button2MassiveUpload label="Importar">
@@ -253,6 +253,7 @@ export default function ProjectPage() {
               await projectMutations.remove(id);
               await refresh();
             }}
+            onEditingChange={setUnsavedRows}
           />
         </section>
       )}
