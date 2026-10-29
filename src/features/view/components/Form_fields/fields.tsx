@@ -1,10 +1,8 @@
-import { EditIcon } from "@/features/view/components/Icons/icons";
-import { FieldProps, NativeSelectProps, SelectProps } from "@/lib/types/components/components";
-import { Project } from "@/lib/types/supabase/project-types";
+import { FieldProps, NativeSelectProps } from "@/lib/types/components/components";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
-import { formatNumber, normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
-import { platformProjectImageName, platformProjectImageUrl } from "@/lib/utils/helpers/render/projectImage";
-import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
+import { type FormEvent, type ReactNode } from "react";
+import { ImpactIcon } from "../Icons/icons";
 
 // ----------------------------------------------
 // ---- Condicionar el requerimiento del campo --
@@ -44,7 +42,7 @@ export function AddTextField({ label, required, value, onChange, error, placehol
     <label className="block">
       <FieldLabel label={label} required={required} />
       <input
-        className="field-input input-focus"
+        className={`field-input input-focus ${error ? "border-[var(--color-error)]" : ""}`}
         required={required}
         disabled={disabled}
         value={value}
@@ -58,47 +56,31 @@ export function AddTextField({ label, required, value, onChange, error, placehol
   );
 }
 
-// Campo de texto largo
-export function AddTextAreaField({ label, required, value, onChange, error }: FieldProps) {
-  return (
-    <label className="block">
-      <FieldLabel label={label} required={required} />
-      <textarea
-        className="field-textarea input-focus"
-        required={required}
-        value={value}
-        onInvalid={required ? markRequired : undefined}
-        onInput={required ? clearRequired : undefined}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      {error ? <span className="field-error">{error}</span> : null}
-    </label>
-  );
-}
-
 // Campo para ingresar números
 export function AddNumberField({ label, required = false, value, onChange, error,
-  step, min, max, centered = false, disabled}: FieldProps) {
+  step, min, max, centered = false, disabled, placeholder, suffix }: FieldProps) {
   return (
     <div className={centered ? "text-center" : undefined}>
-      <label className="mb-2 block text-sm font-bold text-slate-600">
+      <label className="mb-2 block text-sm font-medium text-[var(--color-text-primary)]">
         {label}
         {required ? <span className="text-red-500"> *</span> : null}
       </label>
-
-      <input
-        className="field-input input-focus numeric"
-        inputMode="decimal"
-        required={required}
-        disabled={disabled}
-        value={value}
-        onInvalid={required ? markRequired : undefined}
-        onInput={required ? clearRequired : undefined}
-        onChange={(event) => onChange(event.target.value)}
-        min={typeof min === "number" && Number.isFinite(min) ? min : undefined}
-        step={step === "" || step === undefined ? undefined : String(step)}
-        placeholder={typeof min === "number" && Number.isFinite(min) ? String(min) : "0"}
-      />
+      <div className="relative">
+        <input
+          className={`field-input input-focus numeric ${suffix ? "pr-16" : ""} ${error ? "border-[var(--color-error)]" : ""}`}
+          inputMode="decimal"
+          required={required}
+          disabled={disabled}
+          value={value}
+          onInvalid={required ? markRequired : undefined}
+          onInput={required ? clearRequired : undefined}
+          onChange={(event) => onChange(event.target.value)}
+          min={typeof min === "number" && Number.isFinite(min) ? min : undefined}
+          step={step === "" || step === undefined ? undefined : String(step)}
+          placeholder={placeholder ?? "0"}
+        />
+        {suffix ? <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-sm text-[var(--color-text-secondary)]">{suffix}</span> : null}
+      </div>
       {error ? <span className="field-error">{error}</span> : null}
     </div>
   );
@@ -124,44 +106,6 @@ export function AddDateField({ label, value, required, onChange, error, disabled
   );
 }
 
-// Campo para solo lectura de dato
-export function AddReadOnlyField({ label, value }: { label: string; value: string }) {
-  return (
-    <label className="block">
-      <span className="field-label">{label}</span>
-      <input className="field-input excel-calculated"
-            value={value} readOnly />
-    </label>
-  );
-}
-
-// Campo selector con búsqueda
-export function AddSearchableSelectField({ label, required, value, onChange, options, error,
-  searchPlaceholder = "Buscar..."}: SelectProps) {
-  const listId = `list-${label.replace(/\s+/g, "-").toLowerCase()}`;
-  return (
-    <label className="block">
-      <FieldLabel label={label} required={required} />
-      <input
-        className="field-input input-focus"
-        list={listId}
-        value={value}
-        required={required}
-        placeholder={searchPlaceholder}
-        onInvalid={required ? markRequired : undefined}
-        onInput={required ? clearRequired : undefined}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      <datalist id={listId}>
-        {options.map((option) => (
-          <option key={option} value={option} />
-        ))}
-      </datalist>
-      {error ? <span className="field-error">{error}</span> : null}
-    </label>
-  );
-}
-
 // Campo selector
 export function AddSelectField({ label, required, value, onChange, options, error, disabled }: NativeSelectProps) {
   const normalizedOptions = normalizeSelectOptions(options);
@@ -170,7 +114,7 @@ export function AddSelectField({ label, required, value, onChange, options, erro
     <label className="block">
       <FieldLabel label={label} required={required} />
       <select
-        className="field-select input-focus"
+        className={`field-select input-focus ${error ? "border-[var(--color-error)]" : ""}`}
         value={value}
         required={required}
         disabled={disabled}
@@ -190,102 +134,41 @@ export function AddSelectField({ label, required, value, onChange, options, erro
   );
 }
 
-// Tarjetas de métricas
-export function ImpactCard({
-  title,
-  annual,
-  accumulated,
-  unit,
-  icon,
-  digits = 2,
-}: {
-  title: string;
-  annual?: number | null;
-  accumulated: number | null;
-  unit: string;
-  icon: string;
-  digits?: number;
-}) {
-  const accumulatedText = accumulated === null ? "—" : `${formatNumber(accumulated, digits)} ${unit}`;
+// Campo de detalle
+export function DetailField({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <article className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-black/35 px-3 py-3">
-      <div>
-        <p className="text-xs font-semibold tracking-wide text-white/80">{title}</p>
-        {/* <p className="mt-1 text-[0.7rem] text-[var(--color-text-on-dark-muted)]">Acumulado</p> */}
-        <p className="numeric text-sm font-semibold">{accumulatedText}</p>
-      </div>
-      <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#12345c] text-2xl" aria-hidden="true">
-        {icon}
-      </span>
-    </article>
+    <div>
+      <dt className="text-xs text-[var(--color-text-secondary)]">{label}</dt>
+      <dd className="mt-1 font-medium">{children}</dd>
+    </div>
   );
 }
 
-// Celda para cambiar imagen asociada 
-export function ProjectImageCell({ project, onReplace }: { project: Project; onReplace: (id: string, file: File) => Promise<void> }) {
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const resetting = useRef(false);
-  const storedName = platformProjectImageUrl(project.imagen_url) ? platformProjectImageName(project.imagen_url) : "";
-
-  async function change(file: File) {
-    setBusy(true);
-    setError("");
-    try {
-      await onReplace(project.id, file);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo cambiar la imagen.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function pick(event: ChangeEvent<HTMLInputElement>) {
-    const input = event.currentTarget;
-    if (resetting.current || busy) {
-      return;
-    }
-    const file = input.files?.[0];
-    if (!file) {
-      return;
-    }
-    void change(file).finally(() => {
-      resetting.current = true;
-      input.value = "";
-      resetting.current = false;
-    });
-  }
-
+// tarjeta de impacto ambiental
+export function ImpactTile({
+  title,
+  value,
+  unit,
+  tone,
+  icon,
+}: {
+  title: string;
+  value: string;
+  unit: string;
+  tone: string;
+  icon: "truck" | "factory" | "tree" | "bolt";
+}) {
   return (
-    <div className="flex items-center gap-1">
-      <label className="excel-cell excel-image flex min-w-0 flex-1 cursor-pointer items-center truncate" title={error || storedName || "Subir imagen"}>
-        <span className={error ? "field-error truncate" : "truncate"}>{busy ? "Subiendo…" : error || storedName || "Subir imagen"}</span>
-        <input
-          className="sr-only"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-          aria-label={`Subir imagen de ${project.nombre}`}
-          disabled={busy}
-          onChange={pick}
-        />
-      </label>
-      {storedName ? (
-        <label
-          className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-[0.35rem] text-[#fff7ed]"
-          style={{ background: "var(--color-cell-image)" }}
-          title="Cambiar imagen"
-        >
-          <EditIcon />
-          <input
-            className="sr-only"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-            aria-label={`Cambiar imagen de ${project.nombre}`}
-            disabled={busy}
-            onChange={pick}
-          />
-        </label>
-      ) : null}
-    </div>
+    <article className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white" style={{ background: tone }} aria-hidden="true">
+        <ImpactIcon name={icon} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-sm text-white/70 md:text-base">{title}</p>
+        <p className="numeric text-2xl font-bold leading-tight md:text-3xl">
+          {value} {unit ? <span className="text-base font-semibold text-white/80">{unit}</span> : null}
+        </p>
+      </div>
+    </article>
   );
 }
