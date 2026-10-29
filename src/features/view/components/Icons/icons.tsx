@@ -27,15 +27,6 @@ export function TrashIcon({ className }: IconProps) {
   );
 }
 
-// filtrar
-export function FilterIcon({ className }: IconProps) {
-  return (
-    <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M2 3.5h12L9.5 8.2V13L6.5 11.5V8.2L2 3.5Z" fill="none" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
 // ordenar
 export function SortIcon({ className }: IconProps) {
   return (
@@ -116,6 +107,38 @@ export function CleanIcon({ className }: IconProps) {
   return (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
       <path d="M3 8h10M6 5l-2 3 2 3M10 5l2 3-2 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// icono de impacto ambiental
+export function ImpactIcon({ name }: { name: "truck" | "factory" | "tree" | "bolt" }) {
+  if (name === "truck") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M3 7h11v8H3V7Zm11 3h4l3 3v2h-7v-5Z" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="7" cy="17" r="1.4" fill="currentColor" />
+        <circle cx="17" cy="17" r="1.4" fill="currentColor" />
+      </svg>
+    );
+  }
+  if (name === "factory") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M4 19V10l5 3V10l5 3V8l6 3v8H4Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (name === "tree") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 20v-6M12 14c-3 0-5-2-5-4.5S9 5 12 5s5 2 5 4.5S15 14 12 14Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M13 2 4 14h7l-1 8 10-14h-7l0-6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
     </svg>
   );
 }
