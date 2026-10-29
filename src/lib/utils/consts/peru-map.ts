@@ -174,3 +174,6 @@ export const DEPARTMENT_SHAPES: DepartmentShape[] = [
     labelY: 334.4,
   },
 ];
+
+// Altura de la etiqueta del departamento del Perú
+export const LABEL_HEIGHT = 9;

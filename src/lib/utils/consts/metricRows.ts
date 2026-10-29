@@ -1,14 +1,22 @@
+// FIlas de métricas
 export const METRIC_ROWS = [
     { key: "rendimiento_fv", label: "Rendimiento fotovoltaico (kWh)" },
     { key: "rendimiento_grid", label: "Rendimiento de la red eléctrica (kWh)" },
     { key: "rendimiento_carga", label: "Rendimiento de la carga (kWh)" },
 ] as const;
 
+// Filas de impacto
 export const IMPACT_ROWS = [
     { key: "reduccion_co2", label: "Reducción de CO2 (kg)" },
     { key: "reduccion_carbon", label: "Reducción de carbón convencional (kg)" },
     { key: "arboles", label: "Árboles equivalentes plantados" },
 ] as const;
 
+// Keys
 export type MetricKey = (typeof METRIC_ROWS)[number]["key"];
 export type ImpactKey = (typeof IMPACT_ROWS)[number]["key"];
+
+// Periodos
+export type EnergyPeriod =
+  | { mode: "anio"; year: number }
+  | { mode: "mes"; month: number };
