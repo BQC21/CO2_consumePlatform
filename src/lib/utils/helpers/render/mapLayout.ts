@@ -1,5 +1,5 @@
 import { LabelPoint } from "@/lib/types/components/components";
-import { LABEL_HEIGHT } from "../../consts/peru-map";
+import { LABEL_HEIGHT } from "@/lib/utils/consts/peru-map";
 
 // Ancho del texto
 function labelWidth(nombre: string): number {

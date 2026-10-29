@@ -1,7 +1,7 @@
 import { DashboardMetrics, MonthlyRecordDraft } from "@/lib/types/components/components";
 import { Project } from "@/lib/types/supabase/project-types";
 import { splitYearMonth, sumOrNull, toNullableNumber } from "../normalization";
-import { EnergyPeriod } from "../../consts/metricRows";
+import type { EnergyPeriod } from "@/lib/utils/consts/metricRows";
 
 // Métricas a calcularse
 export function computeDashboardMetrics(
