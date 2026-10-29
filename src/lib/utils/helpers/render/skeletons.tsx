@@ -24,3 +24,15 @@ export function MetricCardsSkeleton() {
     </div>
   );
 }
+
+export function DepartmentCardSkeleton() {
+  return (
+    <article className="rounded-3xl bg-white p-5" aria-hidden="true">
+      <div className="skeleton h-3 w-32 rounded-full" />
+      <div className="skeleton mt-3 h-4 w-full rounded-full" />
+      <div className="skeleton mt-3 h-10 rounded-xl" />
+      <div className="skeleton mt-3 h-16 rounded-xl" />
+      <div className="skeleton mt-3 h-16 rounded-xl" />
+    </article>
+  );
+}
