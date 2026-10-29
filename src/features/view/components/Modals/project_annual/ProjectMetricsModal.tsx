@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DownloadIcon } from "@/features/view/components/Icons/icons";
+import { DownloadIcon, TrashIcon } from "@/features/view/components/Icons/icons";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { createProjectFormStateFromProject } from "@/features/model/mapping/mapping_project";
 import {
@@ -15,7 +15,8 @@ import { MonthlyRecordDraft } from "@/lib/types/components/components";
 import { SUGGESTED_MONTH_MESSAGE } from "@/lib/utils/consts/messages";
 import { IMPACT_ROWS, ImpactKey, METRIC_ROWS, MetricKey } from "@/lib/utils/consts/metricRows";
 import { downloadWorkbook } from "@/lib/utils/helpers/massive/buildWorkbook";
-import { displayMetric, formatMonthLabel, isSuggestedMonth, numberToInput, splitYearMonth, toYearMonth } from "@/lib/utils/helpers/normalization";
+import { MONTH_NAMES } from "@/lib/utils/consts/monthNames";
+import { displayMetric, formatDayMonthYear, formatMonthLabel, isSuggestedMonth, numberToInput, splitYearMonth, toNullableNumber, toYearMonth } from "@/lib/utils/helpers/normalization";
 import { insertMonthRecord, metricsFilename, monthlyTotals, sortMonthRecords, summedMetric } from "@/lib/utils/helpers/render/monthTable";
 
 export function ProjectMetricsModal({
@@ -45,7 +46,8 @@ export function ProjectMetricsModal({
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false); 
+  const [busy, setBusy] = useState(false);
+  const [baseline, setBaseline] = useState<string | null>(null); 
 
   const portalUrl = inverterPortalUrl(project.marca_inversor); // enlace url del portal del inversor
   const years = Array.from(
@@ -70,17 +72,42 @@ export function ProjectMetricsModal({
 
   // Formatos de periodo no admisibles
   const monthFormatError = monthDraft.trim() !== "" && !isSuggestedMonth(monthDraft);
+  const dirty = baseline !== null && baseline !== JSON.stringify({ records, impact }); // estado de cambios sin guardar
+  const orderedRecords = sortMonthRecords(visibleRecords); // grabaciones ordenadas
+  const monthBars = Array.from({ length: 12 }, (_, index) => {
+    const record = orderedRecords.find((item) => splitYearMonth(item.mes)?.month === index + 1);
+    return record ? toNullableNumber(record.rendimiento_fv) ?? 0 : 0;
+  }); // barras de rendimiento fotovoltaico
+  const barPeak = Math.max(...monthBars, 1); // pico de barras
+  const today = new Date(); // fecha actual
+  const columnLabel: Record<string, string> = { 
+    rendimiento_fv: "Fotovoltaico (kWh)",
+    rendimiento_grid: "Red eléctrica (kWh)",
+    rendimiento_carga: "Carga (kWh)",
+  }; // etiquetas de columnas
 
   // -------------------------
   // --- Sincronización ------
   // -------------------------
 
+  const co2Baseline = numberToInput(project.reduccion_co2); // baseline de reducción de CO2
+  const carbonBaseline = numberToInput(project.reduccion_carbon); // baseline de reducción de carbono
+  const treesBaseline = numberToInput(project.arboles); // baseline de árboles
+
+  // Efecto para sincronizar los baselines
   useEffect(() => {
     let active = true;
+    const impactBaseline = {
+      reduccion_co2: co2Baseline,
+      reduccion_carbon: carbonBaseline,
+      arboles: treesBaseline,
+    };
     getMonthlyRecords(project.id)
       .then((rows) => {
         if (active) {
-          setRecords(sortMonthRecords(rows));
+          const sorted = sortMonthRecords(rows);
+          setRecords(sorted);
+          setBaseline(JSON.stringify({ records: sorted, impact: impactBaseline }));
           setLoadError("");
         }
       })
@@ -97,7 +124,7 @@ export function ProjectMetricsModal({
     return () => {
       active = false;
     };
-  }, [project.id]);
+  }, [project.id, co2Baseline, carbonBaseline, treesBaseline]);
 
   // -------------------------
   // --- Funciones -----------
@@ -140,6 +167,10 @@ export function ProjectMetricsModal({
 
   // Remover mes
   function removeMonth(mes: string) {
+    const label = formatMonthLabel(mes);
+    if (!window.confirm(`¿Quitar ${label}?`)) {
+      return;
+    }
     setRecords((current) => current.filter((record) => record.mes !== mes));
   }
 
@@ -238,161 +269,229 @@ export function ProjectMetricsModal({
   // ---------------------------
 
   return (
-    <ModalFrame title={`Métricas · ${project.nombre}`} onClose={onClose} wide>
+    <ModalFrame
+      title={`Métricas · ${project.nombre}${project.ubicacion ? ` – ${project.ubicacion}` : ""}`}
+      onClose={onClose}
+      wide
+      headerExtra={
+        <button type="button" className="btn-toolbar" onClick={exportMetrics} disabled={loading || Boolean(loadError)}>
+          <DownloadIcon />
+          <span>Exportar {activeYear ?? ""}</span>
+        </button>
+      }
+    >
+      {/* Formulario de métricas */}
       <form className="grid gap-4" onSubmit={handleSubmit} onKeyDown={handleFormKeyDown}>
-
-        {/* Información del inversor */}
-        <p className="text-sm text-[var(--color-text-secondary)]">
-          Marca del inversor: {project.marca_inversor || "—"}
+        {/* Encabezado del formulario */}
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--color-text-secondary)]">
+          {/* Inversor */}
+          <span>Inversor {project.marca_inversor || "—"}</span>
+          {/* Portal del inversor */}
           {portalUrl ? (
-            <>
-              {" · "}
-              <a className="font-medium text-[var(--color-primary)] underline" href={portalUrl} target="_blank" rel="noopener noreferrer">
-                Portal del inversor
-              </a>
-            </>
+            // Enlace al portal del inversor
+            <a className="font-semibold text-[var(--color-primary)]" href={portalUrl} target="_blank" rel="noopener noreferrer">
+              Portal del inversor ↗
+            </a>
           ) : null}
+          {/* Tipo de sistema */}
+          <span>· {project.tipo_de_sistema || "—"}</span>
+          {/* Capacidad instalada */}
+          <span>· {project.cap_instalada_kwp === null ? "—" : `${project.cap_instalada_kwp} kWp`}</span>
+          {/* Fecha de instalación */}
+          <span>· Instalado el {formatDayMonthYear(project.fecha_instalacion)}</span>
+          {/* Estado del proyecto */}
+          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${project.estado === "completado" ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
+            {project.estado === "completado" ? "Completado" : "En ejecución"}
+          </span>
         </p>
-        {/* Tipo de instalación */}
-        <p className="text-sm text-[var(--color-text-secondary)]">
-        Tipo de instalación: {project.tipo_de_sistema || "—"} </p>
-
-        {/* Campo para agregar el mes */}
-        <div className="flex flex-wrap items-end gap-2">
-          <label className="block">
-            <span className="field-label">Ingresar el mes y año bajo este formato: MM.YYYY</span>
-            <input
-              className="field-input input-focus"
-              type="text"
-              inputMode="numeric"
-              placeholder="MM.YYYY"
-              value={monthDraft}
-              aria-label="Mes a agregar"
-              aria-invalid={monthFormatError}
-              onChange={(event) => {
-                setMonthDraft(event.target.value);
-                setError("");
-              }}
-            />
-            {monthFormatError ? <span className="field-error block">{SUGGESTED_MONTH_MESSAGE}</span> : null}
-          </label>
-          <button type="button" className="btn-secondary" onClick={addMonth} disabled={loading || Boolean(loadError)}>
-            Agregar mes - año
-          </button>
-          <button type="button" className="btn-secondary" onClick={exportMetrics} disabled={loading || Boolean(loadError)}>
-            <DownloadIcon />
-            <span>Exportar</span>
-          </button>
-          <label className="block">
-            <span className="field-label">Año</span>
-            <select
-              className="field-select input-focus w-32!"
-              aria-label="Año"
-              value={activeYear ?? ""}
-              disabled={years.length === 0 || loading || Boolean(loadError)}
-              onChange={(event) => setSelectedYear(Number(event.target.value))}
-            >
-              {years.length === 0 ? <option value="">—</option> : null}
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
 
         {loading ? <p className="text-sm text-[var(--color-text-secondary)]">Leyendo registros mensuales…</p> : null}
         {loadError ? <p className="field-error">{loadError}</p> : null}
 
-        {/* Tabla de registros mensuales */}
         {!loading && !loadError ? (
-          <div className="excel-scroll">
-            <table className="excel-table" aria-label="Registros mensuales">
-              <thead>
-                <tr>
-                  <th>Métrica</th>
-                  {visibleRecords.map((record) => (
-                    <th key={record.mes}>
-                      <span className="inline-flex items-center gap-2">
-                        {formatMonthLabel(record.mes)}
-                        <button
-                          type="button"
-                          className="text-xs font-medium normal-case tracking-normal text-[var(--color-primary)] underline"
-                          aria-label={`Quitar ${formatMonthLabel(record.mes)}`}
-                          onClick={() => removeMonth(record.mes)}
-                        >
-                          Quitar
-                        </button>
-                      </span>
-                    </th>
-                  ))}
-                  <th>
-                    Total
-                    {records.length === 0 ? (
-                      <span className="mt-1 block text-xs font-normal tracking-normal text-[var(--color-text-secondary)] normal-case">
-                        No hay registros mensuales
-                      </span>
-                    ) : null}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {metricRows.map((row) => (
-                  <tr key={row.key}>
-                    <td className="whitespace-nowrap font-medium">{row.label}</td>
-                    {visibleRecords.map((record) => {
-                      const key = row.key;
-                      return (
-                        <td key={`${record.mes}-${key}`}>
-                          <input
-                            className="field-input input-focus w-28"
-                            inputMode="decimal"
-                            aria-label={`${row.label} de ${formatMonthLabel(record.mes)}`}
-                            value={record[key]}
-                            onChange={(event) => updateCell(record.mes, key, event.target.value)}
-                          />
-                        </td>
-                      );
-                    })}
-                    <td>
-                      <span className="excel-cell excel-calculated">{displayMetric(totalFor(row.key))}</span>
-                    </td>
-                  </tr>
-                ))}
+          <div className="grid items-start gap-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
+            {/* Aside de métricas */}
+            <aside className="grid gap-4">
+              {/* Selector de año */}
+              <div>
+                <p className="mb-2 text-xs font-semibold tracking-wide text-[var(--color-text-secondary)]">Año</p>
+                <div className="flex flex-wrap gap-2">
+                  {years.length === 0 ? <span className="text-sm text-[var(--color-text-secondary)]">Sin meses todavía</span> : null}
+                  {years.map((year) => {
+                    const count = records.filter((record) => splitYearMonth(record.mes)?.year === year).length;
+                    const active = year === activeYear;
+                    return (
+                      <button
+                        key={year}
+                        type="button"
+                        className={`rounded-xl px-3 py-2 text-left text-sm font-semibold ${active ? "bg-[var(--color-secondary)] text-white" : "bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]"}`}
+                        aria-pressed={active}
+                        onClick={() => setSelectedYear(year)}
+                      >
+                        {year}
+                        <span className={`mt-0.5 block text-xs font-medium ${active ? "text-white/80" : "text-[var(--color-text-secondary)]"}`}>
+                          {count} {count === 1 ? "mes" : "meses"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
+              {/* Agregar mes */}
+              <div>
+                <label className="field-label" htmlFor="month-draft">Agregar mes</label>
+                <div className="flex gap-2">
+                  <input
+                    id="month-draft"
+                    className="metric-input text-left"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="MM.YYYY"
+                    value={monthDraft}
+                    aria-label="Mes a agregar"
+                    aria-invalid={monthFormatError}
+                    onChange={(event) => {
+                      setMonthDraft(event.target.value);
+                      setError("");
+                    }}
+                  />
+                  <button type="button" className="btn-secondary btn-compact shrink-0" onClick={addMonth}>
+                    + Agregar
+                  </button>
+                </div>
+                {monthFormatError ? <span className="field-error block">{SUGGESTED_MONTH_MESSAGE}</span> : null}
+              </div>
+
+              {/* Gráfico de rendimiento fotovoltaico */}
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-[var(--color-text-secondary)]">
+                  Energía FV {activeYear ?? today.getFullYear()} (kWh)
+                </p>
+                <div className="mt-2 flex h-16 items-end gap-1" aria-hidden="true">
+                  {monthBars.map((value, index) => (
+                    <span
+                      key={MONTH_NAMES[index]}
+                      className="flex-1 rounded-sm"
+                      title={`${MONTH_NAMES[index]}: ${value || "sin datos"}`}
+                      style={{
+                        height: `${Math.max((value / barPeak) * 100, value > 0 ? 12 : 8)}%`,
+                        background: value > 0 ? "#f07a1a" : "#e6ebf2",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Impacto ambiental */}
+              <div className="grid gap-3">
+                <p className="text-xs font-semibold tracking-wide text-[var(--color-secondary)]">Impacto ambiental (ingreso manual)</p>
                 {IMPACT_ROWS.map((row) => (
-                  <tr key={row.key}>
-                    <td className="whitespace-nowrap font-medium">{row.label}</td>
-                    {/* Para las filas de reducción de CO2, reducción de Carbón y árboles plantados
-                    dejar columnas vacías según la cantidad de meses considerados */}
-                    <td colSpan={visibleRecords.length}></td>
-                      <td>
-                        <input
-                          className="field-input input-focus w-28"
-                          inputMode="decimal"
-                          aria-label={`${row.label}`}
-                          value={impact[row.key]}
-                          onChange={(event) => updateImpact(row.key, event.target.value)}
-                        />
-                      </td>
-                  </tr>
+                  <label key={row.key} className="block">
+                    <span className="field-label">{row.label}</span>
+                    <span className="flex items-center gap-2">
+                      <input
+                        className="metric-input"
+                        inputMode="decimal"
+                        aria-label={row.label}
+                        value={impact[row.key]}
+                        placeholder="Ej.: 0"
+                        onChange={(event) => updateImpact(row.key, event.target.value)}
+                      />
+                      <span className="shrink-0 text-xs text-[var(--color-text-secondary)]">
+                        {row.key === "arboles" ? "árboles" : "kg"}
+                      </span>
+                    </span>
+                  </label>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </aside>
+
+            {/* Tabla de datos ingresados */}
+            <div className="min-w-0">
+              <p className="mb-2 text-xs font-semibold tracking-wide text-[var(--color-text-secondary)]">
+                Datos ingresados · rendimientos {activeYear ?? ""} (kWh)
+              </p>
+              <div className="data-scroll">
+                <table className="data-table data-table-compact" aria-label="Registros mensuales">
+                  <thead>
+                    <tr>
+                      <th>Mes</th>
+                      {metricRows.map((row) => (
+                        <th key={row.key}>{columnLabel[row.key] ?? row.label}</th>
+                      ))}
+                      <th className="sr-only">Quitar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orderedRecords.length === 0 ? (
+                      <tr>
+                        <td colSpan={metricRows.length + 2} className="text-sm text-[var(--color-text-secondary)]">
+                          No hay meses en este año. Agrega uno con el formato MM.YYYY.
+                        </td>
+                      </tr>
+                    ) : (
+                      orderedRecords.map((record) => {
+                        const parts = splitYearMonth(record.mes);
+                        const current = parts !== null && parts.year === today.getFullYear() && parts.month === today.getMonth() + 1;
+                        return (
+                          <tr key={record.mes} className={current ? "row-current" : undefined}>
+                            <td className="whitespace-nowrap font-medium">
+                              {parts ? `${String(parts.month).padStart(2, "0")} · ${MONTH_NAMES[parts.month - 1]}` : record.mes}
+                              {current ? <span className="ml-2 rounded-full bg-[#ffe3c4] px-2 py-0.5 text-[11px] font-semibold text-[#9a4b12]">Mes en curso</span> : null}
+                            </td>
+                            {metricRows.map((row) => (
+                              <td key={`${record.mes}-${row.key}`}>
+                                <input
+                                  className="metric-input"
+                                  inputMode="decimal"
+                                  aria-label={`${row.label} de ${formatMonthLabel(record.mes)}`}
+                                  value={record[row.key]}
+                                  onChange={(event) => updateCell(record.mes, row.key, event.target.value)}
+                                />
+                              </td>
+                            ))}
+                            <td>
+                              <button type="button" className="icon-button text-[var(--color-text-secondary)]" aria-label={`Quitar ${formatMonthLabel(record.mes)}`} onClick={() => removeMonth(record.mes)}>
+                                <TrashIcon />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                    <tr className="row-total">
+                      <td>
+                        Total {activeYear ?? ""} ({orderedRecords.length} {orderedRecords.length === 1 ? "mes" : "meses"})
+                      </td>
+                      {metricRows.map((row) => (
+                        <td key={row.key} className="numeric">
+                          {displayMetric(totalFor(row.key))}
+                        </td>
+                      ))}
+                      <td />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         ) : null}
 
         {error ? <p className="field-error">{error}</p> : null}
 
-        {/* Botones para cancelar o ejecutar operación */}
-        <div className="flex justify-end gap-2">
-          <button type="button" className="btn-secondary" onClick={onClose}>
-            Cancelar
-          </button>
-          <button type="submit" className="btn-primary" disabled={busy || loading || Boolean(loadError)}>
-            {busy ? "Guardando…" : "Guardar métricas"}
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className={`text-sm font-medium ${dirty ? "text-[#9a4b12]" : "text-[#1f7a32]"}`}>
+            {loading ? "Leyendo registros…" : dirty ? "Cambios sin guardar" : "Todo guardado · sin cambios"}
+          </p>
+          <div className="flex gap-2">
+            <button type="button" className="btn-secondary" onClick={onClose}>
+              Cerrar
+            </button>
+            <button type="submit" className="btn-primary" disabled={busy || loading || Boolean(loadError) || !dirty}>
+              {busy ? "Guardando…" : "Guardar métricas"}
+            </button>
+          </div>
         </div>
       </form>
     </ModalFrame>
