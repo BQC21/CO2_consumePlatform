@@ -1,13 +1,9 @@
 import type { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
+import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
 
 // ----------------
 // -- Números ------
 // ----------------
-
-// Convertir a número
-export function toNumber(value: unknown, fallback = 0): number {
-  return toNullableNumber(value) ?? fallback;
-}
 
 /** Convierte lo que escribe una persona o una celda Excel a número, o a null si no hay dato. */
 export function toNullableNumber(value: unknown): number | null {
@@ -39,11 +35,6 @@ export function toNullableInteger(value: unknown): number | null {
   return Math.trunc(parsed);
 }
 
-// Convertir a entero
-export function toInteger(value: unknown, fallback = 0): number {
-  return toNullableInteger(value) ?? fallback;
-}
-
 // Convertir a texto
 export function toText(value: unknown): string {
   if (value === null || value === undefined) {
@@ -69,14 +60,7 @@ export function sumOrNull(values: Array<number | null>): number | null {
   return present.reduce((total, value) => total + value, 0);
 }
 
-/** kg se muestran como toneladas solo cuando el valor supera 1000. */
-export function massFromKg(kg: number | null): { amount: number | null; unit: "kg" | "t" } {
-  if (kg !== null && kg > 1000) {
-    return { amount: kg / 1000, unit: "t" };
-  }
-  return { amount: kg, unit: "kg" };
-}
-
+// Convertir a formato de comas
 export function formatNumber(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined || Number.isNaN(value)) {
     return "—";
@@ -87,14 +71,22 @@ export function formatNumber(value: number | null | undefined, digits = 1): stri
   return fraction ? `${withThousands}.${fraction}` : withThousands;
 }
 
-export function formatPercent(value: number): string {
-  return `${Math.round(value)}%`;
-}
-
 // Mostrar la métrica en pantalla
 export function displayMetric(value: string): string {
   const parsed = toNullableNumber(value);
   return parsed === null ? "—" : formatNumber(parsed, 2);
+}
+
+// ------------------
+// -- Unidades ------
+// ------------------
+
+/** kg se muestran como toneladas solo cuando el valor supera 1000. */
+export function massFromKg(kg: number | null): { amount: number | null; unit: "kg" | "t" } {
+  if (kg !== null && kg > 1000) {
+    return { amount: kg / 1000, unit: "t" };
+  }
+  return { amount: kg, unit: "kg" };
 }
 
 // ----------------
@@ -141,11 +133,6 @@ export function toYearMonth(value: unknown): string {
   return "";
 }
 
-// Rescatar la fecha sin considerar el días
-export function daysInMonth(year: number, month: number): number {
-  return new Date(year, month, 0).getDate();
-}
-
 // Separar Mes y Año
 export function splitYearMonth(mes: string): { year: number; month: number } | null {
   const match = /^(\d{4})-(\d{2})$/.exec(mes);
@@ -172,6 +159,22 @@ export function formatDate(isoDate: string): string {
   return `${match[3]}/${match[2]}/${match[1]}`;
 }
 
+/** 12 oct 2026. Acepta yyyy-mm-dd y timestamps. */
+export function formatDayMonthYear(isoDate: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate.trim());
+  if (match) {
+    const month = Number(match[2]);
+    if (month >= 1 && month <= 12) {
+      return `${Number(match[3])} ${MONTH_SHORT[month - 1]} ${match[1]}`;
+    }
+  }
+  const parsed = new Date(isoDate);
+  if (Number.isNaN(parsed.getTime())) {
+    return "—";
+  }
+  return `${parsed.getDate()} ${MONTH_SHORT[parsed.getMonth()]} ${parsed.getFullYear()}`;
+}
+
 export function formatMonthLabel(mes: string): string {
   const match = /^(\d{4})-(\d{2})$/.exec(mes);
   if (!match) {
@@ -194,21 +197,6 @@ export function initialsFromName(name: string): string {
 // ----------------
 // -- Celdas ------
 // ----------------
-
-import { EMPTY_MARK } from "../empty";
-
-// Indicador de celda vacía
-export function isEmptyValue(value: unknown): boolean {
-    return value === null || value === undefined || value === "";
-}
-
-// Qué mostrar según la existencia de contenida en la celda
-export function displayOrEmpty(value: string | number | null | undefined): string {
-    if (isEmptyValue(value)) {
-        return EMPTY_MARK;
-    }
-    return String(value);
-}
 
 // Normaliza las opciones a mostrarse en el selector
 export function normalizeSelectOptions(options: SelectFieldOptions): SelectOption[] {
