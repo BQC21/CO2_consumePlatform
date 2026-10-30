@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-  const isProtected = pathname.startsWith("/dashboard") || pathname.startsWith("/project") || pathname.startsWith("/save_password");
+  const isProtected = pathname.startsWith("/dashboard") || pathname.startsWith("/project") || pathname.startsWith("/gallery") || pathname.startsWith("/save_password");
   const isGuestOnly = pathname === "/login" || pathname === "/register";
 
   if (isProtected && !user) {
@@ -50,5 +50,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/project/:path*", "/login", "/register", "/save_password"],
+  matcher: ["/", "/dashboard/:path*", "/project/:path*", "/gallery/:path*", "/login", "/register", "/save_password"],
 };
