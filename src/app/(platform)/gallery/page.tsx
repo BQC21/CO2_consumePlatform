@@ -6,12 +6,13 @@ import { GalleryContentModal } from "@/features/view/components/Gallery/GalleryC
 import { GalleryGrid, GalleryGridSkeleton } from "@/features/view/components/Gallery/GalleryGrid";
 import { GalleryToolbar } from "@/features/view/components/Gallery/GalleryToolbar";
 import { RemoveGalleryItemModal } from "@/features/view/components/Gallery/RemoveGalleryItemModal";
+import { FolderIcon } from "@/features/view/components/Icons/icons";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useProjectGallery } from "@/features/ViewModel/hooks/services/useProjectGallery";
 import type { GalleryMediaItem, GalleryMediaKind } from "@/lib/types/supabase/gallery-types";
 import { ProjectSortingOrder } from "@/lib/types/components/options";
 import type { Project } from "@/lib/types/supabase/project-types";
-import { GALLERY_SUBTITLE } from "@/lib/utils/consts/messages";
+import { GALLERY_DRIVE_LABEL, GALLERY_DRIVE_URL, GALLERY_SUBTITLE } from "@/lib/utils/consts/messages";
 import { sortProjects } from "@/lib/utils/helpers/sorting/sortProjects";
 
 type RemoveTarget = {
@@ -66,6 +67,17 @@ export default function GalleryPage() {
       title="Galería de proyectos"
       subtitle={GALLERY_SUBTITLE}
       activePath="/gallery"
+      actions={
+        <a
+          className="inline-flex h-10 items-center gap-2 rounded-full border border-[var(--border-color)] bg-white px-4 text-sm font-semibold text-[var(--color-secondary)]"
+          href={GALLERY_DRIVE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FolderIcon />
+          {GALLERY_DRIVE_LABEL}
+        </a>
+      }
     >
       <GalleryToolbar
         search={search}
