@@ -1,3 +1,6 @@
+import { galleryGridClass } from "@/lib/utils/consts/galleryLayout";
+
+// Skeleton de las tarjetas de métricas
 export function MetricCardsSkeleton() {
   return (
     // Skeleton de las métricas
@@ -25,6 +28,7 @@ export function MetricCardsSkeleton() {
   );
 }
 
+// Skeleton de la tarjeta de departamento
 export function DepartmentCardSkeleton() {
   return (
     <article className="rounded-3xl bg-white p-5" aria-hidden="true">
@@ -34,5 +38,23 @@ export function DepartmentCardSkeleton() {
       <div className="skeleton mt-3 h-16 rounded-xl" />
       <div className="skeleton mt-3 h-16 rounded-xl" />
     </article>
+  );
+}
+
+// Skeleton de la grilla de proyectos
+export function GalleryGridSkeleton() {
+  return (
+    <div className={galleryGridClass} aria-hidden="true">
+      {Array.from({ length: 6 }, (_, index) => (
+        <article key={index} className="overflow-hidden rounded-3xl border border-[var(--border-color)] bg-white">
+          <div className="skeleton h-44 w-full" />
+          <div className="px-4 py-4">
+            <div className="skeleton h-4 w-40 rounded-full" />
+            <div className="skeleton mt-2 h-3 w-24 rounded-full" />
+            <div className="skeleton mt-3 h-3 w-32 rounded-full" />
+          </div>
+        </article>
+      ))}
+    </div>
   );
 }

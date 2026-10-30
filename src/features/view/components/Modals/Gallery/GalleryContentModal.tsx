@@ -2,14 +2,13 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { PlayIcon, PlusIcon, ReplaceIcon, TrashIcon } from "@/features/view/components/Icons/icons";
-import { galleryMediaGridClass, GALLERY_PREVIEW_COUNT } from "@/features/view/components/Gallery/galleryLayout";
+import { galleryMediaGridClass, GALLERY_PREVIEW_COUNT } from "@/lib/utils/consts/galleryLayout";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
-import type { GalleryMediaItem, GalleryMediaKind } from "@/lib/types/supabase/gallery-types";
+import type { GalleryMediaItem } from "@/lib/types/supabase/gallery-types";
 import type { Project } from "@/lib/types/supabase/project-types";
 import { GALLERY_EMPTY_BODY, GALLERY_EMPTY_TITLE, GALLERY_HOVER_HINT } from "@/lib/utils/consts/messages";
 import { formatGalleryPower } from "@/lib/utils/helpers/render/format";
-
-type MediaFilter = "todo" | GalleryMediaKind;
+import { GalleryMediaFilter, GalleryMediaKind } from "@/lib/types/components/options";
 
 export function GalleryContentModal({
   project,
@@ -30,7 +29,7 @@ export function GalleryContentModal({
   onRemove: (item: GalleryMediaItem) => void;
   onClose: () => void;
 }) {
-  const [filter, setFilter] = useState<MediaFilter>("todo");
+  const [filter, setFilter] = useState<GalleryMediaFilter>("todo");
   const [visible, setVisible] = useState(GALLERY_PREVIEW_COUNT);
 
   const items = useMemo(() => {
@@ -51,7 +50,7 @@ export function GalleryContentModal({
     .filter(Boolean)
     .join(" · ");
 
-  function chooseFilter(next: MediaFilter) {
+  function chooseFilter(next: GalleryMediaFilter) {
     setFilter(next);
     setVisible(GALLERY_PREVIEW_COUNT);
   }

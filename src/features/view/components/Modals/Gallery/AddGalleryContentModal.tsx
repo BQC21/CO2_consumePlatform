@@ -1,18 +1,12 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { classifyGalleryFile, GALLERY_FILE_ACCEPT } from "@/features/model/services/galleryQueries";
+import { classifyGalleryFile } from "@/features/model/services/galleryQueries";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { GALLERY_FORMAT_ERROR } from "@/lib/utils/consts/messages";
 import { formatByteSize } from "@/lib/utils/helpers/render/format";
-
-type UploadRow = {
-  key: string;
-  file: File;
-  progress: number;
-  status: "uploading" | "ready" | "error";
-  message: string;
-};
+import { UploadRow } from "@/lib/types/components/components";
+import { GALLERY_FILE_ACCEPT } from "@/lib/utils/consts/image_props";
 
 export function AddGalleryContentModal({
   projectName,

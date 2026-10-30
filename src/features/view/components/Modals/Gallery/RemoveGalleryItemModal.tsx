@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { AlertIcon, PlayIcon } from "@/features/view/components/Icons/icons";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
-import type { GalleryMediaItem, GalleryMediaKind } from "@/lib/types/supabase/gallery-types";
+import type { GalleryMediaItem } from "@/lib/types/supabase/gallery-types";
 import { GALLERY_REMOVE_NOTICE } from "@/lib/utils/consts/messages";
+import { GalleryMediaKind } from "@/lib/types/components/options";
 
 export function RemoveGalleryItemModal({
   item,
