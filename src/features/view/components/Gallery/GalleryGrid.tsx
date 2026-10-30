@@ -1,12 +1,13 @@
 "use client";
 
 import { MediaIcon } from "@/features/view/components/Icons/icons";
-import { galleryGridClass } from "@/features/view/components/Gallery/galleryLayout";
+import { galleryGridClass } from "@/lib/utils/consts/galleryLayout";
 import type { GalleryMediaItem } from "@/lib/types/supabase/gallery-types";
 import type { Project } from "@/lib/types/supabase/project-types";
 import { GALLERY_EMPTY_BODY, GALLERY_EMPTY_TITLE } from "@/lib/utils/consts/messages";
 import { formatGalleryInstallation, formatGalleryUpdated } from "@/lib/utils/helpers/render/format";
 
+// Etiqueta de conteo de media
 function countLabel(count: number, singular: string, plural: string): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }
@@ -77,23 +78,6 @@ export function GalleryGrid({
           </article>
         );
       })}
-    </div>
-  );
-}
-
-export function GalleryGridSkeleton() {
-  return (
-    <div className={galleryGridClass} aria-hidden="true">
-      {Array.from({ length: 6 }, (_, index) => (
-        <article key={index} className="overflow-hidden rounded-3xl border border-[var(--border-color)] bg-white">
-          <div className="skeleton h-44 w-full" />
-          <div className="px-4 py-4">
-            <div className="skeleton h-4 w-40 rounded-full" />
-            <div className="skeleton mt-2 h-3 w-24 rounded-full" />
-            <div className="skeleton mt-3 h-3 w-32 rounded-full" />
-          </div>
-        </article>
-      ))}
     </div>
   );
 }
