@@ -142,3 +142,45 @@ export function ImpactIcon({ name }: { name: "truck" | "factory" | "tree" | "bol
     </svg>
   );
 }
+
+export function PlayIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="18" height="18" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M6 4.2v7.6L12.2 8 6 4.2Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ReplaceIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 6.5h8.2M9.2 4.2 11.8 6.5 9.2 8.8M13 9.5H4.8M6.8 7.2 4.2 9.5l2.6 2.3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function FolderIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 4.5h4l1.2 1.4H14V12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4.5Z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function MediaIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="m8 15 2.5-3 2 2.2L16 10l3 5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function AlertIcon({ className }: IconProps) {
+  return (
+    <svg className={className} width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 4 3.5 19h17L12 4Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M12 10v4M12 16.5v.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
