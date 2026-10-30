@@ -1,6 +1,7 @@
 import type { GalleryMediaItem, ProjectGallery, SupabaseGalleryRow } from "@/lib/types/supabase/gallery-types";
 import { toNullableNumber, toText } from "@/lib/utils/helpers/normalization";
 
+// mapeo de items de la galeria
 function mapMediaItem(value: unknown): GalleryMediaItem | null {
   if (!value || typeof value !== "object") {
     return null;
@@ -19,6 +20,7 @@ function mapMediaItem(value: unknown): GalleryMediaItem | null {
   };
 }
 
+// mapeo de listas de items de la galeria
 function mapMediaList(value: unknown): GalleryMediaItem[] {
   if (!Array.isArray(value)) {
     return [];
@@ -29,6 +31,7 @@ function mapMediaList(value: unknown): GalleryMediaItem[] {
   });
 }
 
+// mapeo de filas de la galeria
 export function mapSupabaseRowToGallery(row: SupabaseGalleryRow): ProjectGallery {
   return {
     id: String(row.id ?? ""),
@@ -40,6 +43,7 @@ export function mapSupabaseRowToGallery(row: SupabaseGalleryRow): ProjectGallery
   };
 }
 
+// mapeo de items de la galeria a json
 export function galleryMediaToJson(items: GalleryMediaItem[]): GalleryMediaItem[] {
   return items.map((item) => ({
     id: item.id,
