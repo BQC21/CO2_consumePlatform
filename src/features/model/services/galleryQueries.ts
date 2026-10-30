@@ -1,23 +1,14 @@
 import { galleryMediaToJson, mapSupabaseRowToGallery } from "@/features/model/mapping/mapping_gallery";
 import { createClient } from "@/features/model/supabase/client";
-import type { GalleryMediaItem, GalleryMediaKind, ProjectGallery, SupabaseGalleryRow } from "@/lib/types/supabase/gallery-types";
+import { GalleryMediaKind } from "@/lib/types/components/options";
+import type { GalleryMediaItem, ProjectGallery, SupabaseGalleryRow } from "@/lib/types/supabase/gallery-types";
+import { EXTENSION_KIND, PHOTO_TYPES, VIDEO_TYPES } from "@/lib/utils/consts/image_props";
 import { GALLERY_FORMAT_ERROR } from "@/lib/utils/consts/messages";
+import { safeFileName, throwIfAborted } from "@/lib/utils/helpers/normalization";
 import { formatMediaDuration } from "@/lib/utils/helpers/render/format";
 import { GALLERY_BUCKET, GALLERY_TABLE } from "@/lib/utils/namingTolerance";
 
-const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-const VIDEO_TYPES = new Set(["video/mp4", "video/quicktime"]);
-const EXTENSION_KIND: Record<string, GalleryMediaKind> = {
-  jpg: "foto",
-  jpeg: "foto",
-  png: "foto",
-  webp: "foto",
-  mp4: "video",
-  mov: "video",
-};
-
-export const GALLERY_FILE_ACCEPT = "image/jpeg,image/png,image/webp,video/mp4,video/quicktime,.jpg,.jpeg,.png,.webp,.mp4,.mov";
-
+// clasificacion de archivos de la galeria
 export function classifyGalleryFile(file: File): GalleryMediaKind | null {
   if (PHOTO_TYPES.has(file.type)) {
     return "foto";
@@ -29,6 +20,7 @@ export function classifyGalleryFile(file: File): GalleryMediaKind | null {
   return EXTENSION_KIND[extension] ?? null;
 }
 
+// lectura de las galerias
 export async function getGalleries(): Promise<ProjectGallery[]> {
   const supabase = createClient();
   const { data, error } = await supabase.from(GALLERY_TABLE).select("*");
@@ -38,6 +30,7 @@ export async function getGalleries(): Promise<ProjectGallery[]> {
   return (data as SupabaseGalleryRow[]).map(mapSupabaseRowToGallery);
 }
 
+// lectura de las urls de la galeria
 export async function signedGalleryUrls(paths: string[]): Promise<Record<string, string>> {
   const unique = [...new Set(paths.filter(Boolean))];
   if (unique.length === 0) {
@@ -57,6 +50,7 @@ export async function signedGalleryUrls(paths: string[]): Promise<Record<string,
   return urls;
 }
 
+// agregacion de archivos a la galeria
 export async function addGalleryFile(
   proyectoId: string,
   nombre: string,
@@ -85,6 +79,7 @@ export async function addGalleryFile(
   }
 }
 
+// reemplazo de archivos en la galeria
 export async function replaceGalleryFile(
   proyectoId: string,
   nombre: string,
@@ -122,6 +117,7 @@ export async function replaceGalleryFile(
   await removeStored(previous.path);
 }
 
+// eliminacion de archivos de la galeria
 export async function removeGalleryFile(proyectoId: string, nombre: string, itemId: string): Promise<void> {
   const current = await readGallery(proyectoId);
   if (!current) {
@@ -140,6 +136,7 @@ export async function removeGalleryFile(proyectoId: string, nombre: string, item
   await removeStored(previous.path);
 }
 
+// lectura de la galeria
 async function readGallery(proyectoId: string): Promise<ProjectGallery | null> {
   const supabase = createClient();
   const { data, error } = await supabase.from(GALLERY_TABLE).select("*").eq("proyecto_id", proyectoId).maybeSingle();
@@ -149,6 +146,7 @@ async function readGallery(proyectoId: string): Promise<ProjectGallery | null> {
   return data ? mapSupabaseRowToGallery(data as SupabaseGalleryRow) : null;
 }
 
+// guardado de la galeria
 async function saveGallery(proyectoId: string, nombre: string, fotos: GalleryMediaItem[], videos: GalleryMediaItem[]): Promise<void> {
   const supabase = createClient();
   const payload = {
@@ -164,6 +162,7 @@ async function saveGallery(proyectoId: string, nombre: string, fotos: GalleryMed
   }
 }
 
+// almacenamiento de archivos en la galeria
 async function storeFile(
   proyectoId: string,
   file: File,
@@ -190,6 +189,7 @@ async function storeFile(
   };
 }
 
+// subida de archivos con progreso
 async function uploadWithProgress(path: string, file: File, onProgress: (ratio: number) => void, signal?: AbortSignal): Promise<void> {
   const supabase = createClient();
   const signed = await supabase.storage.from(GALLERY_BUCKET).createSignedUploadUrl(path);
@@ -225,6 +225,7 @@ async function uploadWithProgress(path: string, file: File, onProgress: (ratio: 
   });
 }
 
+// eliminacion de archivos almacenados en la galeria
 async function removeStored(path: string): Promise<void> {
   const supabase = createClient();
   const { error } = await supabase.storage.from(GALLERY_BUCKET).remove([path]);
@@ -233,6 +234,7 @@ async function removeStored(path: string): Promise<void> {
   }
 }
 
+// lectura de la duracion de videos
 function readVideoDuration(file: File): Promise<string> {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(file);
@@ -246,16 +248,4 @@ function readVideoDuration(file: File): Promise<string> {
     video.onerror = () => finish("");
     video.src = url;
   });
-}
-
-function safeFileName(name: string): string {
-  const base = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const cleaned = base.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/^_+|_+$/g, "");
-  return (cleaned || "archivo").slice(0, 80);
-}
-
-function throwIfAborted(signal?: AbortSignal): void {
-  if (signal?.aborted) {
-    throw new Error("Se canceló la subida.");
-  }
 }
