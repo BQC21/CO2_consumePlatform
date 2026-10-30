@@ -204,3 +204,21 @@ export function normalizeSelectOptions(options: SelectFieldOptions): SelectOptio
       typeof option === "string" ? { value: option, label: option } : option
   );
 }
+
+// -------------
+// -- Galeria --
+// -------------
+
+// conversion de nombres de archivos
+export function safeFileName(name: string): string {
+  const base = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const cleaned = base.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/^_+|_+$/g, "");
+  return (cleaned || "archivo").slice(0, 80);
+}
+
+// lanzamiento de errores si se cancela la subida
+export function throwIfAborted(signal?: AbortSignal): void {
+  if (signal?.aborted) {
+    throw new Error("Se canceló la subida.");
+  }
+}
