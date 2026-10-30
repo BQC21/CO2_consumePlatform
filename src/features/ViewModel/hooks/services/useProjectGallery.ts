@@ -16,6 +16,7 @@ export function useProjectGallery() {
   const [mediaLoading, setMediaLoading] = useState(true);
   const [mediaError, setMediaError] = useState<string | null>(null);
 
+  // carga de la galeria
   const loadMedia = useCallback(async () => {
     if (!hasSupabaseEnv()) {
       setGalleries([]);
@@ -37,6 +38,7 @@ export function useProjectGallery() {
     }
   }, []);
 
+  // efecto para cargar la galeria cuando cambia el estado de los proyectos
   useEffect(() => {
     const timer = window.setTimeout(() => {
       void loadMedia();
@@ -44,6 +46,7 @@ export function useProjectGallery() {
     return () => window.clearTimeout(timer);
   }, [loadMedia]);
 
+  // efecto para cargar la galeria cuando cambia el estado de la galeria
   useEffect(() => {
     if (!hasSupabaseEnv()) {
       return;
@@ -60,6 +63,7 @@ export function useProjectGallery() {
     };
   }, [loadMedia]);
 
+  // mapeo de proyectos a la galeria
   const byProject = useMemo(() => {
     const map = new Map<string, ProjectGallery>();
     for (const row of galleries) {
@@ -68,16 +72,19 @@ export function useProjectGallery() {
     return map;
   }, [galleries]);
 
+  // agregacion de archivos a la galeria
   const addFile = useCallback(async (project: Project, file: File, onProgress: (ratio: number) => void, signal?: AbortSignal) => {
     await addGalleryFile(project.id, project.nombre, file, onProgress, signal);
     await loadMedia();
   }, [loadMedia]);
 
+  // reemplazo de archivos en la galeria
   const replaceFile = useCallback(async (project: Project, itemId: string, file: File, onProgress: (ratio: number) => void, signal?: AbortSignal) => {
     await replaceGalleryFile(project.id, project.nombre, itemId, file, onProgress, signal);
     await loadMedia();
   }, [loadMedia]);
 
+  // eliminacion de archivos de la galeria
   const removeFile = useCallback(async (project: Project, itemId: string) => {
     await removeGalleryFile(project.id, project.nombre, itemId);
     await loadMedia();
