@@ -1,5 +1,3 @@
-export type GalleryMediaKind = "foto" | "video";
-
 /** Un archivo guardado en el vector de fotos o de videos. */
 export type GalleryMediaItem = {
   id: string;
