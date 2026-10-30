@@ -1,6 +1,7 @@
 import type { ReactNode, SelectHTMLAttributes } from "react";
 import { Project, ProjectFormState } from "../supabase/project-types";
-import { ProjectSortingOrder } from "./options";
+import { GalleryMediaKind, ProjectSortingOrder } from "./options";
+import { GalleryMediaItem } from "../supabase/gallery-types";
 
 //--------
 // Fields
@@ -251,6 +252,26 @@ export type MonthlyTotals = {
     rendimiento_fv_total: string;
     rendimiento_grid_total: string;
     carga_consumida_total: string;
+};
+
+//--------
+// Galeria
+//--------
+
+// Eliminacion de items de la galeria
+export type RemoveTarget = {
+    project: Project;
+    item: GalleryMediaItem;
+    kind: GalleryMediaKind;
+};
+
+// Subida de archivos a la galeria
+export type UploadRow = {
+    key: string;
+    file: File;
+    progress: number;
+    status: "uploading" | "ready" | "error";
+    message: string;
 };
 
 //-------------
