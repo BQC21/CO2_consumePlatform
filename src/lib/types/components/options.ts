@@ -20,3 +20,6 @@ export type Period = "diario" | "mes" | "anio"; // periodo de la vista anual del
 export type Impact = "co2" | "carbon" | "arboles"; // impacto ambiental de la vista anual del proyecto
 
 export type DashboardPeriod = number | "todos"; // periodo de la vista dashboard
+
+export type GalleryMediaKind = "foto" | "video"; // tipo de media de la galeria
+export type GalleryMediaFilter = "todo" | GalleryMediaKind; // filtro de media de la galeria
