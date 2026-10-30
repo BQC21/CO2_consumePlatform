@@ -2,6 +2,8 @@
 export const PROJECT_TABLE = "proyectos";
 export const MONTH_TABLE = "registros_mensuales"; // Modal interna de cada fila del proyecto
 export const PROJECT_IMAGE_BUCKET = "project-images"; // Imagen asociada al proyecto
+export const GALLERY_TABLE = "galeria_proyectos";
+export const GALLERY_BUCKET = "gallery-media";
 
 
 // ------------- COLUMNAS -------------------
