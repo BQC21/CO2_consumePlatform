@@ -61,7 +61,7 @@ export function EnvironmentalCards({
       {monthlyError ? <p className="field-error mt-3">{monthlyError}</p> : null}
       
       {/* --- TILES DE IMPACTO --- */}
-      <div className="mt-4 grid grid-cols-4 gap-3">
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <ImpactTile
           title="CO₂ reducido"
           value={co2.amount === null ? "—" : formatNumber(co2.amount, 2)}
