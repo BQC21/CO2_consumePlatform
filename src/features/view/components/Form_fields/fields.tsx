@@ -166,9 +166,9 @@ export function ImpactTile({
         <ImpactIcon name={icon} />
       </span>
       <div className="min-w-0">
-        <p className="text-3xl font-semibold text-white/70">{title}</p>
-        <p className="numeric text-5xl font-bold leading-tight">
-          {value} {unit ? <span className="text-xl font-semibold text-white/80">{unit}</span> : null}
+        <p className="text-base font-semibold text-white/70 sm:text-lg">{title}</p>
+        <p className="numeric text-2xl font-bold leading-tight sm:text-3xl">
+          {value} {unit ? <span className="text-base font-semibold text-white/80 sm:text-lg">{unit}</span> : null}
         </p>
       </div>
     </article>
@@ -186,9 +186,9 @@ export function YearSwitcher({
   years?: number[];
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex max-w-full flex-wrap items-center gap-2">
       <span className="text-sm text-[var(--color-text-secondary)]">Año</span>
-      <div className="flex rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Año de la gráfica">
+      <div className="flex max-w-full flex-wrap rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Año de la gráfica">
         {years.map((year) => {
           const active = year === value;
           return (
@@ -222,9 +222,9 @@ export function PeriodSwitcher({
   ];
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex max-w-full flex-wrap items-center gap-2">
       <span className="text-sm text-[var(--color-text-secondary)]">Periodo</span>
-      <div className="flex rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Periodo">
+      <div className="flex max-w-full flex-wrap rounded-full bg-[var(--color-surface-muted)] p-0.5" role="group" aria-label="Periodo">
         {options.map((option) => {
           const active = option.value === value;
           return (
