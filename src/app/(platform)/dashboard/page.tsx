@@ -52,10 +52,10 @@ export default function DashboardPage() {
     >
       <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
         <article className="rounded-3xl border border-white/10 bg-[#101826]/90 p-6 md:p-8">
-          <h1 className="max-w-5xl text-5xl font-semibold leading-tight md:text-7xl lg:text-7xl">
+          <h1 className="max-w-5xl text-3xl font-semibold leading-tight sm:text-4xl lg:text-6xl">
             Cobertura nacional de todos los proyectos de energía fotovoltaica
           </h1>
-          <p className="mt-5 max-w-5xl text-lg text-white/70 md:text-3xl">
+          <p className="mt-5 max-w-5xl text-base text-white/70 md:text-xl">
             Haz clic en un departamento del mapa para ver el detalle de los proyectos instalados en esa región.
           </p>
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-base text-white/85">
@@ -71,7 +71,7 @@ export default function DashboardPage() {
           // Skeleton de las métricas
           <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5" aria-hidden="true">
             <div className="skeleton-dark h-7 w-72 rounded-full" />
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {Array.from({ length: 4 }, (_, index) => (
                 <div key={index} className="skeleton-dark h-16 rounded-2xl" />
               ))}
