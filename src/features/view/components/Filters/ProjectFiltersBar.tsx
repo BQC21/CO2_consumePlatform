@@ -9,7 +9,7 @@ import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, SOR
 // barra de búsqueda
 export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
   return (
-    <label className="relative block min-w-[16rem] flex-1">
+    <label className="relative block w-full min-w-0 flex-1 sm:w-auto">
       <span className="sr-only">Buscar</span>
       <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[var(--color-text-secondary)]">
         <SearchIcon />
@@ -41,8 +41,8 @@ function PillSelect({
   children: ReactNode;
 }) {
   return (
-    <label className={`relative inline-flex h-10 cursor-pointer items-center rounded-full border bg-white px-3 text-sm font-medium ${value ? "border-[var(--color-secondary)] text-[var(--color-secondary)]" : "border-[var(--border-color)]"}`}>
-      <span>{prefix}: {display}</span>
+    <label className={`relative inline-flex h-10 max-w-full cursor-pointer items-center rounded-full border bg-white px-3 text-sm font-medium ${value ? "border-[var(--color-secondary)] text-[var(--color-secondary)]" : "border-[var(--border-color)]"}`}>
+      <span className="max-w-[12rem] truncate sm:max-w-[16rem]">{prefix}: {display}</span>
       <select
         className="absolute inset-0 cursor-pointer opacity-0"
         aria-label={ariaLabel}
@@ -110,11 +110,11 @@ export function ProjectFiltersBar({
 // selector de orden
 export function ProjectSorter({ value, onChange }: ProjectSorterProps) {
   return (
-    <label className="inline-flex h-10 items-center gap-2 rounded-full border border-[var(--border-color)] bg-white px-3 text-sm">
+    <label className="inline-flex h-10 max-w-full items-center gap-2 rounded-full border border-[var(--border-color)] bg-white px-3 text-sm">
       <SortIcon />
       <span className="sr-only">Orden</span>
       <select
-        className="max-w-52 bg-transparent font-medium outline-none"
+        className="max-w-[12rem] bg-transparent font-medium outline-none sm:max-w-52"
         aria-label="Ordenar proyectos"
         value={value}
         onChange={(event) => onChange(event.target.value as ProjectSortingOrder)}
