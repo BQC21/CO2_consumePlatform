@@ -52,7 +52,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
           </button>
         ) : null}
       </div>
-      <svg viewBox={PERU_MAP_VIEWBOX} className="mx-auto h-[42rem] w-full md:h-[58rem] xl:h-[68rem]" role="img" aria-label="Mapa del Perú por departamentos">
+      <svg viewBox={PERU_MAP_VIEWBOX} className="mx-auto h-80 w-full sm:h-[28rem] md:h-[36rem] xl:h-[44rem]" role="img" aria-label="Mapa del Perú por departamentos">
         {DEPARTMENT_SHAPES.map((shape) => {
           const status = loading ? "sin_proyecto" : departmentStatus(shape.nombre, projects);
           const isSelected = !loading && shape.nombre === selected;
@@ -94,7 +94,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
           );
         })}
       </svg>
-      <ul className="absolute bottom-6 left-6 rounded-2xl border border-[var(--border-color)] bg-white px-4 py-3 text-sm shadow-[var(--shadow-sm)]">
+      <ul className="mt-4 w-fit max-w-full rounded-2xl border border-[var(--border-color)] bg-white px-4 py-3 text-sm shadow-[var(--shadow-sm)]">
         <li className="mb-1 font-semibold">Estado</li>
         <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.completado }} /> Completado</li>
         <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.en_ejecucion }} /> En ejecución</li>
