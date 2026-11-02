@@ -589,10 +589,16 @@ input[type="radio"] {
 /* Estilos para la tabla */
 .data-table {
   width: 100%;
-  min-width: 68rem;
+  min-width: 0;
   border-collapse: separate;
   border-spacing: 0;
   font-size: var(--font-size-sm);
+}
+
+@media (min-width: 80rem) {
+  .data-table {
+    min-width: 68rem;
+  }
 }
 
 /* Estilos para las cabeceras de la tabla */

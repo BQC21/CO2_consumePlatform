@@ -87,7 +87,181 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
 
   return (
     <section>
-      <div className="data-scroll">
+      <div className="grid gap-3 xl:hidden">
+        {projects.length > 0 ? (
+          projects.map((project) => {
+            const existing = project.insercion === "existente";
+            const form = drafts[project.id] ?? null;
+            const editing = form !== null;
+            const expanded = expandedIds.includes(project.id);
+            const saving = savingIds[project.id] === true;
+            const rowError = rowErrors[project.id] ?? "";
+            return (
+              <article key={project.id} className={`rounded-2xl border border-[var(--border-color)] p-4 ${editing ? "bg-[#fff8f1]" : existing ? "bg-[#e7f1fb]" : "bg-white"}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    {form ? (
+                      <input className={editClass} aria-label={`Nombre de ${project.nombre}`} value={form.nombre} onChange={(event) => updateDraft(project.id, "nombre", event.target.value)} />
+                    ) : (
+                      <p className="font-semibold break-words">{project.nombre}</p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[var(--color-text-secondary)]"
+                    aria-expanded={expanded}
+                    aria-label={expanded ? `Ocultar detalle de ${project.nombre}` : `Ver detalle de ${project.nombre}`}
+                    onClick={() => {
+                      setExpandedIds((current) => (
+                        current.includes(project.id) ? current.filter((id) => id !== project.id) : [...current, project.id]
+                      ));
+                    }}
+                  >
+                    <Chevron open={expanded} />
+                  </button>
+                </div>
+                <dl className="mt-3 grid gap-2 text-sm">
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Ubicación</dt>
+                    <dd>
+                      {form ? (
+                        <select className={editClass} aria-label={`Ubicación de ${project.nombre}`} value={form.ubicacion} onChange={(event) => updateDraft(project.id, "ubicacion", event.target.value)}>
+                          <option value="">Selecciona</option>
+                          {optionsIncludingValue(DEPARTMENT_OPTIONS, form.ubicacion).map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      ) : project.ubicacion || "—"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Tipo</dt>
+                    <dd>
+                      {form ? (
+                        <select className={editClass} aria-label={`Tipo de ${project.nombre}`} value={form.tipo_de_sistema} onChange={(event) => updateDraft(project.id, "tipo_de_sistema", event.target.value)}>
+                          {optionsIncludingValue(SYSTEM_TYPE_OPTIONS, form.tipo_de_sistema).map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      ) : project.tipo_de_sistema || "—"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Capacidad kWp</dt>
+                    <dd>
+                      {form ? (
+                        <input className={editClass} inputMode="decimal" aria-label={`Capacidad de ${project.nombre}`} value={form.cap_instalada_kwp} onChange={(event) => updateDraft(project.id, "cap_instalada_kwp", event.target.value)} />
+                      ) : project.cap_instalada_kwp === null ? "—" : formatNumber(project.cap_instalada_kwp, 2)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Inversor</dt>
+                    <dd>
+                      {form ? (
+                        <select className={editClass} aria-label={`Inversor de ${project.nombre}`} value={catalogOption(INVERTER_BRAND_OPTIONS, form.marca_inversor)} onChange={(event) => updateDraft(project.id, "marca_inversor", event.target.value)}>
+                          <option value="">Selecciona</option>
+                          {optionsIncludingValue(INVERTER_BRAND_OPTIONS, form.marca_inversor).map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      ) : project.marca_inversor || "—"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Instalación</dt>
+                    <dd>
+                      {form ? (
+                        <input className={editClass} type="date" aria-label={`Fecha de instalación de ${project.nombre}`} value={form.fecha_instalacion} onChange={(event) => updateDraft(project.id, "fecha_instalacion", event.target.value)} />
+                      ) : formatDayMonthYear(project.fecha_instalacion)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[var(--color-text-secondary)]">Estado</dt>
+                    <dd>
+                      {form ? (
+                        <select className={editClass} aria-label={`Estado de ${project.nombre}`} value={form.estado} onChange={(event) => updateDraft(project.id, "estado", event.target.value === "completado" ? "completado" : "en_ejecucion")}>
+                          <option value="en_ejecucion">En ejecución</option>
+                          <option value="completado">Completado</option>
+                        </select>
+                      ) : (
+                        <StatusPill completed={project.estado === "completado"} />
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+                {expanded ? (
+                  <dl className="mt-3 grid gap-2 border-t border-[var(--border-color)] pt-3 text-sm">
+                    <DetailField label="Marca del panel">
+                      {form ? (
+                        <select className={editClass} aria-label={`Panel de ${project.nombre}`} value={catalogOption(PANEL_BRAND_OPTIONS, form.marca_panel)} onChange={(event) => updateDraft(project.id, "marca_panel", event.target.value)}>
+                          {optionsIncludingValue(PANEL_BRAND_OPTIONS, form.marca_panel).map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      ) : displayBrand(project.marca_panel)}
+                    </DetailField>
+                    <DetailField label="Marca de batería">
+                      {form ? (
+                        <select className={editClass} aria-label={`Batería de ${project.nombre}`} value={catalogOption(BATTERY_BRAND_OPTIONS, form.marca_bateria)} onChange={(event) => updateDraft(project.id, "marca_bateria", event.target.value)}>
+                          {optionsIncludingValue(BATTERY_BRAND_OPTIONS, form.marca_bateria).map((option) => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      ) : displayBrand(project.marca_bateria)}
+                    </DetailField>
+                    <DetailField label="Paneles instalados">
+                      {form ? (
+                        <input className={editClass} inputMode="numeric" aria-label={`Paneles de ${project.nombre}`} value={form.paneles_instalados} onChange={(event) => updateDraft(project.id, "paneles_instalados", event.target.value)} />
+                      ) : project.paneles_instalados === null ? "—" : formatNumber(project.paneles_instalados, 0)}
+                    </DetailField>
+                    <DetailField label="Creado">{formatDayMonthYear(project.created_at)}</DetailField>
+                    <DetailField label="Actualizado">{formatDayMonthYear(project.updated_at)}</DetailField>
+                  </dl>
+                ) : null}
+                {rowError && editing ? <p className="field-error mt-2">{rowError}</p> : null}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  {editing && form ? (
+                    <>
+                      <button type="button" className="btn-primary btn-compact" disabled={saving} onClick={() => void saveEdit(project)}>
+                        {saving ? "Guardando…" : "Guardar"}
+                      </button>
+                      <button type="button" className="btn-secondary btn-compact" disabled={saving} onClick={() => cancelEdit(project.id)}>
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button type="button" className="inline-flex h-8 items-center gap-1 rounded-full bg-[#f3f6fa] px-3 text-xs font-medium" onClick={() => startEdit(project)}>
+                        <EditIcon />
+                        Editar
+                      </button>
+                      <MetricsButton project={project} onUpdate={onUpdate} labeled />
+                      <Button2Delete label={`Eliminar ${project.nombre}`} labeled>
+                        {(close) => (
+                          <DeleteProjectModal
+                            project={project}
+                            onDelete={async (id) => {
+                              await onDelete(id);
+                              close();
+                            }}
+                            onClose={close}
+                          />
+                        )}
+                      </Button2Delete>
+                    </>
+                  )}
+                </div>
+              </article>
+            );
+          })
+        ) : (
+          <div className="rounded-2xl border border-[var(--border-color)] bg-white px-3 py-8 text-sm">
+            <p className="font-medium">No hay proyectos en esta vista.</p>
+            <p className="text-[var(--color-text-secondary)]">El filtro no encontró plantas.</p>
+          </div>
+        )}
+      </div>
+      <div className="data-scroll hidden xl:block">
         <table className="data-table">
           {/* Encabezado de la tabla */}
           <thead>
