@@ -69,7 +69,7 @@ export function PortalShell({
               <span className="block text-[11px] text-[var(--color-text-secondary)]">PlatformCO2</span>
             </span>
           </Link>
-          <nav className="flex flex-1 flex-wrap justify-center gap-2" aria-label="Principal">
+          <nav className="flex min-w-0 flex-1 flex-wrap justify-center gap-2" aria-label="Principal">
             {NAVIGATION.map((item) => (
               <Link key={item.href} href={item.href} className={item.href === activePath ? "nav-pill nav-pill-active" : "nav-pill nav-pill-inactive"}>
                 {item.label}
@@ -77,10 +77,10 @@ export function PortalShell({
             ))}
           </nav>
           {headerCenter}
-          <div className="relative flex items-center gap-2">
-            <span className="hidden text-right leading-tight md:block">
-              <span className="block text-sm font-semibold">{name}</span>
-              {showEmail ? <span className="block text-[11px] text-[var(--color-text-secondary)]">{email}</span> : null}
+          <div className="relative flex min-w-0 shrink items-center gap-2">
+            <span className="hidden min-w-0 max-w-[9rem] text-right leading-tight lg:block xl:max-w-[14rem]">
+              <span className="block truncate text-sm font-semibold">{name}</span>
+              {showEmail ? <span className="block truncate text-[11px] text-[var(--color-text-secondary)]">{email}</span> : null}
             </span>
             <button
               type="button"
