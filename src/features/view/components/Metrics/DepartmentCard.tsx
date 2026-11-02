@@ -66,7 +66,7 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
         </select>
       </label>
 
-      <dl className="mt-4 grid grid-cols-2 gap-2 text-base">
+      <dl className="mt-4 grid grid-cols-1 gap-2 text-base sm:grid-cols-2">
         <div className="rounded-xl bg-[var(--color-background)] px-3 py-2">
           <dt className="text-sm text-[var(--color-text-secondary)]">Capacidad</dt>
           <dd className="numeric text-lg font-semibold">{project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`}</dd>
@@ -80,13 +80,13 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
         <p className="text-sm text-[var(--color-text-secondary)]">Fecha de instalación</p>
         <p className="text-lg font-semibold">{formatDayMonthYear(project.fecha_instalacion)}</p>
       </div>
-      <div className="mt-2 flex items-center justify-between gap-3 rounded-xl bg-[var(--color-background)] px-3 py-2 text-base">
-        <div>
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[var(--color-background)] px-3 py-2 text-base">
+        <div className="min-w-0">
           <p className="text-sm text-[var(--color-text-secondary)]">Marca del inversor</p>
-          <p className="text-lg font-semibold">{project.marca_inversor || "—"}</p>
+          <p className="text-lg font-semibold break-words">{project.marca_inversor || "—"}</p>
         </div>
         {portalUrl ? (
-          <a className="shrink-0 text-base font-semibold text-[var(--color-primary)]" href={portalUrl} target="_blank" rel="noopener noreferrer">
+          <a className="text-base font-semibold text-[var(--color-primary)]" href={portalUrl} target="_blank" rel="noopener noreferrer">
             Portal del inversor ↗
           </a>
         ) : null}
