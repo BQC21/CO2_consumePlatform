@@ -21,24 +21,23 @@ export function MetricCards({
           ACUMULADO
         </p>
         {/* Proyectos registrados y registered en negrita y de color negro en 1 misma línea */}
-        <p className="mt-3 text-5xl font-medium text-[var(--color-text-secondary)]">Proyectos registrados: <span className="font-bold text-[var(--color-text-primary)]">{registered}</span></p>
-        <p className="mt-10 text-3xl text-[var(--color-text-secondary)]">
+        <p className="mt-3 text-2xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-3xl">Proyectos registrados: <span className="font-bold text-[var(--color-text-primary)]">{registered}</span></p>
+        <p className="mt-4 text-lg text-[var(--color-text-secondary)] sm:text-xl">
           en {departmentCount} {departmentCount === 1 ? "departamento" : "departamentos"}
         </p>
       </article>
-      <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-          <p className="text-5xl font-medium text-[var(--color-text-secondary)]">Completados: <span className="font-bold text-[var(--color-text-primary)]">{completed}</span></p>
-          <p className="numeric mt-10 text-4xl leading-none">
+      <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
+        <article className="min-w-0 rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
+          <p className="text-xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-2xl">Completados: <span className="font-bold text-[var(--color-text-primary)]">{completed}</span></p>
+          <p className="numeric mt-4 text-2xl leading-none sm:text-3xl">
             {completed} de {registered}
           </p>
-          
-          <p className="mt-10 text-3xl text-[var(--color-text-secondary)]">{ratio} % operativos</p>
+          <p className="mt-4 text-lg text-[var(--color-text-secondary)] sm:text-xl">{ratio} % operativos</p>
         </article>
-        <article className="rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-          <p className="text-5xl font-medium text-[var(--color-text-secondary)]">Capacidad instalada total</p>
-          <p className="numeric mt-10 text-4xl font-bold leading-none">
-            <span className="text-5xl">{formatNumber(metrics.capacidadInstaladaKwp, 1)}</span> kWp
+        <article className="min-w-0 rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
+          <p className="text-xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-2xl">Capacidad instalada total</p>
+          <p className="numeric mt-4 text-2xl font-bold leading-none sm:text-3xl">
+            <span className="text-3xl sm:text-4xl">{formatNumber(metrics.capacidadInstaladaKwp, 1)}</span> kWp
           </p>
         </article>
       </div>
