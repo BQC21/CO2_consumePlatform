@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { AddGalleryContentModal } from "@/features/view/components/Modals/Gallery/AddGalleryContentModal";
 import { GalleryContentModal } from "@/features/view/components/Modals/Gallery/GalleryContentModal";
 import { GalleryGrid } from "@/features/view/components/Gallery/GalleryGrid";
-import { GalleryGridSkeleton } from "@/lib/utils/helpers/render/skeletons";
+import { GalleryGridSkeleton } from "@/features/view/components/skeletons/skeletons";
 import { GalleryToolbar } from "@/features/view/components/Gallery/GalleryToolbar";
 import { RemoveGalleryItemModal } from "@/features/view/components/Modals/Gallery/RemoveGalleryItemModal";
 import { FolderIcon } from "@/features/view/components/Icons/icons";
