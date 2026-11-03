@@ -1,8 +1,7 @@
 import { mapProjectToSupabaseRow, mapSupabaseRowToProject } from "@/features/model/mapping/mapping_project";
 import { createClient } from "@/features/model/supabase/client";
 import type { Project, ProjectFormData, SupabaseProjectRow } from "@/lib/types/supabase/project-types";
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGE_LABEL } from "@/lib/utils/consts/image_props";
-import { PROJECT_IMAGE_BUCKET, PROJECT_TABLE } from "@/lib/utils/namingTolerance";
+import { PROJECT_TABLE } from "@/lib/utils/namingTolerance";
 
 /** Obtiene todos los proyectos ordenados por fecha de instalación de forma descendente. */
 export async function getProjects(): Promise<Project[]> {
