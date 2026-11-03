@@ -21,5 +21,3 @@ export type Impact = "co2" | "carbon" | "arboles"; // impacto ambiental de la vi
 
 export type DashboardPeriod = number | "todos"; // periodo de la vista dashboard
 
-export type GalleryMediaKind = "foto" | "video"; // tipo de media de la galeria
-export type GalleryMediaFilter = "todo" | GalleryMediaKind; // filtro de media de la galeria
