@@ -65,7 +65,7 @@ export function EnvironmentalCards({
         <ImpactTile
           title="CO₂ reducido"
           value={co2.amount === null ? "—" : formatNumber(co2.amount, 2)}
-          unit={co2.amount === null ? "" : `${co2.unit} CO₂`}
+          unit={co2.amount === null ? "" : `${co2.unit}`}
           tone="#2f6fed"
           icon="truck"
         />

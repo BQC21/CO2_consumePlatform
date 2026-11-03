@@ -12,6 +12,7 @@ import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthl
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
 import { formatDayMonthYear } from "@/lib/utils/helpers/normalization";
+import { Logo } from "@/features/view/components/Images/Logo";
 
 export default function DashboardPage() {
 
@@ -51,13 +52,13 @@ export default function DashboardPage() {
       hideHeading
     >
       <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+        {/* Insertar imagen del logo de TEC (public/Tec_ES_logo.png) */}
+
         <article className="rounded-3xl border border-white/10 bg-[#101826]/90 p-6 md:p-8">
+          <Logo/>
           <h1 className="max-w-5xl text-3xl font-semibold leading-tight sm:text-4xl lg:text-6xl">
-            Cobertura nacional de todos los proyectos de energía fotovoltaica
+            Cobertura nacional de los proyectos de TEC
           </h1>
-          <p className="mt-5 max-w-5xl text-base text-white/70 md:text-xl">
-            Haz clic en un departamento del mapa para ver el detalle de los proyectos instalados en esa región.
-          </p>
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-base text-white/85">
             <span className="h-2 w-2 rounded-full bg-[#3caf53]" />
             {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}

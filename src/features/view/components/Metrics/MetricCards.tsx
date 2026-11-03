@@ -25,15 +25,9 @@ export function MetricCards({
         <p className="mt-4 text-lg text-[var(--color-text-secondary)] sm:text-xl">
           en {departmentCount} {departmentCount === 1 ? "departamento" : "departamentos"}
         </p>
+        <p className="mt-5 text-xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-2xl">Completados: <span className="font-bold text-[var(--color-text-primary)]">{completed}</span></p>
       </article>
-      <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
-        <article className="min-w-0 rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-          <p className="text-xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-2xl">Completados: <span className="font-bold text-[var(--color-text-primary)]">{completed}</span></p>
-          <p className="numeric mt-4 text-2xl leading-none sm:text-3xl">
-            {completed} de {registered}
-          </p>
-          <p className="mt-4 text-lg text-[var(--color-text-secondary)] sm:text-xl">{ratio} % operativos</p>
-        </article>
+      <div className="grid grid-cols-1 gap-3">
         <article className="min-w-0 rounded-2xl bg-white px-4 py-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
           <p className="text-xl font-medium leading-snug text-[var(--color-text-secondary)] sm:text-2xl">Capacidad instalada total</p>
           <p className="numeric mt-4 text-2xl font-bold leading-none sm:text-3xl">

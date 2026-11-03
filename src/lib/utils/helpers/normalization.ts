@@ -82,9 +82,9 @@ export function displayMetric(value: string): string {
 // ------------------
 
 /** kg se muestran como toneladas solo cuando el valor supera 1000. */
-export function massFromKg(kg: number | null): { amount: number | null; unit: "kg" | "t" } {
+export function massFromKg(kg: number | null): { amount: number | null; unit: "kg" | "toneladas" } {
   if (kg !== null && kg > 1000) {
-    return { amount: kg / 1000, unit: "t" };
+    return { amount: kg / 1000, unit: "toneladas" };
   }
   return { amount: kg, unit: "kg" };
 }

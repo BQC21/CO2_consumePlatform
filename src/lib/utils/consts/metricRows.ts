@@ -18,5 +18,5 @@ export type ImpactKey = (typeof IMPACT_ROWS)[number]["key"];
 
 // Periodos
 export type EnergyPeriod =
-  | { mode: "anio"; year: number }
-  | { mode: "mes"; month: number };
+    | { mode: "anio"; year: number }
+    | { mode: "mes"; month: number };
