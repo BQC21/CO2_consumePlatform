@@ -5,6 +5,9 @@ import { DepartmentCardProps } from "@/lib/types/components/components";
 import { inverterPortalUrl } from "@/lib/utils/options";
 import { formatDayMonthYear, formatNumber } from "@/lib/utils/helpers/normalization";
 
+const articleClass =
+  "@container min-w-0 rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] @sm:p-5";
+
 export function DepartmentCard({ department, projects, onActiveProject }: DepartmentCardProps) {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [trackedDepartment, setTrackedDepartment] = useState(department);
@@ -29,10 +32,10 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
 
   if (!department || !project) {
     return (
-      <article className="rounded-3xl bg-white p-5 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-        <p className="text-sm font-semibold tracking-[0.14em] text-[var(--color-text-secondary)]">DEPARTAMENTO</p>
-        <h2 className="mt-2 text-3xl font-semibold">{department ?? "Sin selección"}</h2>
-        <p className="mt-3 text-base text-[var(--color-text-secondary)]">
+      <article className={articleClass}>
+        <p className="text-xs font-semibold tracking-[0.08em] break-words text-[var(--color-text-secondary)] @sm:text-sm @sm:tracking-[0.14em]">DEPARTAMENTO</p>
+        <h2 className="mt-2 text-xl font-semibold break-words @sm:text-2xl @md:text-3xl">{department ?? "Sin selección"}</h2>
+        <p className="mt-3 text-sm text-[var(--color-text-secondary)] @sm:text-base">
           {department
             ? "Este departamento no tiene proyectos."
             : "Elige un departamento del mapa para ver la ficha de la planta."}
@@ -45,19 +48,19 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
   const phrase = project.descripcion || `${system} ${completed ? "en operación" : "en ejecución"}`;
 
   return (
-    <article className="rounded-3xl bg-white p-5 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-      <p className="text-sm font-semibold tracking-[0.14em] text-[var(--color-accent-green)]">DEPARTAMENTO · {department.toUpperCase()}</p>
-      <h2 className="mt-1 text-3xl font-semibold">{project.nombre}</h2>
-      <p className="mt-1 text-base text-[var(--color-text-secondary)]">{phrase}</p>
-      <p className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${completed ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
-        <span className={`h-2 w-2 rounded-full ${completed ? "bg-[#3caf53]" : "bg-[#f05a1a]"}`} />
-        {completed ? "Completado" : "En ejecución"} · {local.length} {local.length === 1 ? "planta" : "plantas"} en {department}
+    <article className={articleClass}>
+      <p className="text-xs font-semibold tracking-[0.08em] break-words text-[var(--color-accent-green)] @sm:text-sm @sm:tracking-[0.14em]">DEPARTAMENTO · {department.toUpperCase()}</p>
+      <h2 className="mt-1 text-xl font-semibold break-words @sm:text-2xl @md:text-3xl">{project.nombre}</h2>
+      <p className="mt-1 text-sm text-[var(--color-text-secondary)] @sm:text-base">{phrase}</p>
+      <p className={`mt-3 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3 py-1 text-xs font-semibold @sm:text-sm ${completed ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
+        <span className={`h-2 w-2 shrink-0 rounded-full ${completed ? "bg-[#3caf53]" : "bg-[#f05a1a]"}`} />
+        {completed ? "Completado" : "En ejecución"} · {local.length} {local.length === 1 ? "planta" : "plantas"}
       </p>
 
-      <label className="mt-4 block text-base font-medium">
-        Proyecto ({local.length} {local.length === 1 ? "planta" : "plantas"} en este departamento)
+      <label className="mt-4 block min-w-0 text-sm font-medium @sm:text-base">
+        Proyecto
         <select
-          className="field-select input-focus mt-1"
+          className="field-select input-focus mt-1 max-w-full"
           aria-label="Proyecto del departamento"
           value={project.id}
           onChange={(event) => setProjectId(event.target.value)}
@@ -70,31 +73,33 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
         </select>
       </label>
 
-      <dl className="mt-4 grid grid-cols-1 gap-2 text-base sm:grid-cols-2">
-        <div className="rounded-xl bg-[var(--color-background)] px-3 py-2">
+      <dl className="mt-4 grid grid-cols-1 gap-2 text-sm @md:grid-cols-2 @sm:text-base">
+        <div className="min-w-0 rounded-xl bg-[var(--color-background)] px-3 py-2">
           <dt className="text-sm text-[var(--color-text-secondary)]">Capacidad</dt>
-          <dd className="numeric text-lg font-semibold">{project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`}</dd>
+          <dd className="numeric text-base font-semibold break-words @sm:text-lg">{project.cap_instalada_kwp === null ? "—" : `${formatNumber(project.cap_instalada_kwp, 2)} kWp`}</dd>
         </div>
-        <div className="rounded-xl bg-[var(--color-background)] px-3 py-2">
+        <div className="min-w-0 rounded-xl bg-[var(--color-background)] px-3 py-2">
           <dt className="text-sm text-[var(--color-text-secondary)]">Tipo de sistema</dt>
-          <dd className="text-lg font-semibold">{project.tipo_de_sistema || "—"}</dd>
+          <dd className="text-base font-semibold break-words @sm:text-lg">{project.tipo_de_sistema || "—"}</dd>
         </div>
       </dl>
-      <div className="mt-2 rounded-xl bg-[var(--color-background)] px-3 py-2 text-base">
-        <p className="text-sm text-[var(--color-text-secondary)]">Fecha de instalación</p>
-        <p className="text-lg font-semibold">{formatDayMonthYear(project.fecha_instalacion)}</p>
-      </div>
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[var(--color-background)] px-3 py-2 text-base">
-        <div className="min-w-0">
-          <p className="text-sm text-[var(--color-text-secondary)]">Marca del inversor</p>
-          <p className="text-lg font-semibold break-words">{project.marca_inversor || "—"}</p>
+      <dl className="mt-4 grid grid-cols-1 gap-2 text-sm @md:grid-cols-2 @sm:text-base">
+        <div className="min-w-0 rounded-xl bg-[var(--color-background)] px-3 py-2">
+          <p className="text-sm text-[var(--color-text-secondary)]">Fecha de instalación</p>
+          <p className="text-base font-semibold break-words @sm:text-lg">{formatDayMonthYear(project.fecha_instalacion)}</p>
         </div>
-        {portalUrl ? (
-          <a className="text-base font-semibold text-[var(--color-primary)]" href={portalUrl} target="_blank" rel="noopener noreferrer">
-            Portal del inversor ↗
-          </a>
-        ) : null}
-      </div>
+        <div className="min-w-0 rounded-xl bg-[var(--color-background)] px-3 py-2">
+          <div className="min-w-0">
+            <p className="text-sm text-[var(--color-text-secondary)]">Marca del inversor</p>
+            <p className="text-base font-semibold break-words @sm:text-lg">{project.marca_inversor || "—"}</p>
+          </div>
+          {portalUrl ? (
+            <a className="shrink-0 text-sm font-semibold text-[var(--color-primary)] @sm:text-base" href={portalUrl} target="_blank" rel="noopener noreferrer">
+              Portal del inversor ↗
+            </a>
+          ) : null}
+        </div>
+      </dl>
     </article>
   );
 }
