@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ImageCardProps } from "@/lib/types/components/components";
-import { mediaFileName, mediaForProject, mediaKind, publicMediaSrc } from "@/lib/utils/consts/mediaCatalog";
+import { mediaFileName, mediaForProject, mediaKind, publicMediaSrc } from "@/lib/utils/helpers/normalization";
 
 export function ImageCard({ projectName }: ImageCardProps) {
   const entry = mediaForProject(projectName);

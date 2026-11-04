@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { EXPOFERIA_2026_IMAGES, publicMediaSrc } from "@/lib/utils/consts/mediaCatalog";
+import { EXPOFERIA_2026_IMAGES } from "@/lib/utils/consts/mediaCatalog";
+import { publicMediaSrc } from "@/lib/utils/helpers/normalization";
 
 export function ExpoferiaCard() {
   return (

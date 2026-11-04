@@ -1,5 +1,7 @@
-import type { SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
+import type { ProjectMedia, SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
 import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
+import { IMAGE_EXTENSIONS, PROJECT_MEDIA, VIDEO_EXTENSIONS } from "../consts/mediaCatalog";
+import { MediaKind } from "@/lib/types/components/options";
 
 // ----------------
 // -- Números ------
@@ -203,4 +205,65 @@ export function normalizeSelectOptions(options: SelectFieldOptions): SelectOptio
   return options.map((option) =>
       typeof option === "string" ? { value: option, label: option } : option
   );
+}
+
+// ----------------
+// -- Galería -----
+// ----------------
+
+export function normalizeMediaName(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+export function mediaForProject(projectName: string | null): ProjectMedia | null {
+  if (!projectName) {
+    return null;
+  }
+  const normalized = normalizeMediaName(projectName);
+  let best: { entry: ProjectMedia; score: number } | null = null;
+  for (const entry of PROJECT_MEDIA) {
+    for (const alias of entry.aliases) {
+      const key = normalizeMediaName(alias);
+      if (!key || !normalized.includes(key)) {
+        continue;
+      }
+      if (!best || key.length > best.score) {
+        best = { entry, score: key.length };
+      }
+    }
+  }
+  return best?.entry ?? null;
+}
+
+export function publicMediaSrc(path: string): string {
+  return path
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+}
+
+export function mediaFileName(path: string): string {
+  const name = path.split("/").pop() ?? path;
+  try {
+    return decodeURIComponent(name);
+  } catch {
+    return name;
+  }
+}
+
+export function mediaKind(path: string): MediaKind {
+  const name = path.split("?")[0]?.split("/").pop() ?? "";
+  const extension = name.includes(".") ? name.slice(name.lastIndexOf(".") + 1).toLowerCase() : "";
+  if (IMAGE_EXTENSIONS.has(extension)) {
+    return "image";
+  }
+  if (VIDEO_EXTENSIONS.has(extension)) {
+    return "video";
+  }
+  return "unsupported";
 }

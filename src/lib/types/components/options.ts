@@ -21,3 +21,4 @@ export type Impact = "co2" | "carbon" | "arboles"; // impacto ambiental de la vi
 
 export type DashboardPeriod = number | "todos"; // periodo de la vista dashboard
 
+export type MediaKind = "image" | "video" | "unsupported"; // Tipo de contenido multimedia leído

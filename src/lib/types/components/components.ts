@@ -305,3 +305,9 @@ export type LabelPoint = {
     x: number;
     y: number;
 };
+
+// Galería de proyectos
+export type ProjectMedia = {
+    aliases: readonly string[];
+    files: readonly string[];
+};
