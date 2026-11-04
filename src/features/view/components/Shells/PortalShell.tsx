@@ -58,7 +58,7 @@ export function PortalShell({
 
   return (
     <div className={shellClass} style={shellStyle}>
-      <header className="sticky top-0 z-10 bg-white">
+      <header className="sticky top-0 z-30 bg-white">
         <div className="flex min-h-16 flex-wrap items-center gap-3 px-4 py-2 md:px-6">
           <Link href="/dashboard" className="flex shrink-0 items-center gap-2.5 text-[var(--color-text-primary)] no-underline">
             <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden">
