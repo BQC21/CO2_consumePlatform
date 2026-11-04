@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCard";
 import { EnvironmentalCards } from "@/features/view/components/Metrics/EnvironmentalCards";
+import { ImageCard } from "@/features/view/components/Metrics/ImageCard";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
-import { DepartmentCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
+import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
 import { PeruMap } from "@/features/view/components/Images/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
@@ -24,6 +25,10 @@ export default function DashboardPage() {
   const monthlyRecords = useMonthlyRecords();
   const loading = projects.loading;
   const [selected, setSelected] = useState<string | null>(null);
+  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const handleActiveProject = useCallback((name: string | null) => {
+    setActiveProject((current) => (current === name ? current : name));
+  }, []);
 
 
   // -------------------------
@@ -90,7 +95,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,1.8fr)_26rem]">
+      <div className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,1fr)]">
         {/* Mapa de Perú */}
         <PeruMap
           projects={projects.items}
@@ -99,12 +104,13 @@ export default function DashboardPage() {
           onClear={() => setSelected(null)}
           loading={loading}
         />
-        {/* Tarjetas de los departamentos */}
-        <div className="flex flex-col gap-4">
-          {/* Skeleton de las tarjetas */}
-          {loading ? <DepartmentCardSkeleton /> : <DepartmentCard department={selected} projects={projects.items} />}
-          {/* Enlace a la lista de proyectos */}
-          <Link href="/project" className={`btn-primary w-full ${loading ? "pointer-events-none opacity-60" : ""}`}>
+        {/* Ficha y galería del proyecto */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {loading ? <DepartmentCardSkeleton /> : (
+            <DepartmentCard department={selected} projects={projects.items} onActiveProject={handleActiveProject} />
+          )}
+          {loading ? <ImageCardSkeleton /> : <ImageCard projectName={activeProject} />}
+          <Link href="/project" className={`btn-primary w-full md:col-span-2 ${loading ? "pointer-events-none opacity-60" : ""}`}>
             Ver lista de proyectos →
           </Link>
         </div>
