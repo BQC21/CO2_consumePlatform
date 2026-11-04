@@ -1,7 +1,21 @@
 import { LogoProps } from "@/lib/types/components/components";
 import Image from "next/image";
 
-export function Logo({ compact = false }: LogoProps) {
+export function Logo({ compact = false, fluid = false }: LogoProps) {
+  if (fluid) {
+    return (
+      <Image
+        src="/Tec_ES_logo.png"
+        alt="TEC Energy Solutions"
+        width={380}
+        height={165}
+        priority
+        className="coverage-logo"
+        style={{ width: "100%", height: "auto" }}
+      />
+    );
+  }
+
   if (compact) {
     return (
       <Image
