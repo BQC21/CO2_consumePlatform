@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MONTH_NAMES, MONTH_SHORT } from "@/lib/utils/consts/monthNames";
-import { monthlyAxisMax } from "@/lib/utils/helpers/computes/chartScale";
+import { monthlyAxisMax } from "@/lib/utils/helpers/render/chartScale";
 import { formatNumber } from "@/lib/utils/helpers/normalization";
 
 const BAR_COLOR = "#f07a1a";
