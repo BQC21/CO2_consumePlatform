@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { DepartmentCardProps } from "@/lib/types/components/components";
 import { inverterPortalUrl } from "@/lib/utils/options";
 import { formatDayMonthYear, formatNumber } from "@/lib/utils/helpers/normalization";
 
-export function DepartmentCard({ department, projects }: DepartmentCardProps) {
+export function DepartmentCard({ department, projects, onActiveProject }: DepartmentCardProps) {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [trackedDepartment, setTrackedDepartment] = useState(department);
   const local = projects.filter((project) => project.ubicacion === department);
@@ -22,6 +22,10 @@ export function DepartmentCard({ department, projects }: DepartmentCardProps) {
     local[0];
   const portalUrl = project ? inverterPortalUrl(project.marca_inversor) : null;
   const completed = project?.estado === "completado";
+
+  useLayoutEffect(() => {
+    onActiveProject?.(!department || !project ? null : project.nombre);
+  }, [department, onActiveProject, project]);
 
   if (!department || !project) {
     return (
