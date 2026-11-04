@@ -701,6 +701,18 @@ input[type="radio"] {
   width: 100%;
 }
 
+/* Foto de fondo del mapa, con menos contraste que el archivo original */
+.map-photo-backdrop {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.58), rgb(255 255 255 / 0.66)),
+    url("/instalacion-lagunaSeca52-edit.jpg");
+  background-position: center;
+  background-size: cover;
+  filter: contrast(0.62);
+}
+
 /* Estilos para el dashboard-canvas */
 .dashboard-canvas {
   background-color: #0c1424;

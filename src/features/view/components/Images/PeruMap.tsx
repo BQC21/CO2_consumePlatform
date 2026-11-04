@@ -53,11 +53,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
         ) : null}
       </div>
       <div className="relative overflow-hidden rounded-2xl">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/instalacion-lagunaSeca52-edit.jpg)" }}
-        />
+        <div className="map-photo-backdrop" aria-hidden="true" />
         <svg viewBox={PERU_MAP_VIEWBOX} className="relative z-10 mx-auto h-80 w-full sm:h-[28rem] md:h-[36rem] xl:h-[44rem]" role="img" aria-label="Mapa del Perú por departamentos">
         {DEPARTMENT_SHAPES.map((shape) => {
           const status = loading ? "sin_proyecto" : departmentStatus(shape.nombre, projects);
@@ -100,7 +96,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
           );
         })}
         </svg>
-        <ul className="relative z-10 mt-4 w-fit max-w-full rounded-2xl border border-[var(--border-color)] bg-white px-4 py-3 text-sm shadow-[var(--shadow-sm)]">
+        <ul className="relative z-10 mt-4 w-fit max-w-full rounded-2xl border border-[var(--border-color)] bg-white/80 px-4 py-3 text-sm shadow-[var(--shadow-sm)]">
         <li className="mb-1 font-semibold">Estado</li>
         <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.completado }} /> Completado</li>
         <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: REGION_FILL.en_ejecucion }} /> En ejecución</li>
