@@ -1,3 +1,5 @@
+export type MediaKind = "image" | "video" | "unsupported";
+
 export type ProjectMedia = {
   aliases: readonly string[];
   files: readonly string[];
@@ -74,4 +76,32 @@ export function mediaForProject(projectName: string | null): ProjectMedia | null
     }
   }
   return best?.entry ?? null;
+}
+
+export function publicMediaSrc(path: string): string {
+  return path
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+}
+
+export function mediaFileName(path: string): string {
+  const name = path.split("/").pop() ?? path;
+  try {
+    return decodeURIComponent(name);
+  } catch {
+    return name;
+  }
+}
+
+export function mediaKind(path: string): MediaKind {
+  const name = path.split("?")[0]?.split("/").pop() ?? "";
+  const extension = name.includes(".") ? name.slice(name.lastIndexOf(".") + 1).toLowerCase() : "";
+  if (IMAGE_EXTENSIONS.has(extension)) {
+    return "image";
+  }
+  if (VIDEO_EXTENSIONS.has(extension)) {
+    return "video";
+  }
+  return "unsupported";
 }
