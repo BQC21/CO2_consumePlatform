@@ -2,20 +2,10 @@
 
 import { useState } from "react";
 import { MONTH_NAMES, MONTH_SHORT } from "@/lib/utils/consts/monthNames";
+import { monthlyAxisMax } from "@/lib/utils/helpers/computes/chartScale";
 import { formatNumber } from "@/lib/utils/helpers/normalization";
 
 const BAR_COLOR = "#f07a1a";
-
-function niceMax(peak: number): number {
-  if (peak <= 0) {
-    return 5;
-  }
-  const padded = peak * 1.25;
-  const power = 10 ** Math.floor(Math.log10(padded));
-  const normalized = padded / power;
-  const step = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
-  return step * power;
-}
 
 export function MonthlyYieldChart({ year, values }: { year: number; values: number[] }) {
   const [hover, setHover] = useState<number | null>(null);
@@ -28,10 +18,9 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
   const innerW = width - padL - padR;
   const innerH = height - padT - padB;
   const now = new Date();
-  const scaleMax = niceMax(Math.max(...values, 0));
+  const scaleMax = monthlyAxisMax(Math.max(...values, 0));
   const slot = innerW / 12;
   const barWidth = slot * 0.62;
-  const digits = scaleMax >= 100 ? 0 : 1;
   const ticks = [scaleMax, scaleMax / 2, 0];
 
   return (
@@ -68,7 +57,7 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
               <g key={tick}>
                 <line x1={padL} x2={width - padR} y1={y} y2={y} stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
                 <text x={padL - 8} y={y + 4} textAnchor="end" fill="rgba(255,255,255,0.6)" fontSize="11">
-                  {formatNumber(tick, digits)}
+                  {formatNumber(tick, Number.isInteger(tick) ? 0 : 1)}
                 </text>
               </g>
             );
