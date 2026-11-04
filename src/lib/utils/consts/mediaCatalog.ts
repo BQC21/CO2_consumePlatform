@@ -45,4 +45,9 @@ export const PROJECT_MEDIA: readonly ProjectMedia[] = [
 ];
 
 // Tarjeta Expoferia 2026
-export const EXPOFERIA_2026_IMAGES: readonly string[] = ["/Ferias/Expoferia2026/_DSC4626.jpg"];
+export const EXPOFERIA_2026_IMAGES: readonly string[] = [
+  "/Ferias/Expoferia2026/_DSC4626.jpg",
+  "/Ferias/Expoferia2026/_DSC4667.jpg",
+  "/Ferias/Expoferia2026/_DSC4718.jpg",
+  "/Ferias/Expoferia2026/_DSC4905.jpg",
+];
