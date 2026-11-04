@@ -46,3 +46,32 @@ export const PROJECT_MEDIA: readonly ProjectMedia[] = [
 ];
 
 export const EXPOFERIA_2026_IMAGES: readonly string[] = ["/Ferias/Expoferia2026/_DSC4626.jpg"];
+
+export function normalizeMediaName(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+export function mediaForProject(projectName: string | null): ProjectMedia | null {
+  if (!projectName) {
+    return null;
+  }
+  const normalized = normalizeMediaName(projectName);
+  let best: { entry: ProjectMedia; score: number } | null = null;
+  for (const entry of PROJECT_MEDIA) {
+    for (const alias of entry.aliases) {
+      const key = normalizeMediaName(alias);
+      if (!key || !normalized.includes(key)) {
+        continue;
+      }
+      if (!best || key.length > best.score) {
+        best = { entry, score: key.length };
+      }
+    }
+  }
+  return best?.entry ?? null;
+}
