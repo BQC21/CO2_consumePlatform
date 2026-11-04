@@ -5,8 +5,8 @@ Plataforma de TEC Energy Solutions para registrar sistemas fotovoltaicos instala
 ## Features
 
 1. Ingreso con correo y contraseña. `/` entra al dashboard si hay sesión y, si no, a `/login`.
-2. Vista principal con proyectos registrados, completados, capacidad instalada, mapa de los 24 departamentos y ficha del departamento elegido.
-3. Tarjeta de impacto ambiental acumulado. CO₂, carbón y árboles salen del total de proyectos. La pastilla de periodo solo cambia la energía generada. La gráfica mensual tiene su propio selector de año.
+2. Vista principal con el logo de TEC al ancho del título, proyectos registrados, completados, capacidad instalada, mapa de los 24 departamentos sobre la foto de Laguna Seca, ficha del departamento, galería del proyecto seleccionado y la foto de la Expoferia 2026.
+3. Tarjeta de impacto ambiental acumulado. CO₂, carbón y árboles salen del total de proyectos. La pastilla de periodo solo cambia la energía generada. La gráfica mensual tiene su propio selector de año y el eje vertical llega al mayor mes, redondeado al entero, más 5.
 4. Lista de proyectos en una tabla anual: búsqueda, filtros, orden, alta, baja, edición de varias filas a la vez y métricas mensuales por proyecto. También hay carga, descarga y limpieza masiva en Excel.
 5. Cada proyecto es independiente o existente. Los existentes se leen del Portal TEC del repositorio [https://github.com/BQC21/Portal_TEC_general](https://github.com/BQC21/Portal_TEC_general)  y se pueden editar aquí. Esa edición se guarda en la base de esta plataforma y conserva el vínculo con el portal.
 6. Sincronización en tiempo real con Supabase.
