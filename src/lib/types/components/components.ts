@@ -283,6 +283,11 @@ export type DashboardMetrics = {
 export type DepartmentCardProps = {
     department: string | null;
     projects: Project[];
+    onActiveProject?: (name: string | null) => void;
+};
+
+export type ImageCardProps = {
+    projectName: string | null;
 };
 
 // operaciones masivas
