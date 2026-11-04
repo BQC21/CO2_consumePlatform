@@ -689,16 +689,33 @@ input[type="radio"] {
   outline-offset: 2px;
 }
 
-/* Logo y título de cobertura comparten el mismo ancho */
+/* El título fija el ancho; el logo escala dentro de ese bloque y queda centrado */
 .coverage-lockup {
-  display: table;
-  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
   max-width: 100%;
   margin-inline: auto;
+  text-align: center;
 }
 
 .coverage-lockup h1 {
+  max-width: 100%;
+  text-wrap: balance;
+}
+
+.coverage-logo-slot {
+  width: 60%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.coverage-logo {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Foto de fondo del mapa, con menos contraste que el archivo original */

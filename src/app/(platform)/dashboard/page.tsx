@@ -7,8 +7,8 @@ import { EnvironmentalCards } from "@/features/view/components/Metrics/Environme
 import { ExpoferiaCard } from "@/features/view/components/Metrics/ExpoferiaCard";
 import { ImageCard } from "@/features/view/components/Metrics/ImageCard";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
-import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
 import { PeruMap } from "@/features/view/components/Metrics/PeruMap";
+import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
@@ -57,20 +57,24 @@ export default function DashboardPage() {
       tone="dark"
       hideHeading
     >
-      <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
-        <article className="rounded-3xl border border-white/10 bg-[#101826]/90 p-6 md:p-8">
+      <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <article className="@container min-w-0 rounded-3xl border border-white/10 bg-[#101826]/90 p-4 sm:p-6 md:p-8">
           <div className="coverage-lockup">
-            <Logo fluid />
-            <h1 className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl lg:text-6xl">
-              Cobertura nacional de los proyectos de TEC
+            <div className="coverage-logo-slot">
+              <Logo fluid/>
+            </div>
+            <h1 className="mt-4 font-semibold leading-tight text-[clamp(1.75rem,10cqi,3.75rem)]">
+              Cobertura nacional de proyectos TEC
             </h1>
           </div>
-          <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-base text-white/85">
-            <span className="h-2 w-2 rounded-full bg-[#3caf53]" />
+          <p className="mx-auto mt-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 text-center text-sm text-white/85 sm:mt-6 sm:px-4 sm:text-base">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[#3caf53]" />
             {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}
           </p>
         </article>
-        {loading ? <MetricCardsSkeleton /> : <MetricCards metrics={metrics} departmentCount={departmentCount} />}
+        <div className="min-w-0">
+          {loading ? <MetricCardsSkeleton /> : <MetricCards metrics={metrics} departmentCount={departmentCount} />}
+        </div>
       </div>
 
       <div className="mt-4">
@@ -96,7 +100,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="mt-4 grid items-start gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,1fr)]">
+      <div className="mt-4 grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(28rem,1fr)]">
         {/* Mapa de Perú */}
         <PeruMap
           projects={projects.items}
@@ -106,15 +110,13 @@ export default function DashboardPage() {
           loading={loading}
         />
         {/* Ficha, galería del proyecto y expoferia */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid min-w-0 content-start gap-4">
           {loading ? <DepartmentCardSkeleton /> : (
             <DepartmentCard department={selected} projects={projects.items} onActiveProject={handleActiveProject} />
           )}
           {loading ? <ImageCardSkeleton /> : <ImageCard projectName={activeProject} />}
-          <div className="md:col-span-2">
-            <ExpoferiaCard />
-          </div>
-          <Link href="/project" className={`btn-primary w-full md:col-span-2 ${loading ? "pointer-events-none opacity-60" : ""}`}>
+          <ExpoferiaCard />
+          <Link href="/project" className={`btn-primary w-full ${loading ? "pointer-events-none opacity-60" : ""}`}>
             Ver lista de proyectos →
           </Link>
         </div>

@@ -11,7 +11,6 @@ export function Logo({ compact = false, fluid = false }: LogoProps) {
         height={165}
         priority
         className="coverage-logo"
-        style={{ width: "100%", height: "auto" }}
       />
     );
   }
@@ -33,7 +32,7 @@ export function Logo({ compact = false, fluid = false }: LogoProps) {
     <Image
       src="/Tec_ES_logo.png"
       alt="TEC Energy Solutions"
-      width={380}
+      width={180}
       height={165}
       priority
       style={{ width: 210, height: "auto" }}
