@@ -65,6 +65,7 @@ export type PortalShellProps = {
 
 export type LogoProps = {
     compact?: boolean;
+    fluid?: boolean;
 };
 
 export type PeruMapProps = {
