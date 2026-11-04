@@ -1,21 +1,9 @@
 import { MapStatus } from "@/lib/types/components/options";
 
-// Estado del proyecto
-export const STATUS_LABEL = {
-    en_ejecucion: "En ejecución",
-    completado: "Completado",
-    sin_proyecto: "Sin proyecto",
-} as const;
-
 // Color según estado del proyecto
-export const FILL: Record<MapStatus, string> = {
-    en_ejecucion: "var(--color-primary)",
-    completado: "var(--color-accent-green)",
-    sin_proyecto: "#2f6fbf",
-};
-
-// Colores para colorear los puntos del mapa según estado del proyecto
-export const DOT_COLOR = {
+export const REGION_FILL: Record<MapStatus | "selected", string> = {
+    sin_proyecto: "#d5dee7",
+    completado: "#7dce6a",
     en_ejecucion: "#f05a1a",
-    completado: "#3caf53",
-} as const;
+    selected: "#1b7a34",
+};

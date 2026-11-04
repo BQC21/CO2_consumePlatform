@@ -8,7 +8,7 @@ import { ExpoferiaCard } from "@/features/view/components/Metrics/ExpoferiaCard"
 import { ImageCard } from "@/features/view/components/Metrics/ImageCard";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
-import { PeruMap } from "@/features/view/components/Images/PeruMap";
+import { PeruMap } from "@/features/view/components/Metrics/PeruMap";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
