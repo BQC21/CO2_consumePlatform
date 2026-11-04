@@ -689,6 +689,18 @@ input[type="radio"] {
   outline-offset: 2px;
 }
 
+/* Logo y título de cobertura comparten el mismo ancho */
+.coverage-lockup {
+  display: table;
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.coverage-lockup h1 {
+  width: 100%;
+}
+
 /* Estilos para el dashboard-canvas */
 .dashboard-canvas {
   background-color: #0c1424;
