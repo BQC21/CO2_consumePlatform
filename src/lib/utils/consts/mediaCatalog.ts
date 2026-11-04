@@ -7,7 +7,7 @@ export const VIDEO_EXTENSIONS = new Set(["mp4", "webm"]);
 // Tarjeta de departamentos
 export const PROJECT_MEDIA: readonly ProjectMedia[] = [
   { aliases: ["Familia Castillo Salazar"], files: [] },
-  { aliases: ["Artesco"], files: ["/Proyectos/Artesco/IMG_3036.HEIC"] },
+  { aliases: ["Artesco"], files: [] },
   { aliases: ["Killa"], files: [] },
   {
     aliases: ["Ribera del Ríos", "Cieneguilla"],
