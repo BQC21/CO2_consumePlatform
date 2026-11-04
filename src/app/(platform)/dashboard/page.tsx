@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { DepartmentCard } from "@/features/view/components/Metrics/DepartmentCard";
 import { EnvironmentalCards } from "@/features/view/components/Metrics/EnvironmentalCards";
+import { ExpoferiaCard } from "@/features/view/components/Metrics/ExpoferiaCard";
 import { ImageCard } from "@/features/view/components/Metrics/ImageCard";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
@@ -104,12 +105,15 @@ export default function DashboardPage() {
           onClear={() => setSelected(null)}
           loading={loading}
         />
-        {/* Ficha y galería del proyecto */}
+        {/* Ficha, galería del proyecto y expoferia */}
         <div className="grid gap-4 md:grid-cols-2">
           {loading ? <DepartmentCardSkeleton /> : (
             <DepartmentCard department={selected} projects={projects.items} onActiveProject={handleActiveProject} />
           )}
           {loading ? <ImageCardSkeleton /> : <ImageCard projectName={activeProject} />}
+          <div className="md:col-span-2">
+            <ExpoferiaCard />
+          </div>
           <Link href="/project" className={`btn-primary w-full md:col-span-2 ${loading ? "pointer-events-none opacity-60" : ""}`}>
             Ver lista de proyectos →
           </Link>
