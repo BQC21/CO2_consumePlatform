@@ -53,7 +53,7 @@ export function EnvironmentalCards({
   const range = monthSpan(periodYear, periodYield, period === "todos"); // rango de meses en el periodo seleccionado
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5 md:p-6">
+    <section className="rounded-3xl border border-white/10 bg-[#31445C]/80 p-5 md:p-6">
 
       {/* Headers + switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3">
