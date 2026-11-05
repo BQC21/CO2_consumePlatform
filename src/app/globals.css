@@ -789,7 +789,7 @@ input[type="radio"] {
 
 /* Estilos para el dashboard-canvas */
 .dashboard-canvas {
-  background-color: #0c1424;
+  background-color: #002244;
   background-image:
     linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
