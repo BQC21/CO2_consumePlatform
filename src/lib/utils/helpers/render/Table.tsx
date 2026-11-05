@@ -1,5 +1,7 @@
+import { MapStatus } from "@/lib/types/components/options";
 import { UNBRANDED } from "../../options";
 import { brandOrUnbranded } from "../options";
+import { Project } from "@/lib/types/supabase/project-types";
 
 // Función para mostrar la marca del panel
 export function displayBrand(value: string): string {
@@ -24,4 +26,16 @@ export function Chevron({ open }: { open: boolean }) {
         <path d="M6 3.5 11 8 6 12.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
+}
+
+/** Estado del departamento */
+export function departmentStatus(nombre: string, projects: Project[]): MapStatus {
+    const local = projects.filter((project) => project.ubicacion === nombre);
+    if (local.some((project) => project.estado === "en_ejecucion")) {
+        return "en_ejecucion";
+    }
+    if (local.some((project) => project.estado === "completado")) {
+        return "completado";
+    }
+    return "sin_proyecto";
 }

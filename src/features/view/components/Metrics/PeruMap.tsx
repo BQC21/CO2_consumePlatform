@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { PeruMapProps } from "@/lib/types/components/components";
 import { REGION_FILL } from "@/lib/utils/consts/design";
 import { DEPARTMENT_SHAPES, PERU_MAP_VIEWBOX } from "@/lib/utils/consts/peru-map";
-import { departmentStatus } from "@/lib/utils/helpers/render/format";
+import { departmentStatus } from "@/lib/utils/helpers/render/Table";
 import { separateLabels } from "@/lib/utils/helpers/render/mapLayout";
 
 export function PeruMap({ projects, selected, onSelect, onClear, loading = false }: PeruMapProps) {
