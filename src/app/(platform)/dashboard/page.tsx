@@ -13,7 +13,9 @@ import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
 import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_metrics";
-import { formatDayMonthYear } from "@/lib/utils/helpers/normalization";
+import { formatDayMonthYear, publicMediaSrc } from "@/lib/utils/helpers/normalization";
+import { HERO_SLIDES } from "@/lib/utils/consts/mediaCatalog";
+import { HERO_SLIDE_SECONDS } from "@/lib/utils/consts/sizes";
 import { Logo } from "@/features/view/components/Images/Logo";
 
 export default function DashboardPage() {
@@ -76,6 +78,22 @@ export default function DashboardPage() {
           {loading ? <MetricCardsSkeleton /> : <MetricCards metrics={metrics} departmentCount={departmentCount} />}
         </div>
       </div>
+
+      {/* Hero section */}
+      <section className="hero-sequence mt-4" aria-label="Secuencia de fotos de los proyectos TEC">
+        {HERO_SLIDES.map((src, index) => (
+          <img
+            key={src}
+            src={publicMediaSrc(src)}
+            alt=""
+            className="hero-sequence-frame"
+            style={{
+              animationDelay: `${index * HERO_SLIDE_SECONDS}s`,
+              animationDuration: `${HERO_SLIDES.length * HERO_SLIDE_SECONDS}s`,
+            }}
+          />
+        ))}
+      </section>
 
       <div className="mt-4">
         {loading ? (
