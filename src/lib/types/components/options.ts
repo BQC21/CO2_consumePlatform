@@ -22,3 +22,6 @@ export type Impact = "co2" | "carbon" | "arboles"; // impacto ambiental de la vi
 export type DashboardPeriod = number | "todos"; // periodo de la vista dashboard
 
 export type MediaKind = "image" | "video" | "unsupported"; // Tipo de contenido multimedia leído
+
+export type SheetCell = string | number | boolean | Date | null; // celda de la hoja de cálculo
+export type SheetMatrix = SheetCell[][]; // matriz de celdas de la hoja de cálculo

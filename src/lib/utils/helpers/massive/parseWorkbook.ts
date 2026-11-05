@@ -2,9 +2,7 @@ import * as XLSX from "xlsx";
 import type { ImportedProjectBlock, MonthlyRecordDraft } from "@/lib/types/components/components";
 import { toIsoDate, toNullableNumber, toText, toYearMonth } from "@/lib/utils/helpers/normalization";
 import { sortMonthRecords } from "@/lib/utils/helpers/render/DateRender";
-
-type SheetCell = string | number | boolean | Date | null;
-type SheetMatrix = SheetCell[][];
+import { SheetCell, SheetMatrix } from "@/lib/types/components/options";
 
 function normalizeHeader(value: string): string {
   return value
