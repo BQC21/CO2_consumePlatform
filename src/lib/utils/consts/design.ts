@@ -3,3 +3,6 @@ export const editClass = "h-9 w-full min-w-24 rounded-lg border border-[var(--co
 
 // Clase de diseño para el campo bloqueado
 export const lockedClass = "h-9 w-full min-w-24 rounded-lg border border-[#b7d4ea] bg-[#d7ebf8] px-2 text-sm text-[#1e4f86]";
+
+// Color de las barras para el gráfico de la vista principal
+export const BAR_COLOR = "#f07a1a";

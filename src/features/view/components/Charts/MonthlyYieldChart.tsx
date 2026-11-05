@@ -4,8 +4,7 @@ import { useState } from "react";
 import { MONTH_NAMES, MONTH_SHORT } from "@/lib/utils/consts/monthNames";
 import { monthlyAxisMax } from "@/lib/utils/helpers/render/charts";
 import { formatNumber } from "@/lib/utils/helpers/normalization";
-
-const BAR_COLOR = "#f07a1a";
+import { BAR_COLOR } from "@/lib/utils/consts/design";
 
 export function MonthlyYieldChart({ year, values }: { year: number; values: number[] }) {
   const [hover, setHover] = useState<number | null>(null);
@@ -26,6 +25,7 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
   return (
     <figure>
       <div className="flex flex-wrap items-center justify-between gap-3">
+        {/* Encabezado de la gráfica */}
         <figcaption className="text-xl font-semibold text-white md:text-2xl">
           Energía generada por mes (MWh)
           <span className="year-pill">{year}</span>
@@ -41,6 +41,7 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
           </span>
         </div>
       </div>
+
       <div className="relative mt-2">
         <svg
           viewBox={`0 0 ${width} ${height}`}
@@ -48,9 +49,11 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
           role="group"
           aria-label={`Energía generada por mes en ${year}, en megavatios-hora`}
         >
+          {/* Texto eje vertical */}
           <text x="14" y={padT + innerH / 2} fill="rgba(255,255,255,0.55)" fontSize="11" transform={`rotate(-90 14 ${padT + innerH / 2})`}>
             MWh
           </text>
+          {/* Líneas horizontales */}
           {ticks.map((tick) => {
             const y = padT + innerH - (tick / scaleMax) * innerH;
             return (
@@ -62,12 +65,14 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
               </g>
             );
           })}
+          {/* Contenido del gráfico */}
           {values.map((value, index) => {
             const future = year > now.getFullYear() || (year === now.getFullYear() && index > now.getMonth());
             const x = padL + slot * index + slot / 2;
             const barHeight = future ? innerH * 0.72 : Math.max((Math.max(value, 0) / scaleMax) * innerH, value > 0 ? 4 : 0);
             const y = padT + innerH - barHeight;
             const label = MONTH_SHORT[index] ? MONTH_SHORT[index].charAt(0).toUpperCase() + MONTH_SHORT[index].slice(1) : "";
+
             return (
               <g key={MONTH_NAMES[index]}>
                 {future ? (
@@ -114,6 +119,8 @@ export function MonthlyYieldChart({ year, values }: { year: number; values: numb
             );
           })}
         </svg>
+
+        {/* Punteros selectores */}
         {hover !== null ? (
           <div
             className="pointer-events-none absolute z-10 -translate-x-1/2 rounded-xl bg-white px-3 py-2 text-[var(--color-text-primary)] shadow-[var(--shadow-md)]"
