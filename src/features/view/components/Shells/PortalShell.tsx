@@ -58,23 +58,26 @@ export function PortalShell({
 
   return (
     <div className={shellClass} style={shellStyle}>
-      <header className="sticky top-0 z-30 bg-white">
-        <div className="flex min-h-16 flex-wrap items-center gap-3 px-4 py-2 md:px-6">
-          <Link href="/dashboard" className="flex shrink-0 items-center gap-2.5 text-[var(--color-text-primary)] no-underline">
-            <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden">
-              <Logo compact />
-            </span>
-            <span className="hidden leading-tight sm:block">
-              <span className="block text-sm font-semibold">TEC Energy Solutions</span>
-              <span className="block text-[11px] text-[var(--color-text-secondary)]">PlatformCO2</span>
-            </span>
-          </Link>
-          <nav className="flex min-w-0 flex-1 flex-wrap justify-center gap-2" aria-label="Principal">
-            {NAVIGATION.map((item) => (
-              <Link key={item.href} href={item.href} className={item.href === activePath ? "nav-pill nav-pill-active" : "nav-pill nav-pill-inactive"}>
-                {item.label}
-              </Link>
-            ))}
+      <header className="sticky top-0 z-30 border-b border-[#e6e8ee] bg-white">
+        <div className="flex min-h-[5.5rem] flex-wrap items-center gap-4 px-4 py-3 md:gap-8 md:px-8">
+          <div className="w-48 shrink-0 sm:w-64 lg:w-80">
+            <Logo fluid />
+          </div>
+          <span className="hidden h-14 w-px shrink-0 bg-[#d5d8e0] sm:block" aria-hidden="true" />
+          <nav className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-x-8 gap-y-2 md:gap-x-14" aria-label="Principal">
+            {NAVIGATION.map((item) => {
+              const active = item.href === activePath;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-xl font-medium no-underline md:text-2xl ${active ? "text-[var(--color-accent-green)]" : "text-[#1c2434] hover:text-[var(--color-accent-green)]"}`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
           {headerCenter}
           <div className="relative flex min-w-0 shrink items-center gap-2">
@@ -98,11 +101,6 @@ export function PortalShell({
               </button>
             ) : null}
           </div>
-        </div>
-        <div className="flex h-1">
-          <span className="flex-1" style={{ background: "var(--color-primary)" }} />
-          <span className="flex-1" style={{ background: "var(--color-accent-green)" }} />
-          <span className="flex-1" style={{ background: "var(--color-secondary)" }} />
         </div>
       </header>
       <main className="px-4 py-6 lg:px-8" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
