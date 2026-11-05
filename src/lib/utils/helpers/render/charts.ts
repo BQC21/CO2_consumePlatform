@@ -13,4 +13,9 @@ export function monthSpan(year: number, values: number[], allYears: boolean): st
   const end = MONTH_SHORT[present[present.length - 1]].toUpperCase();
   return start === end ? `${start} ${year}` : `${start} – ${end} ${year}`;
 }
-  
+
+/** Tope del eje Y: el mayor valor mensual, redondeado al entero, más 5. */
+export function monthlyAxisMax(peak: number): number {
+  const safe = Number.isFinite(peak) ? Math.max(peak, 0) : 0;
+  return Math.round(safe) + 5;
+}
