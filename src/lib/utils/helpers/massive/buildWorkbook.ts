@@ -1,7 +1,5 @@
 import * as XLSX from "xlsx-js-style";
-
-/** Margen para que el encabezado en negrita no quede cortado. */
-const COLUMN_PADDING = 2;
+import { COLUMN_PADDING } from "../../consts/sizes";
 
 /** Ancho de cada columna según el texto más largo del encabezado o de sus celdas. */
 export function workbookColumnWidths(headers: string[], rows: string[][]): { wch: number }[] {

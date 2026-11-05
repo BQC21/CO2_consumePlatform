@@ -177,3 +177,6 @@ export const DEPARTMENT_SHAPES: DepartmentShape[] = [
 
 // Altura de la etiqueta del departamento del Perú
 export const LABEL_HEIGHT = 9;
+
+/** Margen para que el encabezado en negrita no quede cortado. */
+export const COLUMN_PADDING = 2;
