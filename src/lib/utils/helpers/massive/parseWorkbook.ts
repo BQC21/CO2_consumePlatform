@@ -1,17 +1,8 @@
 import * as XLSX from "xlsx";
 import type { ImportedProjectBlock, MonthlyRecordDraft } from "@/lib/types/components/components";
-import { toIsoDate, toNullableNumber, toText, toYearMonth } from "@/lib/utils/helpers/normalization";
+import { normalizeHeader, toIsoDate, toNullableNumber, toText, toYearMonth } from "@/lib/utils/helpers/normalization";
 import { sortMonthRecords } from "@/lib/utils/helpers/render/DateRender";
 import { SheetCell, SheetMatrix } from "@/lib/types/components/options";
-
-function normalizeHeader(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
 
 export function readSheetRows(fileBuffer: ArrayBuffer): Record<string, string>[] {
   const workbook = XLSX.read(fileBuffer, { type: "array" });

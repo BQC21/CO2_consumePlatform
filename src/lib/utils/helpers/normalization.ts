@@ -267,3 +267,12 @@ export function mediaKind(path: string): MediaKind {
   }
   return "unsupported";
 }
+
+export function normalizeHeader(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
