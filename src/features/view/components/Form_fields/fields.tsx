@@ -5,6 +5,7 @@ import { type FormEvent, type ReactNode } from "react";
 import { ImpactIcon } from "../Icons/icons";
 import { DashboardPeriod } from "@/lib/types/components/options";
 import { periodYears } from "@/lib/utils/helpers/render/DateRender";
+import { tones } from "@/lib/utils/consts/design";
 
 // ----------------------------------------------
 // ---- Condicionar el requerimiento del campo --
@@ -20,6 +21,7 @@ function clearRequired(event: FormEvent<HTMLInputElement | HTMLSelectElement | H
   event.currentTarget.setCustomValidity("");
 }
 
+// Label principal de campo
 function FieldLabel({ label, required }: { label: string; required?: boolean }) {
   return (
     <span className="field-label">
@@ -241,5 +243,32 @@ export function PeriodSwitcher({
         })}
       </div>
     </div>
+  );
+}
+
+// Vista moderna de tarjeta
+export function MetricTile({
+  label,
+  value,
+  detail,
+  tone,
+  children,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  tone: keyof typeof tones;
+  children?: ReactNode;
+}) {
+  const style = tones[tone];
+
+  return (
+    <article className={`relative flex h-full min-w-0 flex-col overflow-hidden rounded-3xl px-4 py-4 shadow-[var(--shadow-sm)] ring-1 @container/tile ${style.card}`}>
+      <span className={`absolute top-4 right-4 h-2.5 w-2.5 rounded-full ${style.mark}`} aria-hidden="true" />
+      <p className="pr-5 text-[0.68rem] font-semibold leading-snug tracking-[0.08em] text-[var(--color-text-secondary)]">{label}</p>
+      <p className={`numeric mt-2 text-[clamp(1.5rem,22cqi,2.75rem)] font-bold leading-none ${style.value}`}>{value}</p>
+      <p className="mt-2 text-sm font-medium leading-snug text-[var(--color-text-primary)]">{detail}</p>
+      {children ? <div className="mt-auto pt-3">{children}</div> : null}
+    </article>
   );
 }

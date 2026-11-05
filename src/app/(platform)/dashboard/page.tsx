@@ -59,7 +59,7 @@ export default function DashboardPage() {
       tone="dark"
       hideHeading
     >
-      <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
         <article className="@container min-w-0 rounded-3xl border border-white/10 bg-[#101826]/90 p-4 sm:p-6 md:p-8">
           <div className="coverage-lockup">
             <div className="coverage-logo-slot">
