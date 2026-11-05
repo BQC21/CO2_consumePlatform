@@ -4,6 +4,14 @@ import { ProjectMedia } from "@/lib/types/components/components";
 export const IMAGE_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
 export const VIDEO_EXTENSIONS = new Set(["mp4", "webm"]);
 
+// Hero section
+export const HERO_SLIDES = [
+  "/Hero/_DSC3503.jpg",
+  "/Hero/_DSC4539.jpg",
+  "/Hero/EQUIPO TÉCNICO (2).jpg",
+  "/Hero/EQUIPO TÉCNICO (17).jpg",
+] as const;
+
 // Tarjeta de departamentos
 export const PROJECT_MEDIA: readonly ProjectMedia[] = [
   { aliases: ["Familia Castillo Salazar"], files: [] },
