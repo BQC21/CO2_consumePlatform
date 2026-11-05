@@ -20,7 +20,6 @@ export function ExpoferiaCard() {
 
   return (
     <section className="rounded-3xl bg-white p-5 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]" aria-label="Expoferia 2026">
-      <p className="text-sm font-semibold tracking-[0.14em] text-[var(--color-accent-green)]">EXPOFERIA 2026</p>
       <h2 className="mt-1 text-2xl font-semibold">Expoferia 2026</h2>
       {files.length === 0 || !current ? (
         <p className="mt-3 text-base text-[var(--color-text-secondary)]" role="status">

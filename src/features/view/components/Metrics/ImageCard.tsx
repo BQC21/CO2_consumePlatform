@@ -40,7 +40,7 @@ export function ImageCard({ projectName }: ImageCardProps) {
 
   return (
     <article className="rounded-3xl bg-white p-5 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]">
-      <p className="text-sm font-semibold tracking-[0.14em] text-[var(--color-accent-green)]">GALERÍA</p>
+      <p className="text-sm font-semibold tracking-[0.14em] text-[var(--color-text-secondary)]">GALERÍA</p>
       <h2 className="mt-1 text-2xl font-semibold">{projectName ?? "Sin proyecto"}</h2>
 
       {!projectName ? (

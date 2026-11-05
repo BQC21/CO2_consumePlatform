@@ -54,6 +54,8 @@ export function EnvironmentalCards({
 
   return (
     <section className="rounded-3xl border border-white/10 bg-[#101826]/80 p-5 md:p-6">
+
+      {/* Headers + switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-2xl font-semibold md:text-4xl">Impacto ambiental acumulado</h2>
         <PeriodSwitcher value={period} onChange={setPeriod} />
@@ -101,13 +103,15 @@ export function EnvironmentalCards({
         )}
       </div>
 
-      {/* --- GRÁFICO DE RENDIMIENTO MENSUAL --- */}
+      
       <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 px-3 py-4 md:px-5">
+        {/* Headers + switcher */}
         <div className="mb-3 flex justify-end">
           <YearSwitcher value={chartYear} onChange={setChartYear} />
         </div>
+        {/* --- GRÁFICO DE RENDIMIENTO MENSUAL --- */}
         {monthlyLoading ? <div className="skeleton-dark h-56 rounded-2xl" /> : 
-              <MonthlyYieldChart year={chartYear} values={chartYield} />
+          <MonthlyYieldChart year={chartYear} values={chartYield} />
         }
       </div>
     </section>

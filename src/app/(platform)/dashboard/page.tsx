@@ -8,7 +8,7 @@ import { ExpoferiaCard } from "@/features/view/components/Metrics/ExpoferiaCard"
 import { ImageCard } from "@/features/view/components/Metrics/ImageCard";
 import { MetricCards } from "@/features/view/components/Metrics/MetricCards";
 import { PeruMap } from "@/features/view/components/Metrics/PeruMap";
-import { DepartmentCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
+import { DepartmentCardSkeleton, ExpoferiaCardSkeleton, ImageCardSkeleton, MetricCardsSkeleton } from "@/features/view/components/skeletons/skeletons";
 import { PortalShell } from "@/features/view/components/Shells/PortalShell";
 import { useMonthlyRecords } from "@/features/ViewModel/hooks/services/useMonthlyRecords";
 import { useRealtimeProject } from "@/features/ViewModel/hooks/services/useRealtimeProject";
@@ -16,7 +16,6 @@ import { computeDashboardMetrics } from "@/lib/utils/helpers/computes/dashboard_
 import { formatDayMonthYear, publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { HERO_SLIDES } from "@/lib/utils/consts/mediaCatalog";
 import { HERO_SLIDE_SECONDS } from "@/lib/utils/consts/sizes";
-import { Logo } from "@/features/view/components/Images/Logo";
 
 export default function DashboardPage() {
 
@@ -26,9 +25,11 @@ export default function DashboardPage() {
 
   const projects = useRealtimeProject();
   const monthlyRecords = useMonthlyRecords();
+
   const loading = projects.loading;
-  const [selected, setSelected] = useState<string | null>(null);
-  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null); // departamento seleccionado
+  const [activeProject, setActiveProject] = useState<string | null>(null); // proyectos activos
+
   const handleActiveProject = useCallback((name: string | null) => {
     setActiveProject((current) => (current === name ? current : name));
   }, []);
@@ -39,10 +40,12 @@ export default function DashboardPage() {
   // -------------------------
 
   const metrics = useMemo(() => computeDashboardMetrics(projects.items), [projects.items]); // métricas de la cobertura nacional
+
   const departmentCount = useMemo(
     () => new Set(projects.items.map((project) => project.ubicacion).filter(Boolean)).size,
     [projects.items],
   ); // cantidad de departamentos
+
   const updatedAt = useMemo(() => {
     const latest = projects.items.reduce((max, project) => {
       const time = Date.parse(project.updated_at); 
@@ -59,21 +62,24 @@ export default function DashboardPage() {
       tone="dark"
       hideHeading
     >
+      {/* Métricas generales */}
       <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
-        <article className="@container min-w-0 rounded-3xl border border-white/10 bg-[#101826]/90 p-4 sm:p-6 md:p-8">
-          <div className="coverage-lockup">
-            <div className="coverage-logo-slot">
-              <Logo fluid/>
+        {/* Columna 1 */}
+        <article className="@container relative isolate min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-[#101826] p-4 sm:p-6 md:p-8">
+          <div className="relative z-10">
+            <div className="coverage-lockup">
+              <h1 className="mt-4 font-semibold leading-tight text-[clamp(1.75rem,10cqi,3.75rem)]">
+                Cobertura nacional de proyectos TEC
+              </h1>
             </div>
-            <h1 className="mt-4 font-semibold leading-tight text-[clamp(1.75rem,10cqi,3.75rem)]">
-              Cobertura nacional de proyectos TEC
-            </h1>
+            {/* Fecha de la última actualización de datos */}
+            <p className="mx-auto mt-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-full bg-[#101826]/70 px-3 py-2 text-center text-sm text-white/85 sm:mt-6 sm:px-4 sm:text-base">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-[#3caf53]" />
+              {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}
+            </p>
           </div>
-          <p className="mx-auto mt-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 text-center text-sm text-white/85 sm:mt-6 sm:px-4 sm:text-base">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-[#3caf53]" />
-            {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}
-          </p>
         </article>
+        {/* Columna 2 */}
         <div className="min-w-0">
           {loading ? <MetricCardsSkeleton /> : <MetricCards metrics={metrics} departmentCount={departmentCount} />}
         </div>
@@ -119,7 +125,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="mt-4 grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(28rem,1fr)]">
-        {/* Mapa de Perú */}
+        {/* Columna 1 */}
         <PeruMap
           projects={projects.items}
           selected={selected}
@@ -127,13 +133,16 @@ export default function DashboardPage() {
           onClear={() => setSelected(null)}
           loading={loading}
         />
-        {/* Ficha, galería del proyecto y expoferia */}
+        {/* Columna 2 */}
         <div className="grid min-w-0 content-start gap-4">
+          {/* Información por departamento */}
           {loading ? <DepartmentCardSkeleton /> : (
-            <DepartmentCard department={selected} projects={projects.items} onActiveProject={handleActiveProject} />
-          )}
+            <DepartmentCard department={selected} projects={projects.items} onActiveProject={handleActiveProject} />)}
+          {/* Galería de imagen por proyecto seleccionado */}
           {loading ? <ImageCardSkeleton /> : <ImageCard projectName={activeProject} />}
-          <ExpoferiaCard />
+          {/* Galería para ferias y eventos */}
+          {loading ? <ExpoferiaCardSkeleton /> : <ExpoferiaCard />}
+
           <Link href="/project" className={`btn-primary w-full ${loading ? "pointer-events-none opacity-60" : ""}`}>
             Ver lista de proyectos →
           </Link>

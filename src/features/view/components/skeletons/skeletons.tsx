@@ -26,6 +26,17 @@ export function ImageCardSkeleton() {
   );
 }
 
+// Skeleton de la tarjeta de Ferias & Eventos
+export function ExpoferiaCardSkeleton() {
+  return (
+    <article className="rounded-3xl bg-white p-5" aria-hidden="true">
+      <div className="skeleton h-3 w-24 rounded-full" />
+      <div className="skeleton mt-3 h-7 w-40 rounded-full" />
+      <div className="skeleton mt-4 aspect-[4/3] rounded-2xl" />
+    </article>
+  );
+}
+
 // Skeleton de la tarjeta de departamento
 export function DepartmentCardSkeleton() {
   return (
