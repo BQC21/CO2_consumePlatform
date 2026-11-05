@@ -65,7 +65,7 @@ export default function DashboardPage() {
       {/* Métricas generales */}
       <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
         {/* Columna 1 */}
-        <article className="@container relative isolate min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-[#101826] p-4 sm:p-6 md:p-8">
+        <article className="@container relative isolate min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-[#31445C] p-4 sm:p-6 md:p-8">
           <div className="relative z-10">
             <div className="coverage-lockup">
               <h1 className="mt-4 font-semibold leading-tight text-[clamp(1.75rem,10cqi,3.75rem)]">
