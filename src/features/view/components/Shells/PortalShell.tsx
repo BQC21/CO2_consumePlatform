@@ -81,13 +81,13 @@ export function PortalShell({
           </nav>
           {headerCenter}
           <div className="relative flex min-w-0 shrink items-center gap-2">
-            <span className="hidden min-w-0 max-w-[9rem] text-right leading-tight lg:block xl:max-w-[14rem]">
-              <span className="block truncate text-sm font-semibold">{name}</span>
-              {showEmail ? <span className="block truncate text-[11px] text-[var(--color-text-secondary)]">{email}</span> : null}
+            <span className="hidden min-w-0 max-w-[12rem] text-right leading-tight lg:block xl:max-w-[18rem]">
+              <span className="block truncate text-base font-semibold lg:text-lg">{name}</span>
+              {showEmail ? <span className="block truncate text-sm text-[var(--color-text-secondary)]">{email}</span> : null}
             </span>
             <button
               type="button"
-              className="grid place-items-center rounded-full text-xs font-semibold text-white"
+              className="grid place-items-center rounded-full text-sm font-semibold text-white"
               style={{ width: "var(--avatar-size)", height: "var(--avatar-size)", background: "var(--color-primary)" }}
               aria-label={`Cuenta de ${name}`}
               aria-expanded={menuOpen}
@@ -96,7 +96,7 @@ export function PortalShell({
               {initialsFromName(name)}
             </button>
             {menuOpen ? (
-              <button type="button" className="btn-secondary absolute top-12 right-0 z-20 h-10" onClick={() => void handleSignOut()}>
+              <button type="button" className="btn-secondary absolute top-12 right-0 z-20 h-11 px-4 text-base" onClick={() => void handleSignOut()}>
                 Cerrar sesión
               </button>
             ) : null}
@@ -107,12 +107,12 @@ export function PortalShell({
         {hideHeading ? null : (
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-3xl">
-              <h1 className="text-2xl font-semibold md:text-3xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
+              <h1 className="text-3xl font-semibold md:text-4xl" style={{ color: tone === "dark" ? "var(--color-text-on-dark)" : "var(--color-text-primary)" }}>
                 {title}
                 {titleBadge}
               </h1>
               {subtitle ? (
-                <p className="mt-1 text-sm" style={{ color: tone === "dark" ? "var(--color-text-on-dark-muted)" : "var(--color-text-secondary)" }}>
+                <p className="mt-1 text-base md:text-lg" style={{ color: tone === "dark" ? "var(--color-text-on-dark-muted)" : "var(--color-text-secondary)" }}>
                   {subtitle}
                 </p>
               ) : null}
