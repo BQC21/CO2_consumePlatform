@@ -5,15 +5,18 @@ Plataforma de TEC Energy Solutions para registrar sistemas fotovoltaicos instala
 ## Features
 
 1. Ingreso con correo y contraseña. `/` entra al dashboard si hay sesión y, si no, a `/login`.
-2. Vista principal con el logo de TEC al ancho del título, proyectos registrados, completados, capacidad instalada, mapa de los 24 departamentos sobre la foto de Laguna Seca, ficha del departamento, galería del proyecto seleccionado y la foto de la Expoferia 2026.
+2. Vista principal con el logo de TEC al ancho del título y tres cifras: proyectos registrados, paneles instalados y capacidad. Debajo, un pase de fotos de obras TEC. Cada foto dura 4 segundos, se acerca con un zoom lineal y se puede cambiar con flechas, puntos o las teclas de dirección. Si el sistema pide menos movimiento, el pase no avanza solo. El mapa de los 24 departamentos va sobre la foto de Laguna Seca. A la derecha quedan la ficha del departamento, la galería del proyecto elegido y dos ferias: ExpoEnergética 2026 y ExpoSolar 2026.
 3. Tarjeta de impacto ambiental acumulado. CO₂, carbón y árboles salen del total de proyectos. La pastilla de periodo solo cambia la energía generada. La gráfica mensual tiene su propio selector de año y el eje vertical llega al mayor mes, redondeado al entero, más 5.
-4. Lista de proyectos en una tabla anual: búsqueda, filtros, orden, alta, baja, edición de varias filas a la vez y métricas mensuales por proyecto. También hay carga, descarga y limpieza masiva en Excel.
+4. Lista de proyectos en una tabla anual: búsqueda, filtros, orden, alta, baja, edición de varias filas a la vez y métricas mensuales por proyecto. También hay carga, descarga y limpieza masiva en Excel. El subtítulo pide registrar, editar o eliminar proyectos.
 5. Cada proyecto es independiente o existente. Los existentes se leen del Portal TEC del repositorio [https://github.com/BQC21/Portal_TEC_general](https://github.com/BQC21/Portal_TEC_general)  y se pueden editar aquí. Esa edición se guarda en la base de esta plataforma y conserva el vínculo con el portal.
 6. Sincronización en tiempo real con Supabase.
+7. La galería del proyecto no lista archivos en el código. `mediaForProject` reconoce el nombre y `filesInFolder` lee la carpeta correspondiente en `public/Proyectos`. Las ferias se leen igual desde `public/Ferias` y se abren en un pase de fotos.
+8. El encabezado muestra el nombre de la cuenta. `PORTAL_USER_DISPLAY_NAMES` vive solo en el servidor y asocia un correo con un nombre visible. Salir abre una confirmación antes de cerrar la sesión.
+9. La interfaz usa la paleta de TEC: dorado `#eda30f`, azul `#2d78f7` y verde `#8dbe23`. El texto va en Montserrat y los títulos en Josefin Sans. El favicon es `public/ICONOS/NARANJA.png`.
 
 ## Stack
 
-1. Visualización: Next.js 16, React 19 y Tailwind CSS 4.
+1. Visualización: Next.js 16, React 19, Tailwind CSS 4, Montserrat y Josefin Sans.
 2. Capa lógica: `app` / `features/view` / `features/model` / `features/ViewModel` / `lib`.
 3. Base de datos: PostgreSQL en Supabase, sin ORM.
 4. Seguridad: Supabase Auth, cookies SSR y RLS para usuarios autenticados. `src/proxy.ts` protege `/dashboard` y `/project`.
@@ -62,6 +65,12 @@ Portal TEC, solo para leer proyectos existentes:
 
 El navegador usa la publishable key. Guardar un proyecto existente no escribe en el Portal TEC.
 
+Nombre visible de la cuenta, solo en el servidor:
+
+* `PORTAL_USER_DISPLAY_NAMES`
+
+El valor es una lista `correo=Nombre visible` separada por punto y coma. Si el correo de la sesión no está en esa lista, el encabezado usa el nombre del usuario o el correo.
+
 ---
 
 ## Prerequisites
@@ -96,7 +105,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Completa las variables de la plataforma en `.env.local`. Las del portal hacen falta para jalar un proyecto existente.
+Completa las variables de la plataforma en `.env.local`. Las del portal hacen falta para jalar un proyecto existente. `PORTAL_USER_DISPLAY_NAMES` es opcional y no lleva el prefijo `NEXT_PUBLIC_`.
 
 #### 4. Run development app
 
@@ -113,7 +122,7 @@ http://localhost:3000
 ## Deploy en Vercel
 
 1. Importa el repositorio en Vercel. El comando de build es `next build`.
-2. Define `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Si se usan proyectos existentes, define también `NEXT_PUBLIC_PORTAL_SUPABASE_URL` y `NEXT_PUBLIC_PORTAL_SUPABASE_PUBLISHABLE_KEY`.
+2. Define `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Si se usan proyectos existentes, define también `NEXT_PUBLIC_PORTAL_SUPABASE_URL` y `NEXT_PUBLIC_PORTAL_SUPABASE_PUBLISHABLE_KEY`. Si las cuentas deben mostrar un nombre propio, define `PORTAL_USER_DISPLAY_NAMES` en el servidor.
 3. Cuando el build quede verde, apunta el dominio. Recién entonces actualiza el DNS en Hostinger.
 4. Agrega esa URL de producción en la configuración de URLs de Supabase Auth.
 5. Si un deploy falla, vuelve en Vercel al último build verde. Eso no revierte filas ni políticas de Supabase: respalda el SQL antes de un cambio destructivo.
