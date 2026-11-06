@@ -172,7 +172,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
               return (
                 <label
                   key={origin}
-                  className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium ${active ? "border-[var(--color-primary)] bg-[#fff4ee]" : "border-[var(--border-color)]"}`}
+                  className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium ${active ? "border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_16%,white)]" : "border-[var(--border-color)]"}`}
                 >
                   <input type="radio" name="insercion" checked={active} onChange={() => changeOrigin(origin)} />
                   {origin === "independiente" ? "Independiente" : "Existente"}
