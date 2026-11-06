@@ -97,7 +97,7 @@ export function ProjectAnnualTable({ projects, total, onUpdate, onDelete, onEdit
             const saving = savingIds[project.id] === true;
             const rowError = rowErrors[project.id] ?? "";
             return (
-              <article key={project.id} className={`rounded-2xl border border-[var(--border-color)] p-4 ${editing ? "bg-[#fff8f1]" : existing ? "bg-[#e7f1fb]" : "bg-white"}`}>
+              <article key={project.id} className={`rounded-2xl border border-[var(--border-color)] p-4 ${editing ? "bg-[color-mix(in_srgb,var(--color-primary)_16%,white)]" : existing ? "bg-[color-mix(in_srgb,var(--color-secondary)_10%,white)]" : "bg-white"}`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     {form ? (

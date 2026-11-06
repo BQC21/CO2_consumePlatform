@@ -12,8 +12,8 @@ export function displayBrand(value: string): string {
 // Función para mostrar el estado del proyecto
 export function StatusPill({ completed }: { completed: boolean }) {
     return (
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${completed ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${completed ? "bg-[#3caf53]" : "bg-[#f05a1a]"}`} />
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${completed ? "bg-[color-mix(in_srgb,var(--color-accent-green)_22%,white)] text-[var(--color-text-brand-green)]" : "bg-[color-mix(in_srgb,var(--color-primary)_24%,white)] text-[var(--color-text-brand-gold)]"}`}>
+        <span className={`h-1.5 w-1.5 rounded-full ${completed ? "bg-[var(--color-accent-green)]" : "bg-[var(--color-primary)]"}`} />
         {completed ? "Completado" : "En ejecución"}
         </span>
     );
