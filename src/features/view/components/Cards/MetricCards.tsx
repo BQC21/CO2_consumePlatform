@@ -22,19 +22,19 @@ export function MetricCards({
       <MetricTile
         label="PROYECTOS REGISTRADOS"
         value={String(registered)}
-        detail={`en ${departmentCount} ${departmentCount === 1 ? "departamento" : "departamentos"}`}
+        detail={registered === 0 ? "Aún no hay proyectos registrados" : `${ratio}% de proyectos completados`}
         tone="blue"
-      />
-      <MetricTile
-        label="COMPLETADOS"
-        value={String(completed)}
-        detail={registered === 0 ? "Aún no hay proyectos registrados" : `${ratio}% del total registrado`}
-        tone="green"
       >
-        <div className="h-2 overflow-hidden rounded-full bg-white/80 ring-1 ring-[#d7efc4]" aria-hidden="true">
-          <div className="h-full rounded-full bg-[var(--color-success)]" style={{ width: `${ratio}%` }} />
+        <div className="h-2 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--color-secondary)_18%,white)]" aria-hidden="true">
+          <div className="h-full rounded-full bg-[var(--color-secondary)]" style={{ width: `${ratio}%` }} />
         </div>
       </MetricTile>
+      <MetricTile
+        label="TOTAL DE PANELES"
+        value={formatNumber(metrics.paneles, 0)}
+        detail="paneles instalados"
+        tone="green"
+      />
       <MetricTile
         label="CAPACIDAD INSTALADA"
         value={formatNumber(metrics.capacidadInstaladaKwp, 1)}

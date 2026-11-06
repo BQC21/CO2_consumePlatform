@@ -53,7 +53,7 @@ export function EnvironmentalCards({
   const range = monthSpan(periodYear, periodYield, period === "todos"); // rango de meses en el periodo seleccionado
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-[#31445C]/80 p-5 md:p-6">
+    <section className="rounded-3xl border border-white/10 bg-[var(--color-surface-brand)] p-5 md:p-6">
 
       {/* Headers + switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -68,26 +68,26 @@ export function EnvironmentalCards({
           title="CO₂ reducido"
           value={co2.amount === null ? "—" : formatNumber(co2.amount, 2)}
           unit={co2.amount === null ? "" : `${co2.unit}`}
-          tone="#2f6fed"
+          tone="#2d78f7"
           icon="truck"
         />
         <ImpactTile
           title="Carbón reducido"
           value={carbon.amount === null ? "—" : formatNumber(carbon.amount, 2)}
           unit={carbon.amount === null ? "" : carbon.unit}
-          tone="#7c5cff"
+          tone="#8dbe23"
           icon="factory"
         />
         <ImpactTile
           title="Árboles equivalentes"
           value={metrics.arboles === null ? "—" : formatNumber(Math.ceil(metrics.arboles), 0)}
           unit={metrics.arboles === null ? "" : "árboles"}
-          tone="#3caf53"
+          tone="#8dbe23"
           icon="tree"
         />
         {monthlyLoading ? (
           <article className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3" aria-hidden="true">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#f05a1a] text-white">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--color-primary)] text-[var(--color-text-on-primary)]">
               <ImpactIcon name="bolt" />
             </span>
             <div className="skeleton-dark h-8 w-24 rounded-full" />
@@ -97,7 +97,7 @@ export function EnvironmentalCards({
             title="Energía generada"
             value={periodEnergy === null ? "—" : formatNumber(periodEnergy, 2)}
             unit={periodEnergy === null ? "" : `MWh · ${range}`}
-            tone="#f05a1a"
+            tone="#eda30f"
             icon="bolt"
           />
         )}

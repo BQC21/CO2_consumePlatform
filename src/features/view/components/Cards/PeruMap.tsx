@@ -29,17 +29,17 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
           Proyectos por departamento
         </h2>
         {loading ? (
-          <span className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#b7e0c2] px-3 py-1 text-sm font-medium text-[#1f7a32]">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-[#1f7a32]" />
+          <span className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-accent-green)] px-3 py-1 text-sm font-medium text-[var(--color-text-brand-green)]">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-accent-green)]" />
             Cargando datos…
           </span>
         ) : selected ? (
           <button
             type="button"
-            className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[#b7e0c2] px-3 py-1 text-left text-sm font-medium text-[#1f7a32]"
+            className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-accent-green)] px-3 py-1 text-left text-sm font-medium text-[var(--color-text-brand-green)]"
             onClick={onClear}
           >
-            <span className="h-2 w-2 shrink-0 rounded-full bg-[#1f7a32]" />
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-accent-green)]" />
             <span className="min-w-0 break-words">Mostrando: {selected}</span>
             <span aria-hidden="true">×</span>
             <span className="sr-only">Quitar selección</span>
@@ -83,7 +83,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
               x={label.x}
               y={label.y}
               textAnchor="middle"
-              fill="#16324f"
+              fill="#1a4d96"
               fontSize="6.4"
               fontWeight="600"
               style={{ pointerEvents: "none" }}

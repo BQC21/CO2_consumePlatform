@@ -13,23 +13,30 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
   const [trackedDepartment, setTrackedDepartment] = useState(department);
   const local = projects.filter((project) => project.ubicacion === department);
 
+  // Si el departamento ha cambiado, actualizar el proyecto activo
   if (department !== trackedDepartment) {
     setTrackedDepartment(department);
     setProjectId(null);
   }
 
+  // Si el departamento es el mismo, usar el proyecto activo, si no, usar el primer proyecto en ejecución
   const activeId = department === trackedDepartment ? projectId : null;
+  // Si no hay proyecto activo, usar el primer proyecto en ejecución, si no, usar el primer proyecto
   const project =
     local.find((item) => item.id === activeId) ??
     local.find((item) => item.estado === "en_ejecucion") ??
     local[0];
+  // Si hay un proyecto, obtener el URL del portal del inversor
   const portalUrl = project ? inverterPortalUrl(project.marca_inversor) : null;
+  // Si el proyecto está completado, mostrar el estado de completado, si no, mostrar el estado de en ejecución
   const completed = project?.estado === "completado";
 
+  // Si hay un proyecto activo, actualizar el estado del proyecto
   useLayoutEffect(() => {
     onActiveProject?.(!department || !project ? null : project.nombre);
   }, [department, onActiveProject, project]);
 
+  // Si no hay departamento o proyecto, mostrar el mensaje de sin selección
   if (!department || !project) {
     return (
       <article className={articleClass}>
@@ -44,7 +51,9 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
     );
   }
 
+  // Sistema del proyecto
   const system = project.tipo_de_sistema || "Sistema";
+  // Descripción del proyecto
   const phrase = project.descripcion || `${system} ${completed ? "en operación" : "en ejecución"}`;
 
   return (
@@ -52,11 +61,14 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
       <p className="text-xs font-semibold tracking-[0.08em] break-words text-[var(--color-accent-green)] @sm:text-sm @sm:tracking-[0.14em]">DEPARTAMENTO · {department.toUpperCase()}</p>
       <h2 className="mt-1 text-xl font-semibold break-words @sm:text-2xl @md:text-3xl">{project.nombre}</h2>
       <p className="mt-1 text-sm text-[var(--color-text-secondary)] @sm:text-base">{phrase}</p>
-      <p className={`mt-3 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3 py-1 text-xs font-semibold @sm:text-sm ${completed ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
-        <span className={`h-2 w-2 shrink-0 rounded-full ${completed ? "bg-[#3caf53]" : "bg-[#f05a1a]"}`} />
+      
+      {/* Estado del proyecto */}
+      <p className={`mt-3 inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full px-3 py-1 text-xs font-semibold @sm:text-sm ${completed ? "bg-[color-mix(in_srgb,var(--color-accent-green)_22%,white)] text-[var(--color-text-brand-green)]" : "bg-[color-mix(in_srgb,var(--color-primary)_24%,white)] text-[var(--color-text-brand-gold)]"}`}>
+        <span className={`h-2 w-2 shrink-0 rounded-full ${completed ? "bg-[var(--color-accent-green)]" : "bg-[var(--color-primary)]"}`} />
         {completed ? "Completado" : "En ejecución"} · {local.length} {local.length === 1 ? "planta" : "plantas"}
       </p>
 
+      {/* Selector de proyecto */}
       <label className="mt-4 block min-w-0 text-sm font-medium @sm:text-base">
         Proyecto
         <select
@@ -73,6 +85,7 @@ export function DepartmentCard({ department, projects, onActiveProject }: Depart
         </select>
       </label>
 
+      {/* Bloque de campos generales del proyecto */}
       <dl className="mt-4 grid grid-cols-1 gap-2 text-sm @md:grid-cols-2 @sm:text-base">
         <div className="min-w-0 rounded-xl bg-[var(--color-background)] px-3 py-2">
           <dt className="text-sm text-[var(--color-text-secondary)]">Capacidad</dt>
