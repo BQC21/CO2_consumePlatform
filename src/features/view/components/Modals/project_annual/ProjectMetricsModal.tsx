@@ -313,7 +313,7 @@ export function ProjectMetricsModal({
           {/* Fecha de instalación */}
           <span>· Instalado el {formatDayMonthYear(project.fecha_instalacion)}</span>
           {/* Estado del proyecto */}
-          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${project.estado === "completado" ? "bg-[#e5f6e8] text-[#1f7a32]" : "bg-[#fff1e8] text-[#c44712]"}`}>
+          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${project.estado === "completado" ? "bg-[color-mix(in_srgb,var(--color-accent-green)_22%,white)] text-[var(--color-text-brand-green)]" : "bg-[color-mix(in_srgb,var(--color-primary)_24%,white)] text-[var(--color-text-brand-gold)]"}`}>
             {project.estado === "completado" ? "Completado" : "En ejecución"}
           </span>
         </p>
@@ -389,7 +389,7 @@ export function ProjectMetricsModal({
                       title={`${MONTH_NAMES[index]}: ${value || "sin datos"}`}
                       style={{
                         height: `${Math.max((value / barPeak) * 100, value > 0 ? 12 : 8)}%`,
-                        background: value > 0 ? "#f07a1a" : "#e6ebf2",
+                        background: value > 0 ? "#eda30f" : "#e6ebf2",
                       }}
                     />
                   ))}
@@ -451,7 +451,7 @@ export function ProjectMetricsModal({
                           <tr key={record.mes} className={current ? "row-current" : undefined}>
                             <td className="whitespace-nowrap font-medium">
                               {parts ? `${String(parts.month).padStart(2, "0")} · ${MONTH_NAMES[parts.month - 1]}` : record.mes}
-                              {current ? <span className="ml-2 rounded-full bg-[#ffe3c4] px-2 py-0.5 text-[11px] font-semibold text-[#9a4b12]">Mes en curso</span> : null}
+                              {current ? <span className="ml-2 rounded-full bg-[color-mix(in_srgb,var(--color-primary)_28%,white)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-text-brand-gold)]">Mes en curso</span> : null}
                             </td>
                             {metricRows.map((row) => (
                               <td key={`${record.mes}-${row.key}`}>
@@ -494,7 +494,7 @@ export function ProjectMetricsModal({
         {error ? <p className="field-error">{error}</p> : null}
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className={`text-sm font-medium ${dirty ? "text-[#9a4b12]" : "text-[#1f7a32]"}`}>
+          <p className={`text-sm font-medium ${dirty ? "text-[var(--color-text-brand-gold)]" : "text-[var(--color-text-brand-green)]"}`}>
             {loading ? "Leyendo registros…" : dirty ? "Cambios sin guardar" : "Todo guardado · sin cambios"}
           </p>
           <div className="flex gap-2">
