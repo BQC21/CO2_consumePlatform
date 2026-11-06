@@ -10,6 +10,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Energy Track",
   description: "Registro y seguimiento de sistemas fotovoltaicos instalados por TEC Energy Solutions.",
+  icons: {
+    icon: "/ICONOS/NARANJA.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
