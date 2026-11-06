@@ -127,13 +127,13 @@ export default function ProjectPage() {
   return (
     <PortalShell
       title="Lista de proyectos"
-      subtitle="Registra, edita o elimina proyectos fotovoltaicos. Haz clic en el lápiz para editar una fila."
+      subtitle="Registra, edita o elimina proyectos. Haz clic en el lápiz para editar una fila."
       activePath="/project"
       actions={
         <div className="flex flex-wrap items-center gap-2">
           {unsavedRows > 0 ? (
             <span className="unsaved-chip">
-              <span className="h-2 w-2 rounded-full bg-[#f05a1a]" />
+              <span className="h-2 w-2 rounded-full bg-[var(--color-primary)]" />
               Cambios sin guardar ({unsavedRows} {unsavedRows === 1 ? "fila" : "filas"})
             </span>
           ) : null}
