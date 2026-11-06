@@ -1,61 +1,45 @@
-import { ProjectMedia } from "@/lib/types/components/components";
+import type { ProjectMedia } from "@/lib/types/components/components";
 
 // Algunos navegadores no admiten lectura de archivos en formato .heic
 export const IMAGE_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
 export const VIDEO_EXTENSIONS = new Set(["mp4", "webm"]);
 
-// Hero section
+// Carrusel del dashboard. El botón 1 muestra la primera foto, y así en orden.
 export const HERO_SLIDES = [
   "/Hero/_DSC3503.jpg",
   "/Hero/_DSC4539.jpg",
-  "/Hero/EQUIPO TÉCNICO (2).jpg",
   "/Hero/EQUIPO TÉCNICO (17).jpg",
+  "/Hero/EQUIPO TÉCNICO (24).jpg",
+  "/Hero/EQUIPO TÉCNICO (2).jpg",
+  "/Hero/TEC V2 (7).jpg",
 ] as const;
 
-// Tarjeta de departamentos
-export const PROJECT_MEDIA: readonly ProjectMedia[] = [
-  { aliases: ["Familia Castillo Salazar"], files: [] },
-  { aliases: ["Artesco"], files: [] },
-  { aliases: ["Killa"], files: [] },
-  {
-    aliases: ["Ribera del Ríos", "Cieneguilla"],
-    files: ["/Proyectos/Cieneguilla/DJI_0107.jpg", "/Proyectos/Cieneguilla/_DSC3665.jpg"],
-  },
-  {
-    aliases: ["Quilmaná", "Quilmana"],
-    files: ["/Proyectos/Quilmana/_DSC4491.jpg", "/Proyectos/Quilmana/_DSC4577.jpg"],
-  },
-  { aliases: ["Algarrobos"], files: [] },
-  {
-    aliases: ["Honda"],
-    files: ["/Proyectos/Loreto/EDIT IQUITOS (3).jpg", "/Proyectos/Loreto/TEC WEB (3).jpg"],
-  },
-  {
-    aliases: ["CENTRIKA", "Centrika"],
-    files: ["/Proyectos/Centrika/1 (1).jpg", "/Proyectos/Centrika/WhatsApp Image 2025-11-06 at 10.33.00 PM.jpeg"],
-  },
-  {
-    aliases: ["Caja los Andes"],
-    files: ["/Proyectos/Puno/instalacion-puno-edit.jpg", "/Proyectos/Puno/EQUIPO TÉCNICO (13).jpg"],
-  },
-  {
-    aliases: ["Laguna Seca", "Laguna SECA"],
-    files: ["/Proyectos/Cajamarca/LAGUNA SECA- TEC (26).jpg", "/Proyectos/Cajamarca/LAGUNA SECA- TEC (61).jpg"],
-  },
-  {
-    aliases: ["La Floresta", "San Borja"],
-    files: ["/Proyectos/SanBorja/DJI_20250912113552_0046_D.jpg", "/Proyectos/SanBorja/_DSC8408.jpg"],
-  },
-  {
-    aliases: ["Cafetero", "Satipo"],
-    files: ["/Proyectos/Junin/TEC V2 (1).jpg", "/Proyectos/Junin/TEC V2 (6).jpg"],
-  },
+// Carpeta dentro de public. Las fotos no se listan aquí: mediaForProject las lee de la carpeta.
+export const PROJECT_MEDIA: readonly Pick<ProjectMedia, "aliases" | "folder">[] = [
+  { aliases: ["Familia Castillo Salazar"], folder: "/Proyectos/Castillo" },
+  { aliases: ["Artesco"], folder: "/Proyectos/Artesco" },
+  { aliases: ["Killa"], folder: "/Proyectos/Killa" },
+  { aliases: ["Ribera del Ríos", "Cieneguilla"], folder: "/Proyectos/Cieneguilla" },
+  { aliases: ["Quilmaná", "Quilmana"], folder: "/Proyectos/Quilmana" },
+  { aliases: ["Algarrobos"], folder: "/Proyectos/Algarrobos" },
+  { aliases: ["Honda"], folder: "/Proyectos/Loreto" },
+  { aliases: ["CENTRIKA", "Centrika"], folder: "/Proyectos/Centrika" },
+  { aliases: ["Caja los Andes"], folder: "/Proyectos/Puno" },
+  { aliases: ["Laguna Seca", "Laguna SECA"], folder: "/Proyectos/Cajamarca" },
+  { aliases: ["La Floresta", "San Borja"], folder: "/Proyectos/SanBorja" },
+  { aliases: ["Cafetero", "Satipo"], folder: "/Proyectos/Junin" },
 ];
 
-// Tarjeta Expoferia 2026
-export const EXPOFERIA_2026_IMAGES: readonly string[] = [
-  "/Ferias/Expoferia2026/_DSC4626.jpg",
-  "/Ferias/Expoferia2026/_DSC4667.jpg",
-  "/Ferias/Expoferia2026/_DSC4718.jpg",
-  "/Ferias/Expoferia2026/_DSC4905.jpg",
-];
+// Ferias y eventos
+export const EVENTS = [
+  {
+    title: "ExpoEnergética 2026",
+    cover: "/Ferias/Expoferia2026/_DSC4626.jpg",
+    folder: "/Ferias/Expoferia2026",
+  },
+  {
+    title: "ExpoSolar 2026",
+    cover: "/Ferias/ExpoSolar2026/ExpoSolar1.JPG",
+    folder: "/Ferias/ExpoSolar2026",
+  },
+] as const;

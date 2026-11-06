@@ -1,3 +1,4 @@
+import { EVENTS } from "@/lib/utils/consts/mediaCatalog";
 import { PROJECT_ANNUAL_HEADERS } from "@/lib/utils/headers";
 import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS, 
     SORTING_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
@@ -25,3 +26,5 @@ export type MediaKind = "image" | "video" | "unsupported"; // Tipo de contenido 
 
 export type SheetCell = string | number | boolean | Date | null; // celda de la hoja de cálculo
 export type SheetMatrix = SheetCell[][]; // matriz de celdas de la hoja de cálculo
+
+export type FairEvent = (typeof EVENTS)[number]; // feria o evento

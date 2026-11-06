@@ -1,6 +1,7 @@
 import type { ProjectMedia, SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
 import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
 import { IMAGE_EXTENSIONS, PROJECT_MEDIA, VIDEO_EXTENSIONS } from "../consts/mediaCatalog";
+import { filesInFolder } from "./projectMediaFiles";
 import { MediaKind } from "@/lib/types/components/options";
 
 // ----------------
@@ -220,12 +221,15 @@ export function normalizeMediaName(value: string): string {
     .trim();
 }
 
-export function mediaForProject(projectName: string | null): ProjectMedia | null {
+export async function mediaForProject(projectName: string | null): Promise<ProjectMedia | null> {
   if (!projectName) {
     return null;
   }
-  const normalized = normalizeMediaName(projectName);
-  let best: { entry: ProjectMedia; score: number } | null = null;
+
+  const normalized = normalizeMediaName(projectName); // Nombre normalizado del proyecto
+  let best: { entry: (typeof PROJECT_MEDIA)[number]; score: number } | null = null; // Mejor coincidencia
+
+  // Buscar el proyecto en la lista de proyectos
   for (const entry of PROJECT_MEDIA) {
     for (const alias of entry.aliases) {
       const key = normalizeMediaName(alias);
@@ -237,7 +241,15 @@ export function mediaForProject(projectName: string | null): ProjectMedia | null
       }
     }
   }
-  return best?.entry ?? null;
+  if (!best) {
+    return null;
+  }
+  const files = await filesInFolder(best.entry.folder);
+  return {
+    aliases: best.entry.aliases,
+    folder: best.entry.folder,
+    files,
+  };
 }
 
 export function publicMediaSrc(path: string): string {

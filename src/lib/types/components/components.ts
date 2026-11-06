@@ -286,6 +286,7 @@ export type DepartmentCardProps = {
     onActiveProject?: (name: string | null) => void;
 };
 
+// Tarjeta de la galería de proyectos
 export type ImageCardProps = {
     projectName: string | null;
 };
@@ -306,8 +307,15 @@ export type LabelPoint = {
     y: number;
 };
 
-// Galería de proyectos
+// Galería de proyectos. La carpeta vive en public y las fotos se leen de ahí.
 export type ProjectMedia = {
     aliases: readonly string[];
+    folder: string;
     files: readonly string[];
+};
+
+// Secuencia de fotos
+export type PhotoSequenceProps = {
+    files: readonly string[];
+    label: string;
 };
