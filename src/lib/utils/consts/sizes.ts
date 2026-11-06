@@ -179,7 +179,7 @@ export const DEPARTMENT_SHAPES: DepartmentShape[] = [
 export const LABEL_HEIGHT = 9;
 
 // Delay on translating images on Hero section
-export const HERO_SLIDE_SECONDS = 5;
+export const HERO_SLIDE_SECONDS = 4;
 
 /** Margen para que el encabezado en negrita no quede cortado. */
 export const COLUMN_PADDING = 2;
