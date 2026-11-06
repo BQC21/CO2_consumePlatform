@@ -99,7 +99,7 @@ export function MetricsButton({
     <>
       <button
         type="button"
-        className={labeled ? "inline-flex h-8 items-center gap-1 rounded-full bg-[#e8f1ff] px-3 text-xs font-semibold text-[var(--color-secondary)]" : "icon-button"}
+        className={labeled ? "inline-flex h-8 items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--color-secondary)_12%,white)] px-3 text-xs font-semibold text-[var(--color-secondary)]" : "icon-button"}
         style={labeled ? undefined : { color: "var(--color-secondary)" }}
         aria-label={`Métricas de ${project.nombre}`}
         onClick={() => setOpen(true)}
