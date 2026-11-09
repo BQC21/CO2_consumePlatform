@@ -9,41 +9,58 @@ import { EVENTS } from "@/lib/utils/consts/mediaCatalog";
 import { FairEvent } from "@/lib/types/components/options";
 
 export function ExpoferiaCard() {
-  const [open, setOpen] = useState<FairEvent | null>(null);
-  const [files, setFiles] = useState<readonly string[] | null>(null);
-  const close = useCallback(() => setOpen(null), []);
+
+  // -----------------
+  // -- Estados ------
+  // -----------------
+
+  const [open, setOpen] = useState<FairEvent | null>(null); // Estado para abrir el modal de la feria o evento
+  const [files, setFiles] = useState<readonly string[] | null>(null); // Estado para las fotos de la feria o evento
+  const close = useCallback(() => setOpen(null), []); // Función para cerrar el modal de la feria o evento
+
+  // -----------------
+  // -- Efectos ------
+  // -----------------
 
   useEffect(() => {
+    // Si no hay feria o evento seleccionada, se limpia el estado de las fotos
     if (!open) {
       setFiles(null);
       return;
     }
+    // Si hay feria o evento seleccionada
     let active = true;
     setFiles(null);
-    void filesInFolder(open.folder)
-      .then((found) => {
-        if (active) {
-          setFiles(found);
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setFiles([]);
-        }
+      // Se leen las fotos de la carpeta del evento seleccionado
+      void filesInFolder(open.folder)
+        .then((found) => {
+          if (active) {
+            setFiles(found);
+          }
+        })
+        .catch(() => {
+          if (active) {
+            setFiles([]);
+          }
       });
+    // Si el componente se desmonta, se limpia el estado de las fotos
     return () => {
       active = false;
     };
   }, [open]);
 
+  // -----------------
+  // -- Renderizado --
+  // -----------------
+
   return (
+    // Bloque principal de la tarjeta
     <>
-      <div className="grid grid-cols-2 gap-3">
-        {/* Bloque de ferias y eventos */}
-        {EVENTS.map((event) => (
-          <section key={event.folder} className="rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]" aria-label={event.title}>
-            <h2 className="text-2xl font-semibold">Eventos</h2>
-            <div className="relative mt-3 overflow-hidden rounded-2xl bg-[var(--color-background)]">
+      <section className="rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]" aria-label="Eventos">
+        <h2 className="text-2xl font-semibold">Eventos</h2>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          {EVENTS.map((event) => (
+            <div key={event.folder} className="relative overflow-hidden rounded-2xl bg-[var(--color-background)]">
               <img src={publicMediaSrc(event.cover)} alt={event.title} className="aspect-[4/3] w-full object-cover" />
               <button
                 type="button"
@@ -57,9 +74,9 @@ export function ExpoferiaCard() {
                 </svg>
               </button>
             </div>
-          </section>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
       {open ? (
         // Modal de la feria o evento
         <ModalFrame title={open.title} onClose={close} wide>

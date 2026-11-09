@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { DepartmentCard } from "@/features/view/components/Cards/DepartmentCard";
 import { EnvironmentalCards } from "@/features/view/components/Cards/EnvironmentalCards";
-import { ExpoferiaCard } from "@/features/view/components/Cards/ExpoferiaCard";
+import { ExpoferiaCard } from "@/features/view/components/Cards/EventsCard";
 import { ImageCard } from "@/features/view/components/Cards/ImageCard";
 import { MetricCards } from "@/features/view/components/Cards/MetricCards";
 import { PeruMap } from "@/features/view/components/Cards/PeruMap";
