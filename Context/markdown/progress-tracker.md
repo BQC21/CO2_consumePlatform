@@ -4,11 +4,11 @@
 
 **Overall status:** DEVELOPMENT
 
-**Completion:** 85%
+**Completion:** 88%
 
-**Current phase:** Producto usable en local, con la galería de proyectos. Falta el deploy y la prueba con una sesión real.
+**Current phase:** Producto usable en local. El dashboard recorre fotos de obras, proyectos y ferias. Falta el deploy, la prueba con una sesión real y la página `/gallery`.
 
-**Last updated:** 2026-10-30
+**Last updated:** 2026-11-06
 
 ---
 
@@ -25,7 +25,12 @@
 - [x] CO₂, carbón y árboles persistidos en `proyectos` y sumados en el dashboard
 - [x] Migraciones en `supabase/migrations/` para origen, marcas, imagen y registros mensuales
 - [x] `README.md` en la raíz del repositorio
-- [x] Galería `/gallery`: un bloque por proyecto, orden por fecha de instalación, alta, reemplazo y baja de fotos y videos en Storage
+- [x] Pase de fotos del dashboard, con flechas, puntos, teclado y avance de 4 segundos
+- [x] Galería del proyecto leída desde `public/Proyectos`, sin listar cada archivo en el catálogo
+- [x] ExpoEnergética 2026 y ExpoSolar 2026, cada una con su carpeta en `public/Ferias`
+- [x] Paleta dorada, azul y verde; Montserrat en el texto y Josefin Sans en los títulos
+- [x] Nombre visible de la cuenta con `PORTAL_USER_DISPLAY_NAMES` y confirmación al salir
+- [ ] Galería `/gallery`: un bloque por proyecto, orden por fecha de instalación, alta, reemplazo y baja de fotos y videos en Storage
 
 ---
 
