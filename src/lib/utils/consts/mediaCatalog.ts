@@ -11,7 +11,6 @@ export const HERO_SLIDES = [
   "/Hero/EQUIPO TÉCNICO (17).jpg",
   "/Hero/EQUIPO TÉCNICO (24).jpg",
   "/Hero/EQUIPO TÉCNICO (2).jpg",
-  "/Hero/TEC V2 (7).jpg",
 ] as const;
 
 // Carpeta dentro de public. Las fotos no se listan aquí: mediaForProject las lee de la carpeta.
