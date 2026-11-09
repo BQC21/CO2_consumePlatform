@@ -69,21 +69,21 @@ export function EnvironmentalCards({
           value={co2.amount === null ? "—" : formatNumber(co2.amount, 2)}
           unit={co2.amount === null ? "" : `${co2.unit}`}
           tone="#2d78f7"
-          icon="truck"
+          icon="/ICONOS/CO2.png"
         />
         <ImpactTile
           title="Carbón reducido"
           value={carbon.amount === null ? "—" : formatNumber(carbon.amount, 2)}
           unit={carbon.amount === null ? "" : carbon.unit}
           tone="#8dbe23"
-          icon="factory"
+          icon="/ICONOS/energia (2).png"
         />
         <ImpactTile
           title="Árboles equivalentes"
           value={metrics.arboles === null ? "—" : formatNumber(Math.ceil(metrics.arboles), 0)}
           unit={metrics.arboles === null ? "" : "árboles"}
           tone="#8dbe23"
-          icon="tree"
+          icon="/ICONOS/E RENOVABLE.png"
         />
         {monthlyLoading ? (
           <article className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3" aria-hidden="true">
@@ -98,7 +98,7 @@ export function EnvironmentalCards({
             value={periodEnergy === null ? "—" : formatNumber(periodEnergy, 2)}
             unit={periodEnergy === null ? "" : `MWh · ${range}`}
             tone="#eda30f"
-            icon="bolt"
+            icon="/ICONOS/ENERGÍA CONTINUA.png"
           />
         )}
       </div>

@@ -1,6 +1,6 @@
 import { FieldProps, NativeSelectProps } from "@/lib/types/components/components";
 import { REQUIRED_MESSAGE } from "@/lib/utils/consts/messages";
-import { normalizeSelectOptions } from "@/lib/utils/helpers/normalization";
+import { normalizeSelectOptions, publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { type FormEvent, type ReactNode } from "react";
 import { ImpactIcon } from "../Icons/icons";
 import { DashboardPeriod } from "@/lib/types/components/options";
@@ -148,6 +148,13 @@ export function DetailField({ label, children }: { label: string; children: Reac
   );
 }
 
+type ImpactIconName = "truck" | "factory" | "tree" | "bolt";
+
+// Condicionamiento
+function isIconImage(icon: ImpactIconName | `/ICONOS/${string}`): icon is `/ICONOS/${string}` {
+  return icon.startsWith("/ICONOS/");
+}
+
 // tarjeta de impacto ambiental
 export function ImpactTile({
   title,
@@ -160,12 +167,17 @@ export function ImpactTile({
   value: string;
   unit: string;
   tone: string;
-  icon: "truck" | "factory" | "tree" | "bolt";
+  icon: ImpactIconName | `/ICONOS/${string}`;
 }) {
   return (
     <article className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white" style={{ background: tone }} aria-hidden="true">
-        <ImpactIcon name={icon} />
+      <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl text-white" 
+          style={{ background: tone }} aria-hidden="true">
+        {isIconImage(icon) ? (
+          <img src={publicMediaSrc(icon)} alt="" className="h-8 w-8 object-contain" />
+        ) : (
+          <ImpactIcon name={icon} />
+        )}
       </span>
       <div className="min-w-0">
         <p className="text-base font-semibold text-white/70 sm:text-lg">{title}</p>
