@@ -57,7 +57,7 @@ export function EnvironmentalCards({
 
       {/* Headers + switcher */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-2xl font-semibold md:text-4xl">Impacto ambiental acumulado</h2>
+        <h2 className="text-2xl font-semibold md:text-4xl"><b>IMPACTO AMBIENTAL ACUMULADO</b></h2>
         <PeriodSwitcher value={period} onChange={setPeriod} />
       </div>
       {monthlyError ? <p className="field-error mt-3">{monthlyError}</p> : null}
