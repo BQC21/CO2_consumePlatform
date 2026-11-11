@@ -57,7 +57,7 @@ export function ModalFrame({ title, onClose, children, wide = false, roomy = fal
           </h2>
           <div className="flex items-center gap-2">
             {headerExtra}
-            <button type="button" className="icon-button bg-[var(--color-surface-muted)]" aria-label="Cerrar" onClick={onClose}>
+            <button type="button" className="icon-button shrink-0 bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]" aria-label="Cerrar" onClick={onClose}>
               <CloseIcon />
             </button>
           </div>
