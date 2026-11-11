@@ -279,7 +279,7 @@ export function MetricTile({
 
   return (
     <article className={`relative flex h-full min-w-0 flex-col overflow-hidden rounded-3xl px-4 py-4 shadow-[var(--shadow-sm)] ring-1 @container/tile ${style.card}`}>
-      <p className="pr-5 text-[1.48rem] font-semibold leading-snug tracking-[0.08em] text-[var(--color-text-secondary)]">{label}</p>
+      <p className="pr-5 text-[1.38rem] font-semibold leading-snug tracking-[0.08em] text-[var(--color-text-secondary)]">{label}</p>
       <p className={`numeric mt-2 text-[clamp(1.5rem,22cqi,2.75rem)] font-bold leading-none ${style.value}`}>{value}</p>
       <p className="mt-2 text-[0.88rem] font-medium leading-snug text-[var(--color-text-primary)]">{detail}</p>
       {children ? <div className="pt-3">{children}</div> : null}
