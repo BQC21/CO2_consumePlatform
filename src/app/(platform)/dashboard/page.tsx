@@ -85,22 +85,22 @@ export default function DashboardPage() {
       {/* Métricas generales */}
       <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)]">
         {/* Columna 1 */}
-        <article className="@container relative isolate min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-[var(--color-surface-brand)] p-4 sm:p-6 md:p-8">
-          <div className="relative z-10">
-            <div className="coverage-lockup">
-              <h1 className="mt-4 font-semibold leading-tight text-[clamp(1.75rem,10cqi,3.75rem)]">
-                Cobertura nacional de proyectos TEC
-              </h1>
-            </div>
-            {/* Fecha de la última actualización de datos */}
-            <p className="mx-auto mt-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-full bg-[var(--color-background-dark)]/70 px-3 py-2 text-center text-sm text-white/85 sm:mt-6 sm:px-4 sm:text-base">
-              <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-accent-green)]" />
-              {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}
-            </p>
+        <article className="@container relative isolate flex h-full min-w-0 flex-col items-center justify-center overflow-hidden rounded-3xl bg-[var(--color-accent-green)] px-5 py-6 text-center text-white sm:px-8 sm:py-8">
+          <div className="coverage-lockup">
+            <h1 className="font-bold uppercase leading-[1.05] text-white text-[clamp(1.7rem,6.4cqi,2.85rem)]">
+              Cobertura nacional
+              <br />
+              de proyecto TEC
+            </h1>
           </div>
+          {/* Fecha de la última actualización de datos */}
+          <p className="mx-auto mt-4 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-full bg-[var(--color-background-dark)] px-3 py-1.5 text-center text-xs text-white sm:mt-5 sm:px-4 sm:text-sm">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-accent-green)]" />
+            {loading ? "Cargando datos" : `Datos actualizados al ${updatedAt}`}
+          </p>
         </article>
         {/* Columna 2 */}
-        <div className="min-w-0">
+        <div className="h-full min-w-0">
           {loading ? <MetricCardsSkeleton /> : <MetricCards metrics={metrics} departmentCount={departmentCount} />}
         </div>
       </div>
