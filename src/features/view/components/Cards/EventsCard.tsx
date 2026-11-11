@@ -60,11 +60,13 @@ export function ExpoferiaCard() {
         <h2 className="text-2xl font-semibold"><b>EVENTOS</b></h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
           {EVENTS.map((event) => (
-            <div key={event.folder} className="relative overflow-hidden rounded-2xl bg-[var(--color-background)]">
-              <img src={publicMediaSrc(event.cover)} alt={event.title} className="aspect-[4/3] w-full object-cover" />
+            <div key={event.folder} className="overflow-hidden rounded-2xl bg-white">
+              <div className="flex h-28 items-center justify-center px-3 py-2 sm:h-32">
+                <img src={publicMediaSrc(event.cover)} alt={event.title} className="max-h-full w-full object-contain" />
+              </div>
               <button
                 type="button"
-                className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-[color-mix(in_srgb,var(--color-secondary)_28%,transparent)] px-10 text-base font-semibold text-black backdrop-blur-[2px]"
+                className="relative flex h-12 w-full items-center justify-center bg-[color-mix(in_srgb,var(--color-secondary)_28%,transparent)] px-10 text-base font-semibold text-black"
                 aria-label={`Ver fotos de ${event.title}`}
                 onClick={() => setOpen(event)}
               >
