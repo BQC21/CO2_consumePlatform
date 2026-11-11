@@ -3,9 +3,9 @@
 export function MetricCardsSkeleton() {
   return (
     // Skeleton de las métricas
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" aria-hidden="true">
+    <div className="grid h-full grid-cols-1 gap-3 sm:grid-cols-[repeat(3,minmax(0,1fr))]" aria-hidden="true">
       {Array.from({ length: 3 }, (_, index) => (
-        <article key={index} className="rounded-3xl bg-white px-5 py-4">
+        <article key={index} className="h-full min-h-36 rounded-3xl bg-white px-5 py-4">
           <div className="skeleton h-3 w-32 rounded-full" />
           <div className="skeleton mt-3 h-10 w-24 rounded-full" />
           <div className="skeleton mt-3 h-4 w-40 rounded-full" />

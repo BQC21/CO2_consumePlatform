@@ -18,7 +18,7 @@ export function MetricCards({
   const ratio = registered === 0 ? 0 : Math.min(100, Math.round((completed / registered) * 100));
 
   return (
-    <div className="grid min-w-0 grid-cols-1 items-stretch gap-3 sm:grid-cols-3">
+    <div className="grid h-full min-w-0 grid-cols-1 items-stretch gap-3 sm:grid-cols-[repeat(3,minmax(0,1fr))]">
       <MetricTile
         label="PROYECTOS REGISTRADOS"
         value={String(registered)}
