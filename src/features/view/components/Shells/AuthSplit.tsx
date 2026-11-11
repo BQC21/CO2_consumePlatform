@@ -16,28 +16,27 @@ export function AuthSplit({ title, subtitle, children }: { title: string; subtit
 
 
       {/* Sección de la derecha */}
-      <section className="grid place-items-center px-4 py-10" style={{ background: "var(--color-background)" }}>
-        <div>
-          {/* Texto debe ubicarse al centro de la sección derecha */}
-          <h1 className="max-w-250 text-5xl text-center font-semibold leading-tight">Plataforma nacional de energía solar</h1>
-          <p className="mt-20 max-w-300 text-2xl text-center text-black/45">
+      <section className="flex min-h-screen flex-col items-center px-6 py-8" style={{ background: "var(--color-background)" }}>
+        <div className="flex w-full max-w-2xl flex-1 flex-col items-center justify-center">
+          <h1 className="text-center text-[clamp(1.25rem,2.7vw,2.55rem)] font-bold uppercase leading-[1.15] tracking-[0.02em] text-[var(--color-section-title)]">
+            <span className="block whitespace-nowrap">Plataforma nacional</span>
+            <span className="block whitespace-nowrap">de energía solar</span>
+          </h1>
+          <p className="mt-6 max-w-lg text-center text-base leading-relaxed text-[var(--color-text-secondary)]">
             Accede para consultar la cobertura por departamento, revisar el estado de cada planta y administrar los proyectos registrados.
           </p>
-        </div>
 
-        <div className="w-full max-w-xl rounded-[var(--radius-xl)] bg-white p-8 shadow-[var(--shadow-md)]">
-          <div className="mb-10 flex justify-center">
-            <Logo />
+          <div className="mt-8 w-full max-w-md rounded-[var(--radius-xl)] bg-white p-8 shadow-[var(--shadow-md)]">
+            <div className="mb-8 flex justify-center">
+              <Logo />
+            </div>
+            <h2 className="text-center text-2xl font-semibold">{title}</h2>
+            <p className="mt-2 mb-6 text-center text-sm text-[var(--color-text-secondary)]">{subtitle}</p>
+            {children}
           </div>
-          <h2 className="text-center text-3xl font-semibold">{title}</h2>
-          <p className="mt-2 mb-6 text-center text-sm text-[var(--color-text-secondary)]">{subtitle}</p>
-          {children}
         </div>
 
-        <div className="relative flex h-full flex-col justify-between p-10">
-          {/* pie de página*/}
-          <p className="text-sm">TEC - Energy Solutions S.A.C</p>
-        </div>
+        <p className="mt-8 text-center text-sm text-[var(--color-text-secondary)]">TEC - Energy Solutions S.A.C</p>
       </section>
     </div>
   );
