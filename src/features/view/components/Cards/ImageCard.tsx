@@ -49,7 +49,7 @@ export function ImageCard({ projectName }: ImageCardProps) {
           Este proyecto no tiene material multimedia.
         </p>
       ) : (
-        <PhotoSequence files={files} label={projectName} />
+        <PhotoSequence files={files} label={projectName} contained = {false}/>
       )}
     </article>
   );
