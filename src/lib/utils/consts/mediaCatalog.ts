@@ -6,11 +6,12 @@ export const VIDEO_EXTENSIONS = new Set(["mp4", "webm"]);
 
 // Carrusel del dashboard. El botón 1 muestra la primera foto, y así en orden.
 export const HERO_SLIDES = [
-  "/Hero/_DSC3503.jpg",
-  "/Hero/_DSC4539.jpg",
-  "/Hero/EQUIPO TÉCNICO (17).jpg",
-  "/Hero/EQUIPO TÉCNICO (24).jpg",
-  "/Hero/EQUIPO TÉCNICO (2).jpg",
+  "/Hero/PORTADA1.jpg",
+  "/Hero/PORTADA2.jpg",
+  "/Hero/PORTADA3.jpg",
+  "/Hero/PORTADA4.jpg",
+  "/Hero/PORTADA5.jpg",
+  "/Hero/PORTADA6.jpg",
 ] as const;
 
 // Carpeta dentro de public. Las fotos no se listan aquí: mediaForProject las lee de la carpeta.
