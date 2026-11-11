@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HERO_SLIDE_SECONDS } from "@/lib/utils/consts/sizes";
 import { mediaFileName, mediaKind, publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { PhotoSequenceProps } from "@/lib/types/components/components";
@@ -15,6 +15,9 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
   const signature = files.join("\0"); // Firma de las fotos
   const [tracked, setTracked] = useState(signature); // seguimiento de las fotos
   const [slide, setSlide] = useState(0); // slide actual
+  const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
+  const naturalSize = useRef<{ width: number; height: number } | null>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
 
   // --------------------
   // --- Efectos --------
@@ -39,6 +42,49 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
         }
         setSlide(((next % slideCount) + slideCount) % slideCount);
     }, [slideCount]);
+
+  // El cuadro del modal toma el ancho y el alto de la foto, sin pasar la ventana.
+    const fitToImage = useCallback((width: number, height: number) => {
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        naturalSize.current = { width, height };
+        const maxWidth = Math.max(280, window.innerWidth - 96);
+        const maxHeight = Math.max(180, window.innerHeight - 180);
+        const scale = Math.min(1, maxWidth / width, maxHeight / height);
+        setFrameSize({ width: Math.round(width * scale), height: Math.round(height * scale) });
+    }, []);
+
+    useEffect(() => {
+        if (!contained) {
+            return;
+        }
+        const media = frameRef.current?.querySelector<HTMLImageElement | HTMLVideoElement>(".hero-sequence-frame.is-active");
+        if (media instanceof HTMLImageElement && media.complete && media.naturalWidth > 0) {
+            fitToImage(media.naturalWidth, media.naturalHeight);
+            return;
+        }
+        if (media instanceof HTMLVideoElement && media.videoWidth > 0) {
+            fitToImage(media.videoWidth, media.videoHeight);
+            return;
+        }
+        naturalSize.current = null;
+        setFrameSize(null);
+    }, [contained, fitToImage, safeSlide, signature]);
+
+    useEffect(() => {
+        if (!contained) {
+            return;
+        }
+        function onResize() {
+            const natural = naturalSize.current;
+            if (natural) {
+                fitToImage(natural.width, natural.height);
+            }
+        }
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, [contained, fitToImage]);
 
   // En el modal la foto se muestra completa y no usa el zoom del Hero.
   // El pase automático sigue el mismo intervalo.
@@ -71,8 +117,14 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
 
     return (
         <div
+            ref={frameRef}
             className="hero-sequence hero-sequence-card mt-4"
-            style={contained ? { aspectRatio: "auto", height: "min(72vh, calc(92vh - 7.5rem))" } : undefined}
+            style={contained ? {
+                aspectRatio: "auto",
+                width: frameSize ? frameSize.width : "min(72vw, 48rem)",
+                height: frameSize ? frameSize.height : "min(50vh, 24rem)",
+                background: "transparent",
+            } : undefined}
             aria-label={label}
             onKeyDown={(event) => {
             if (event.key === "ArrowLeft") {
@@ -95,6 +147,11 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
                     controls
                     preload="metadata"
                     src={publicMediaSrc(src)}
+                    onLoadedMetadata={(event) => {
+                        if (contained) {
+                            fitToImage(event.currentTarget.videoWidth, event.currentTarget.videoHeight);
+                        }
+                    }}
                 >
                     {label}
                 </video>
@@ -118,6 +175,11 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
                     ...(contained ? { objectFit: "contain", transform: "none", animation: "none" } : {}),
                 }}
                 aria-hidden={!active}
+                onLoad={(event) => {
+                    if (contained && active) {
+                        fitToImage(event.currentTarget.naturalWidth, event.currentTarget.naturalHeight);
+                    }
+                }}
                 onAnimationEnd={() => advanceSlide(index)}
                 />
             );

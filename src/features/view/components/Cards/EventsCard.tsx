@@ -64,7 +64,7 @@ export function ExpoferiaCard() {
               <img src={publicMediaSrc(event.cover)} alt={event.title} className="aspect-[4/3] w-full object-cover" />
               <button
                 type="button"
-                className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-[color-mix(in_srgb,var(--color-secondary)_28%,transparent)] px-10 text-base font-semibold text-white backdrop-blur-[2px]"
+                className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-[color-mix(in_srgb,var(--color-secondary)_28%,transparent)] px-10 text-base font-semibold text-black backdrop-blur-[2px]"
                 aria-label={`Ver fotos de ${event.title}`}
                 onClick={() => setOpen(event)}
               >
@@ -79,7 +79,7 @@ export function ExpoferiaCard() {
       </section>
       {open ? (
         // Modal de la feria o evento
-        <ModalFrame title={open.title} onClose={close} wide>
+        <ModalFrame title={open.title} onClose={close} fitContent>
           {files === null ? (
             <p className="text-base text-[var(--color-text-secondary)]" role="status">Leyendo fotos…</p>
           ) : files.length === 0 ? (

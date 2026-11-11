@@ -179,6 +179,7 @@ export type ModalFrameProps = {
     children: ReactNode;
     wide?: boolean;
     roomy?: boolean;
+    fitContent?: boolean;
     headerExtra?: ReactNode;
 };
 

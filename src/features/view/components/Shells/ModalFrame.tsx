@@ -5,7 +5,7 @@ import { CloseIcon } from "@/features/view/components/Icons/icons";
 import { useModalLifecycle } from "@/features/ViewModel/hooks/modals/useModalLifecycle";
 import { ModalFrameProps } from "@/lib/types/components/components";
 
-export function ModalFrame({ title, onClose, children, wide = false, roomy = false, headerExtra }: ModalFrameProps) {
+export function ModalFrame({ title, onClose, children, wide = false, roomy = false, fitContent = false, headerExtra }: ModalFrameProps) {
   
   const titleId = useId();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -45,7 +45,7 @@ export function ModalFrame({ title, onClose, children, wide = false, roomy = fal
     <div className="modal-backdrop" onMouseDown={onClose}>
       <div
         ref={cardRef}
-        className={wide ? "modal-card modal-card-wide" : roomy ? "modal-card modal-card-roomy" : "modal-card"}
+        className={`modal-card${wide ? " modal-card-wide" : ""}${roomy ? " modal-card-roomy" : ""}${fitContent ? " modal-card-fit" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

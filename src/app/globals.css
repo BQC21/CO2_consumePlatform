@@ -460,6 +460,12 @@ input[type="radio"] {
   max-height: min(92vh, 100%);
 }
 
+.modal-card.modal-card-fit {
+  width: max-content;
+  max-width: min(92vw, 100%);
+  max-height: min(92vh, 100%);
+}
+
 /* Estilos para el backdrop de las modales */
 .modal-backdrop {
   position: fixed;
