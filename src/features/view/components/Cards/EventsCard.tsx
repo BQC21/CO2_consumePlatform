@@ -57,7 +57,7 @@ export function ExpoferiaCard() {
     // Bloque principal de la tarjeta
     <>
       <section className="rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]" aria-label="Eventos">
-        <h2 className="text-2xl font-semibold">Eventos</h2>
+        <h2 className="text-2xl font-semibold"><b>EVENTOS</b></h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
           {EVENTS.map((event) => (
             <div key={event.folder} className="relative overflow-hidden rounded-2xl bg-[var(--color-background)]">
@@ -85,7 +85,7 @@ export function ExpoferiaCard() {
           ) : files.length === 0 ? (
             <p className="text-base text-[var(--color-text-secondary)]" role="status">Esta feria no tiene fotos.</p>
           ) : (
-            <PhotoSequence files={files} label={open.title} />
+            <PhotoSequence files={files} label={open.title} contained/>
           )}
         </ModalFrame>
       ) : null}
