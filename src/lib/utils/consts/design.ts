@@ -13,17 +13,17 @@ export const BAR_COLOR = "#eda30f";
 // Diseño para las tarjetas de métricas (vista moderna)
 export const tones = {
     blue: {
-        card: "bg-[linear-gradient(160deg,#eef4ff_0%,#ffffff_68%)] ring-[var(--color-secondary)]",
+        card: "bg-white ring-[var(--border-color)]",
         mark: "bg-[var(--color-secondary)]",
         value: "text-[var(--color-secondary)]",
     },
     green: {
-        card: "bg-[linear-gradient(160deg,#f3fbe9_0%,#ffffff_68%)] ring-[var(--color-accent-green)]",
+        card: "bg-white ring-[var(--border-color)]",
         mark: "bg-[var(--color-success)]",
         value: "text-[var(--color-text-brand-green)]",
     },
     orange: {
-        card: "bg-[linear-gradient(160deg,#fff8e6_0%,#ffffff_68%)] ring-[var(--color-primary)]",
+        card: "bg-white ring-[var(--border-color)]",
         mark: "bg-[var(--color-primary)]",
         value: "text-[var(--color-primary)]",
     },

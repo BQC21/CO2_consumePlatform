@@ -96,7 +96,8 @@ export function EnvironmentalCards({
           <ImpactTile
             title="Energía generada"
             value={periodEnergy === null ? "—" : formatNumber(periodEnergy, 2)}
-            unit={periodEnergy === null ? "" : `MWh · ${range}`}
+            unit={periodEnergy === null ? "" : "MWh"}
+            detail={periodEnergy === null ? "" : range}
             tone="#eda30f"
             icon="/ICONOS/ENERGÍA CONTINUA.png"
           />
