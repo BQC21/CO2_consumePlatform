@@ -318,4 +318,5 @@ export type ProjectMedia = {
 export type PhotoSequenceProps = {
     files: readonly string[];
     label: string;
+    contained: boolean;
 };
