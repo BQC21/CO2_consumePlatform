@@ -26,7 +26,7 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
     <article className="relative isolate min-w-0 overflow-hidden rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)] sm:p-5 md:p-6">
       <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <h2 className="min-w-0 text-xl font-semibold sm:text-2xl md:text-3xl">
-          Proyectos por departamento
+        <b>PROYECTOS POR DEPARTAMENTO</b>
         </h2>
         {loading ? (
           <span className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--color-accent-green)] px-3 py-1 text-sm font-medium text-[var(--color-text-brand-green)]">
