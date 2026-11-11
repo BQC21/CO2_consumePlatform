@@ -34,12 +34,12 @@ export const PROJECT_MEDIA: readonly Pick<ProjectMedia, "aliases" | "folder">[] 
 export const EVENTS = [
   {
     title: "ExpoEnergética 2026",
-    cover: "/Ferias/Expoferia2026/_DSC4626.jpg",
+    cover: "/expoEnergetica.jpeg",
     folder: "/Ferias/Expoferia2026",
   },
   {
     title: "ExpoSolar 2026",
-    cover: "/Ferias/ExpoSolar2026/ExpoSolar1.JPG",
+    cover: "/ExpoSolar.png",
     folder: "/Ferias/ExpoSolar2026",
   },
 ] as const;
