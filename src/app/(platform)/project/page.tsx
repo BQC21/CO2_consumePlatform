@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button2Add, Button2MassiveClean, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/buttons";
+import { Button2Add, Button2MassiveDownload, Button2MassiveUpload } from "@/features/view/components/Buttons/buttons";
 import { ProjectFiltersBar, ProjectSorter, SearchBar } from "@/features/view/components/Filters/ProjectFiltersBar";
-import { MassiveCleanModal } from "@/features/view/components/MassiveModals/MassiveCleanModal";
 import { MassiveDownloadModal } from "@/features/view/components/MassiveModals/MassiveDownloadModal";
 import { MassiveUploadModal } from "@/features/view/components/MassiveModals/MassiveUploadModal";
 import { AddProjectModal } from "@/features/view/components/Modals/project_annual/AddProjectModal";
@@ -174,20 +173,6 @@ export default function ProjectPage() {
               />
             )}
           </Button2MassiveDownload>
-          <Button2MassiveClean label="Limpiar">
-            {(close) => (
-              <MassiveCleanModal
-                title="Limpiar proyectos"
-                description="Se vaciará la lista de proyectos."
-                onClean={async () => {
-                  await projectMutations.removeAll();
-                  await refresh();
-                  close();
-                }}
-                onClose={close}
-              />
-            )}
-          </Button2MassiveClean>
           <Button2Add label="Nuevo proyecto" compact>
             {(close) => (
               <AddProjectModal
