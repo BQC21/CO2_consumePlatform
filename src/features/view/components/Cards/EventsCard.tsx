@@ -82,11 +82,17 @@ export function ExpoferiaCard() {
       </section>
       {open ? (
         // Modal de la feria o evento
-        <ModalFrame title={open.title} onClose={close} fitContent>
+        <ModalFrame title={open.banner} onClose={close} fitContent hideTitle>
+          <p
+            className="rounded-2xl bg-[var(--color-secondary)] px-6 py-3 text-center font-bold uppercase leading-none tracking-wide text-white"
+            style={{ fontSize: "clamp(1.45rem, 2.6vw, 2.55rem)" }}
+          >
+            {open.banner}
+          </p>
           {files === null ? (
-            <p className="text-base text-[var(--color-text-secondary)]" role="status">Leyendo fotos…</p>
+            <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Leyendo fotos…</p>
           ) : files.length === 0 ? (
-            <p className="text-base text-[var(--color-text-secondary)]" role="status">Esta feria no tiene fotos.</p>
+            <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Esta feria no tiene fotos.</p>
           ) : (
             <PhotoSequence files={files} label={open.title} contained/>
           )}
