@@ -32,7 +32,12 @@ export const tones = {
 // Color según estado del proyecto
 export const REGION_FILL: Record<MapStatus | "selected", string> = {
     sin_proyecto: "#d5dee7",
+
     completado: "#8dbe23",
+    instalado: "#8dbe23",
+
     en_ejecucion: "#eda30f",
+    en_desarrollo: "#eda30f",
+
     selected: "#3d6b12",
 };

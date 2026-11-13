@@ -4,7 +4,7 @@ import { DEPARTMENT_OPTIONS, INVERTER_BRAND_OPTIONS, PROJECT_STATUS_OPTIONS,
     SORTING_OPTIONS, SYSTEM_TYPE_OPTIONS } from "@/lib/utils/options";
 
 // estados de los proyectos a visualizarse en el mapa
-export type MapStatus = "en_ejecucion" | "completado" | "sin_proyecto";
+export type MapStatus = "en_ejecucion" | "completado" | "instalado" | "en_desarrollo" | "sin_proyecto";
 
 // ¿De dónde se jalará la info?
 export type ProjectOrigin = "independiente" | "existente";

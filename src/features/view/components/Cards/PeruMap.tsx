@@ -95,8 +95,8 @@ export function PeruMap({ projects, selected, onSelect, onClear, loading = false
         </svg>
         <ul className="relative z-10 m-3 flex w-fit max-w-[calc(100%-1.5rem)] flex-col gap-1 rounded-2xl border border-[var(--border-color)] bg-white/80 px-4 py-3 text-sm shadow-[var(--shadow-sm)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
           <li className="font-semibold sm:w-full">Estado</li>
-          <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.completado }} /> Completado</li>
-          <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.en_ejecucion }} /> En ejecución</li>
+          <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.instalado }} /> Instalado</li>
+          <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.en_desarrollo }} /> En desarrollo</li>
           <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.sin_proyecto }} /> Sin proyectos</li>
           <li className="flex items-center gap-2"><span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: REGION_FILL.selected }} /> Seleccionado</li>
         </ul>
