@@ -258,7 +258,7 @@ export function ProjectFormModal({ title, submitLabel, busyLabel, initial, onSub
         <section className="grid gap-3">
           <AddSectionTitle>4 · Instalación</AddSectionTitle>
           <div className="grid gap-4 sm:grid-cols-2">
-            <AddDateField label="Fecha de instalación" required value={form.fecha_instalacion} onChange={(value) => update("fecha_instalacion", value)} />
+            <AddDateField label="Fecha de instalación" value={form.fecha_instalacion} onChange={(value) => update("fecha_instalacion", value)} />
             <AddSelectField
               label="Estado"
               required
