@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PhotoSequence } from "@/features/view/Animations/PhotoSequence";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
 import { gallerySlides } from "@/lib/utils/helpers/render/Gallery";
@@ -8,8 +8,9 @@ import { filesInFolder } from "@/lib/utils/helpers/render/projectMediaFiles";
 import { publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { EVENTS } from "@/lib/utils/consts/mediaCatalog";
 import { FairEvent } from "@/lib/types/components/options";
+import { POSTER_SIDE_RATIO } from "@/lib/utils/consts/sizes";
 
-export function ExpoferiaCard() {
+export function ExpoferiaCard() { 
 
   // -----------------
   // -- Estados ------
@@ -17,6 +18,8 @@ export function ExpoferiaCard() {
 
   const [open, setOpen] = useState<FairEvent | null>(null); // Estado para abrir el modal de la feria o evento
   const [files, setFiles] = useState<readonly string[] | null>(null); // Estado para las fotos de la feria o evento
+  const [photoBox, setPhotoBox] = useState<{ width: number; height: number } | null>(null); // Estado para el tamaño de la imagen del poster
+  const sequenceHost = useRef<HTMLDivElement>(null); // Referencia para el contenedor de la secuencia de fotos
   const close = useCallback(() => setOpen(null), []); // Función para cerrar el modal de la feria o evento
 
   // -----------------
@@ -27,6 +30,7 @@ export function ExpoferiaCard() {
     // Si no hay feria o evento seleccionada, se limpia el estado de las fotos
     if (!open) {
       setFiles(null);
+      setPhotoBox(null);
       return;
     }
     // Si hay feria o evento seleccionada
@@ -50,6 +54,29 @@ export function ExpoferiaCard() {
     };
   }, [open]);
 
+  useEffect(() => {
+    // Se obtiene el contenedor de la secuencia de fotos
+    const host = sequenceHost.current;
+    const sequence = host?.querySelector(".hero-sequence");
+
+    // Si no hay contenedor de la secuencia de fotos, se retorna
+    if (!(sequence instanceof HTMLElement)) {
+      return;
+    }
+
+    // Se observa el contenedor de la secuencia de fotos
+    const observer = new ResizeObserver(([entry]) => {
+      // Se obtiene el ancho y alto de la secuencia de fotos
+      const width = Math.round(entry.contentRect.width);
+      const height = Math.round(entry.contentRect.height);
+      setPhotoBox((current) => (current?.width === width && current.height === height ? current : { width, height }));
+    });
+    observer.observe(sequence);
+
+    // Si el componente se desmonta, se desconecta el observador
+    return () => observer.disconnect();
+  }, [open, files]);
+
   // -----------------
   // -- Renderizado --
   // -----------------
@@ -59,6 +86,8 @@ export function ExpoferiaCard() {
     <>
       <section className="rounded-3xl bg-white p-4 text-[var(--color-text-primary)] shadow-[var(--shadow-sm)]" aria-label="Eventos">
         <h2 className="text-2xl font-semibold"><b>EVENTOS</b></h2>
+
+        {/* Galería de fotos */}
         <div className="mt-3 grid grid-cols-2 gap-3">
           {EVENTS.map((event) => (
             <div key={event.folder} className="overflow-hidden rounded-2xl bg-white">
@@ -80,22 +109,38 @@ export function ExpoferiaCard() {
           ))}
         </div>
       </section>
+
+      {/* Modal de la feria o evento */}
       {open ? (
         // Modal de la feria o evento
         <ModalFrame title={open.banner} onClose={close} fitContent hideTitle>
-          <p
-            className="rounded-2xl bg-[var(--color-secondary)] px-6 py-3 text-center font-bold uppercase leading-none tracking-wide text-white"
-            style={{ fontSize: "clamp(1.45rem, 2.6vw, 2.55rem)" }}
-          >
-            {open.banner}
-          </p>
-          {files === null ? (
-            <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Leyendo fotos…</p>
-          ) : files.length === 0 ? (
-            <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Esta feria no tiene fotos.</p>
-          ) : (
-            <PhotoSequence files={files} label={open.title} contained/>
-          )}
+          <div className="flex items-end gap-3">
+            <div ref={sequenceHost} className="min-w-0">
+              {/* Título del evento */}
+              <p
+                className="rounded-2xl bg-[var(--color-secondary)] px-6 py-3 text-center font-bold uppercase leading-none tracking-wide text-white"
+                style={{ fontSize: "clamp(1.45rem, 2.6vw, 2.55rem)", width: photoBox ? photoBox.width : undefined }}
+              >
+                {open.banner}
+              </p>
+              {/* Secuencia de fotos */}
+              {files === null ? (
+                <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Leyendo fotos…</p>
+              ) : files.length === 0 ? (
+                <p className="mt-4 text-base text-[var(--color-text-secondary)]" role="status">Esta feria no tiene fotos.</p>
+              ) : (
+                <PhotoSequence files={files} label={open.title} contained sideRatio={POSTER_SIDE_RATIO} />
+              )}
+            </div>
+            {/* Cartilla lateral informativa */}
+            <img
+              src={publicMediaSrc(open.poster)}
+              alt={`Información de ${open.title}`}
+              data-event-poster=""
+              className="w-auto shrink-0 object-contain object-bottom"
+              style={{ height: photoBox ? photoBox.height : "min(68vh, 36rem)" }}
+            />
+          </div>
         </ModalFrame>
       ) : null}
     </>
