@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { PhotoSequence } from "@/features/view/Animations/PhotoSequence";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
-import { filesInFolder } from "@/lib/utils/helpers/projectMediaFiles";
+import { filesInFolder } from "@/lib/utils/helpers/render/projectMediaFiles";
 import { publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { EVENTS } from "@/lib/utils/consts/mediaCatalog";
 import { FairEvent } from "@/lib/types/components/options";

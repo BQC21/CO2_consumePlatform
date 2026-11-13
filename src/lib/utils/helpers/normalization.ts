@@ -1,7 +1,7 @@
 import type { ProjectMedia, SelectFieldOptions, SelectOption } from "@/lib/types/components/components";
 import { MONTH_SHORT } from "@/lib/utils/consts/monthNames";
 import { IMAGE_EXTENSIONS, PROJECT_MEDIA, VIDEO_EXTENSIONS } from "../consts/mediaCatalog";
-import { filesInFolder } from "./projectMediaFiles";
+import { filesInFolder } from "./render/projectMediaFiles";
 import { MediaKind } from "@/lib/types/components/options";
 
 // ----------------
