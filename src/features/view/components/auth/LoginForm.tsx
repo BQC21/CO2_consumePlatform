@@ -46,7 +46,7 @@ export function LoginForm() {
     <form className="grid gap-4" onSubmit={handleSubmit}>
       
       <label>
-        <span className="field-label">Correo electrónico</span>
+        <span className="field-label">Nombre de usuario</span>
         <input className="field-input input-focus-brand" 
           type="email" autoComplete="username" 
           value={email} onChange={(event) => setEmail(event.target.value)} />
