@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { PhotoSequence } from "@/features/view/Animations/PhotoSequence";
 import { ModalFrame } from "@/features/view/components/Shells/ModalFrame";
+import { gallerySlides } from "@/lib/utils/helpers/render/Gallery";
 import { filesInFolder } from "@/lib/utils/helpers/render/projectMediaFiles";
 import { publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { EVENTS } from "@/lib/utils/consts/mediaCatalog";
@@ -35,7 +36,7 @@ export function ExpoferiaCard() {
       void filesInFolder(open.folder)
         .then((found) => {
           if (active) {
-            setFiles(found);
+            setFiles(gallerySlides(found));
           }
         })
         .catch(() => {
