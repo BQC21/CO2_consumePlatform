@@ -321,4 +321,5 @@ export type PhotoSequenceProps = {
     files: readonly string[];
     label: string;
     contained: boolean;
+    sideRatio?: number;
 };

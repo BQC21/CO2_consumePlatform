@@ -5,23 +5,19 @@ import { HERO_SLIDE_SECONDS } from "@/lib/utils/consts/sizes";
 import { mediaFileName, mediaKind, publicMediaSrc } from "@/lib/utils/helpers/normalization";
 import { PhotoSequenceProps } from "@/lib/types/components/components";
 
-export function PhotoSequence({ files, label, contained = false }: PhotoSequenceProps) {
+export function PhotoSequence({ files, label, contained = false, sideRatio = 0 }: PhotoSequenceProps) {
 
   // --------------------
   // --- Estados --------
   // --------------------
 
-  const slideCount: number = files.length; // Cantidad de fotos
-  const signature = files.join("\0"); // Firma de las fotos
-  const [tracked, setTracked] = useState(signature); // seguimiento de las fotos
-  const [slide, setSlide] = useState(0); // slide actual
-  const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
-  const naturalSize = useRef<{ width: number; height: number } | null>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
-
-  // --------------------
-  // --- Efectos --------
-  // --------------------
+    const slideCount: number = files.length; // Cantidad de fotos
+    const signature = files.join("\0"); // Firma de las fotos
+    const [tracked, setTracked] = useState(signature); // seguimiento de las fotos
+    const [slide, setSlide] = useState(0); // slide actual
+    const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null); // tamaño del frame
+    const naturalSize = useRef<{ width: number; height: number } | null>(null); // tamaño natural de la imagen
+    const frameRef = useRef<HTMLDivElement>(null); // referencia al contenedor del frame
 
     if (signature !== tracked) {
         setTracked(signature); // Actualizar la firma de las fotos
@@ -48,13 +44,22 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
         if (width <= 0 || height <= 0) {
             return;
         }
-        naturalSize.current = { width, height };
-        const maxWidth = Math.max(280, window.innerWidth - 96);
-        const maxHeight = Math.max(180, window.innerHeight - 180);
-        const scale = Math.min(1, maxWidth / width, maxHeight / height);
-        setFrameSize({ width: Math.round(width * scale), height: Math.round(height * scale) });
-    }, []);
+        naturalSize.current = { width, height }; // tamaño natural de la imagen
+        const rowBudget = Math.min(window.innerWidth - 160, window.innerWidth * 0.92 - 88); // presupuesto de ancho
+        const maxWidth = Math.max(360, sideRatio > 0 ? rowBudget : window.innerWidth - 96); // ancho máximo
+        const maxHeight = Math.max(220, sideRatio > 0 ? window.innerHeight * 0.92 - 230 : window.innerHeight - 180); // alto máximo
+        const gap = sideRatio > 0 ? 16 : 0; // espacio entre las fotos
+        const widthLimit = (maxWidth - gap) / (width + height * sideRatio); // límite de ancho
+        const heightLimit = maxHeight / height; // límite de alto
+        const scale = Math.min(1, widthLimit, heightLimit); // escala
+        setFrameSize({ width: Math.max(1, Math.round(width * scale)), height: Math.max(1, Math.round(height * scale)) });
+    }, [sideRatio]);
 
+    // --------------------
+    // --- Efectos --------
+    // --------------------
+
+    // Se ajusta el tamaño del frame a la imagen
     useEffect(() => {
         if (!contained) {
             return;
@@ -72,6 +77,7 @@ export function PhotoSequence({ files, label, contained = false }: PhotoSequence
         setFrameSize(null);
     }, [contained, fitToImage, safeSlide, signature]);
 
+    // Se ajusta el tamaño del frame a la ventana
     useEffect(() => {
         if (!contained) {
             return;
