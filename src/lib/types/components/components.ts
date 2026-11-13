@@ -180,6 +180,7 @@ export type ModalFrameProps = {
     wide?: boolean;
     roomy?: boolean;
     fitContent?: boolean;
+    hideTitle?: boolean;
     headerExtra?: ReactNode;
 };
 

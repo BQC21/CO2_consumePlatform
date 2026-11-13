@@ -5,7 +5,8 @@ import { CloseIcon } from "@/features/view/components/Icons/icons";
 import { useModalLifecycle } from "@/features/ViewModel/hooks/modals/useModalLifecycle";
 import { ModalFrameProps } from "@/lib/types/components/components";
 
-export function ModalFrame({ title, onClose, children, wide = false, roomy = false, fitContent = false, headerExtra }: ModalFrameProps) {
+export function ModalFrame({ title, onClose, children, wide = false, 
+  roomy = false, fitContent = false, hideTitle = false, headerExtra }: ModalFrameProps) {
   
   const titleId = useId();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -51,11 +52,11 @@ export function ModalFrame({ title, onClose, children, wide = false, roomy = fal
         aria-labelledby={titleId}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 id={titleId} className="text-xl font-semibold text-[var(--color-text-primary)]">
+        <div className={`${hideTitle ? "mb-2" : "mb-4"} flex items-start justify-between gap-3`}>
+          <h2 id={titleId} className={hideTitle ? "sr-only" : "text-xl font-semibold text-[var(--color-text-primary)]"}>
             {title}
           </h2>
-          <div className="flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2">
             {headerExtra}
             <button type="button" className="icon-button shrink-0 bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]" aria-label="Cerrar" onClick={onClose}>
               <CloseIcon />
