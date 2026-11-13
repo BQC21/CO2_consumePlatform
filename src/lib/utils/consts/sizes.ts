@@ -183,3 +183,6 @@ export const HERO_SLIDE_SECONDS = 4;
 
 /** Margen para que el encabezado en negrita no quede cortado. */
 export const COLUMN_PADDING = 2;
+
+// Ratio de la imagen del poster
+export const POSTER_SIDE_RATIO = 1450 / 3088;
